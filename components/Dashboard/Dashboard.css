@@ -1,3 +1,9 @@
+.active-menu-item {
+    background-color: #1851DF;
+    border-radius: 10px;
+    color: #fff;
+}
+
 @media (min-width: 0px) {
     @media (orientation: landscape) {
         .css-i3yesn-MuiToolbar-root {
