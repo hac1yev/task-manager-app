@@ -1,0 +1,7 @@
+@media (min-width: 0px) {
+    @media (orientation: landscape) {
+        .css-i3yesn-MuiToolbar-root {
+            min-height: 64px!important;
+        }
+    }
+}
