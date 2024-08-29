@@ -1,6 +1,6 @@
 "use client";
 
-import { Box,List,ListItem,ListItemButton,ListItemIcon,ListItemText } from "@mui/material";
+import { Box,List,ListItem,ListItemButton,ListItemIcon,ListItemText, useMediaQuery } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import GridViewIcon from "@mui/icons-material/GridView";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -14,17 +14,18 @@ import Link from "next/link";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
+  const matches = useMediaQuery("(min-width:769px)");
 
   return (
     <>
       <Box>
-        <List sx={{ display: 'flex', flexDirection: 'column', mt: "12px", px: "15px", gap: '5px' }}>
+        <List sx={{ display: 'flex', flexDirection: 'column', mt: "12px", px: "9px" , gap: '5px' }}>
           <Link href="/">
             <ListItem
               disablePadding
               className={pathname === "/" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <GridViewIcon
                     sx={{ color: pathname === "/" ? "#fff" : "#0f0f0f" }}
@@ -39,7 +40,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/tasks" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <FormatListBulletedIcon
                     sx={{ color: pathname === "/tasks" ? "#fff" : "#0f0f0f" }}
@@ -54,7 +55,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/completed" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <CheckCircleOutlineIcon
                     sx={{ color: pathname === "/completed" ? "#fff" : "#0f0f0f" }}
@@ -69,7 +70,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/in-progress" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <LoopIcon
                     sx={{
@@ -86,7 +87,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/to-do" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <ChecklistIcon
                     sx={{ color: pathname === "/to-do" ? "#fff" : "#0f0f0f" }}
@@ -101,7 +102,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/team" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <PeopleOutlineIcon
                     sx={{ color: pathname === "/team" ? "#fff" : "#0f0f0f" }}
@@ -116,7 +117,7 @@ const SidebarMenu = () => {
               disablePadding
               className={pathname === "/trash" ? "active-menu-item" : ""}
             >
-              <ListItemButton>
+              <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
                   <DeleteOutlineIcon
                     sx={{ color: pathname === "/trash" ? "#fff" : "#0f0f0f" }}

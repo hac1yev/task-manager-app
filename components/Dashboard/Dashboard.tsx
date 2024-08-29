@@ -61,7 +61,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
-        width: theme.spacing(7),
+        width: theme.spacing(9),
         [theme.breakpoints.up('sm')]: {
           width: theme.spacing(9),
         },
@@ -142,8 +142,8 @@ export default function Dashboard({ children }: DashboardProps) {
         <AppBar position="absolute" open={open}>
         <Toolbar
             sx={{
-              p: 0,
-              pr: 2,
+              p: 1,
+              px: "24px",
               minHeight: '65px',
             }}
           >
@@ -155,9 +155,9 @@ export default function Dashboard({ children }: DashboardProps) {
               sx={{
                 flexGrow: 1,
                 display: "flex",
-                px: 3,
+                pl: "3px",
                 alignItems: "center",
-                pr: matches ? 3 : 0,
+                
             }}
             >
               <IconButton
@@ -207,7 +207,7 @@ export default function Dashboard({ children }: DashboardProps) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              px: [1],
+              p: [1],
             }}
           >
             <Link href="/" style={{ textDecoration: 'none', gap: '5px' }} className='flex-center'>

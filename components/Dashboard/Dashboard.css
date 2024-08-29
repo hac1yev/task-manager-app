@@ -1,13 +1,25 @@
+.menu-item-button {
+    border-radius: 5px;
+    display: flex;
+    gap: 6px;
+}
+
 .active-menu-item {
     background-color: #1851DF;
-    border-radius: 10px;
+    border-radius: 5px;
     color: #fff;
 }
 
+
 @media (min-width: 0px) {
     @media (orientation: landscape) {
-        .css-i3yesn-MuiToolbar-root {
-            min-height: 64px!important;
+        .css-i3yesn-MuiToolbar-root,
+        .css-95f9g5-MuiToolbar-root,
+        .css-1s52gio-MuiToolbar-root {
+            min-height: 65px!important;
         }
     }
+}
+.css-95f9g5-MuiToolbar-root {
+    min-height: 65px!important;
 }
