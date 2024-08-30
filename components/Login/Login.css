@@ -1,0 +1,14 @@
+.login-round {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgb(4,1,42);
+    background: linear-gradient(90deg, rgba(4,1,42,0.8688725490196079) 0%, rgba(157,34,193,1) 57%, rgba(230,230,230,1) 100%);
+}
+
+.login-manage {
+    color: #777;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 2px 10px;
+}
