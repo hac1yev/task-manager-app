@@ -70,7 +70,7 @@ export default function PageViewsBarChart() {
               stack: 'A',
             },
           ]}
-          height={300}
+          height={360}
           margin={{ left: 50, right: 0, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
           slotProps={{

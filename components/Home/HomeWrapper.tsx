@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Grid2 } from "@mui/material";
+import { Box } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import FindReplaceOutlinedIcon from '@mui/icons-material/FindReplaceOutlined';
@@ -8,6 +9,8 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import StatCard from "./StatCard";
 import './Home.css';
 import PageViewsBarChart from "./PageViewsBarChart";
+import CustomizedDataGrid from "./CustomizedDataGrid";
+import Users from "./Users";
 
 const data: StatCardProps[] = [
   {
@@ -43,26 +46,39 @@ const data: StatCardProps[] = [
 const HomeWrapper = () => {
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
-      <Grid2
+      <Grid
         container
         spacing={1}
         columns={12}
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid2 key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
             <StatCard 
                 logo_img={card.logo_img} 
                 count={card.count} 
                 title={card.title} 
                 palette={card.palette}
             />
-          </Grid2>
+          </Grid>
         ))}
-      </Grid2>
-      <Grid2 size={{ sm: 12, md: 6 }}>
-        <PageViewsBarChart />
-      </Grid2>
+      </Grid>
+      <Grid
+        container
+        spacing={1}
+        columns={12}
+        sx={{ mb: (theme) => theme.spacing(2) }}
+      >
+        <Grid size={12} sx={{ mb: (theme) => theme.spacing(2) }}>
+          <PageViewsBarChart />
+        </Grid>
+        <Grid size={{ sm: 7 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+          <CustomizedDataGrid />
+        </Grid>
+        <Grid size={{ sm: 5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+          <Users />
+        </Grid>
+      </Grid>
     </Box>
   );
 };
