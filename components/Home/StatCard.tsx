@@ -25,10 +25,9 @@ const StatCard = ({ logo_img, title, count, palette }: Partial<StatCardProps>) =
           </Stack>
         </Stack>
       </CardContent>
-      <CardMedia component={"div"} sx={{ bgcolor: palette }} className="stat-card-logo">
+      <CardMedia component={"div"} sx={{ bgcolor: palette }} className="stat-card-logo flex-center">
         {logo_img}
       </CardMedia>
-
     </Card>
   )
 }
