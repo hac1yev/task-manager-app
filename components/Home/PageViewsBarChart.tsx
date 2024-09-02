@@ -10,7 +10,7 @@ export default function PageViewsBarChart() {
   const colorPalette = [
     theme.palette.primary.dark,
     theme.palette.primary.main,
-    theme.palette.primary.light,
+    theme.palette.primary.light, 
   ];
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
