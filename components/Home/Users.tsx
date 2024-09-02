@@ -20,6 +20,8 @@ const rows = [
 ];
 
 export default function Users() {
+  const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'];
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="custom pagination table">
@@ -34,7 +36,7 @@ export default function Users() {
           {rows.map((row,i) => (
             <TableRow key={i}>
               <TableCell component="th" scope="row" className='flex-start' sx={{ display: 'flex', gap: 1 }}>
-                <Avatar sx={{ bgcolor: '#6D36D4' }}>
+                <Avatar sx={{ bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}>
                   {row.fullName.split(" ").map(item => item[0].toLocaleUpperCase()).join("")}
                 </Avatar>
                 {row.fullName}
