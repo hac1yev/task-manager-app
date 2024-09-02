@@ -11,7 +11,6 @@ import './Home.css';
 import PageViewsBarChart from "./PageViewsBarChart";
 import CustomizedDataGrid from "./CustomizedDataGrid";
 import Users from "./Users";
-import useRefreshToken from "@/hooks/useRefreshToken";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 const data: StatCardProps[] = [
