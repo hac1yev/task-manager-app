@@ -15,6 +15,8 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { TableHead } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -87,19 +89,20 @@ function createData(title: string, priority: string, team: string, created_at: s
 };
 
 const rows = [
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Normal', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
 ];
 
 export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'] 
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -125,7 +128,7 @@ export default function CustomPaginationActionsTable() {
         <TableHead>
           <TableRow>
             <TableCell><b>Task Title</b></TableCell>
-            <TableCell align="right"><b>Priority</b></TableCell>
+            <TableCell align="left" sx={{ width: '110px' }}><b>Priority</b></TableCell>
             <TableCell align="right"><b>Team</b></TableCell>
             <TableCell align="right"><b>Created At</b></TableCell>
           </TableRow>
@@ -136,16 +139,23 @@ export default function CustomPaginationActionsTable() {
             : rows
           ).map((row,i) => (
             <TableRow key={i}>
-              <TableCell component="th" scope="row">
-                {row.title}
+              <TableCell>
+                <Box className='flex-start' sx={{ gap: 1 }}>
+                  <Box sx={{ width: '15px', height: '15px', borderRadius: '50%', marginTop: '-2px', bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}></Box>
+                  {row.title}
+                </Box>
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.priority}
+              <TableCell style={{ width: 110 }}  align="right">
+                <Box className='flex-start'>
+                  {row.priority === 'Medium' && <KeyboardArrowUpIcon sx={{ color: '#CC8907' }} />}
+                  {row.priority === 'High' && <KeyboardDoubleArrowUpIcon sx={{ color: '#E13722' }} />}
+                  {row.priority}
+                </Box>
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell style={{ width: 130 }} align="right">
                 {row.team}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell style={{ width: 130 }} align="right">
                 {row.created_at}
               </TableCell>
             </TableRow>
@@ -159,7 +169,7 @@ export default function CustomPaginationActionsTable() {
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              rowsPerPageOptions={[8, 10, 25, { label: 'All', value: -1 }]}
               colSpan={4}
               count={rows.length}
               rowsPerPage={rowsPerPage}

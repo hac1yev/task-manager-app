@@ -11,6 +11,8 @@ import './Home.css';
 import PageViewsBarChart from "./PageViewsBarChart";
 import CustomizedDataGrid from "./CustomizedDataGrid";
 import Users from "./Users";
+import useRefreshToken from "@/hooks/useRefreshToken";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 const data: StatCardProps[] = [
   {
@@ -44,6 +46,17 @@ const data: StatCardProps[] = [
 ];
 
 const HomeWrapper = () => {
+  const axiosPrivate = useAxiosPrivate();
+  
+  const handleS = async () => {
+    try {
+      const response = await axiosPrivate.get("/api/tasks");
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
       <Grid
@@ -53,7 +66,7 @@ const HomeWrapper = () => {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }} onClick={handleS}>
             <StatCard 
                 logo_img={card.logo_img} 
                 count={card.count} 
@@ -72,10 +85,10 @@ const HomeWrapper = () => {
         <Grid size={12} sx={{ mb: (theme) => theme.spacing(2) }}>
           <PageViewsBarChart />
         </Grid>
-        <Grid size={{ sm: 7 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+        <Grid size={{ sm: 7.5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
           <CustomizedDataGrid />
         </Grid>
-        <Grid size={{ sm: 5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+        <Grid size={{ sm: 4.5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
           <Users />
         </Grid>
       </Grid>

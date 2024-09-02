@@ -25,22 +25,28 @@ export async function POST(req: NextRequest) {
     const refreshSecretKey = new TextEncoder().encode(process.env.REFRESH_SECRET_KEY);
 
     const accessToken = await new SignJWT({ 
-        email 
+        email,
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user' 
     })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30s')
+    .setExpirationTime('10s')
     .sign(jwtSecretKey);
 
     const refreshToken = await new SignJWT({ 
-        email 
+        email,
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user' 
     })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('30d')
     .sign(refreshSecretKey);
                                                                         
-    const response = NextResponse.json({ message: "Login successfully!", accessToken }, { status: 200 });
+    const response = NextResponse.json({ 
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user', 
+        message: "Login successfully!", 
+        accessToken, 
+    }, { status: 200 });
 
     response.cookies.set({
         name: 'refreshToken',

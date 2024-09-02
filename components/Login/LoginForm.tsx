@@ -52,16 +52,23 @@ const LoginForm = () => {
     try {
         const response = await axios.post("/api/login", JSON.stringify(userInfo), {
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             }
         });
         
-        localStorage.setItem("accessToken", response.data.accessToken);
-        
+        const user_data: {
+          accessToken: string;
+          role: string;
+        } = {
+          accessToken: response.data.accessToken,
+          role: response.data.role
+        };
+
+        localStorage.setItem("userInfo", JSON.stringify(user_data));
+
         if(response.status === 200) {
           navigate.push('/');
         }
-
         
     } catch (error) {
         console.log(error);
