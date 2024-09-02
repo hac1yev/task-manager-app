@@ -140,7 +140,7 @@ export default function CustomPaginationActionsTable() {
             <TableRow key={i}>
               <TableCell>
                 <Box className='flex-start' sx={{ gap: 1 }}>
-                  <Box sx={{ width: '15px', height: '15px', borderRadius: '50%', marginTop: '-2px', bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}></Box>
+                  <Box sx={{ width: '15px', height: '15px', flexShrink: 0, borderRadius: '50%', marginTop: '-2px', bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}></Box>
                   {row.title}
                 </Box>
               </TableCell>
