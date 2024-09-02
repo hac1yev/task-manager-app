@@ -14,7 +14,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { TableHead } from '@mui/material';
+import { Avatar, Stack, TableHead } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
@@ -104,7 +104,6 @@ export default function CustomPaginationActionsTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'] 
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -129,8 +128,8 @@ export default function CustomPaginationActionsTable() {
           <TableRow>
             <TableCell><b>Task Title</b></TableCell>
             <TableCell align="left" sx={{ width: '110px' }}><b>Priority</b></TableCell>
-            <TableCell align="right"><b>Team</b></TableCell>
-            <TableCell align="right"><b>Created At</b></TableCell>
+            <TableCell align="left"><b>Team</b></TableCell>
+            <TableCell align="left"><b>Created At</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -152,10 +151,14 @@ export default function CustomPaginationActionsTable() {
                   {row.priority}
                 </Box>
               </TableCell>
-              <TableCell style={{ width: 130 }} align="right">
-                {row.team}
+              <TableCell style={{ width: 130 }} align="left">
+                <Stack direction="row" className='flex-start'>
+                  <Avatar sx={{ width: '25px', height: '25px', fontSize: '14px' }}>H</Avatar>
+                  <Avatar sx={{ bgcolor: '#D83121', width: '25px', height: '25px', fontSize: '14px' }}>N</Avatar>
+                  <Avatar sx={{ bgcolor: '#1A65E9', width: '25px', height: '25px', fontSize: '14px' }}>OP</Avatar>
+                </Stack>
               </TableCell>
-              <TableCell style={{ width: 130 }} align="right">
+              <TableCell style={{ width: 130 }} align="left">
                 {row.created_at}
               </TableCell>
             </TableRow>

@@ -12,6 +12,7 @@ export default function PageViewsBarChart() {
     theme.palette.primary.main,
     theme.palette.primary.light, 
   ];
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
@@ -26,31 +27,27 @@ export default function PageViewsBarChart() {
               {
                 scaleType: 'band',
                 categoryGapRatio: 0.5,
-                data: ['High', 'Medium', 'Low'],
+                data: ['High', 'Medium', 'Normal'],
               },
             ] as any
           }
-          series={[
+          yAxis={[
             {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998],
-              stack: 'A',
-            },
-            {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129],
-              stack: 'A',
+              scaleType: 'linear', 
+              max: 8, 
+              min: 0, 
             },
           ]}
-          height={360}
+          series={[
+            {
+              id: 'task',
+              label: 'Task',
+              data: [3,4,1],
+              stack: 'A',
+            },
+            
+          ]}
+          height={380}
           margin={{ left: 50, right: 0, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
           slotProps={{

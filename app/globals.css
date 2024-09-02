@@ -18,6 +18,12 @@
   justify-content: flex-start;
 }
 
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .flex-between {
   display: flex;
   align-items: center;
