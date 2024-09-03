@@ -68,6 +68,7 @@ const LoginForm = () => {
 
         if(response.status === 200) {
           navigate.push('/');
+          window.location.reload();        
         }
         
     } catch (error) {
