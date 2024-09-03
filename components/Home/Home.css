@@ -6,7 +6,3 @@
     border-radius: 30px;
     flex-shrink: 0;
 }
-
-.users-table .MuiTableCell-root {
-    padding: 12px!important;
-}

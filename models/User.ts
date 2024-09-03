@@ -1,17 +1,35 @@
 import { model, models, Schema } from "mongoose";
 
 const UserSchema = new Schema({
-    email: {
+    fullName: {
         type: String,
         required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    isAdmin: {
-        type: Boolean,
-        default: false
+    role: {
+        type: String,
+        required: true,
+    },
+    status: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     }
 });
 

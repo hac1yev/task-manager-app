@@ -1,10 +1,10 @@
 "use client";
 
 import { configureStore } from "@reduxjs/toolkit";
-import { authSlice } from "./auth-slice";
+import { teamSlice } from "./team-slice";
 
 export const store = configureStore({
     reducer: {
-        authReducer: authSlice.reducer,
+        teamReducer: teamSlice.reducer,
     },
 });

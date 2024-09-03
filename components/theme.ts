@@ -29,7 +29,7 @@ const theme = createTheme({
     },
     h2: {
       fontSize: '42px',
-      color: '#B8926A',
+      color: '#2D2D2B',
       fontWeight: '700',
       lineHeight: '44px',
       '@media (max-width:900px)': {
@@ -73,7 +73,7 @@ const theme = createTheme({
       fontSize: '18px',
       fontWeight: '600',
       lineHeight: '28px',
-      color: '#B8926A',
+      color: '#2D2D2B',
       '@media (max-width:900px)': {
         fontSize: '16px',
         lineHeight: '18px',

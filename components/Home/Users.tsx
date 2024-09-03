@@ -6,20 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Avatar, Box, TableHead } from '@mui/material';
-
-function createData(fullName: string, status: string, created_at: string) {
-  return { fullName, status, created_at };
-};
-
-const rows = [
-  createData('Ilkin Haciyev', 'Avtive', '2 hours ago'),
-  createData('Fariz Memmedov', 'Deactive', '2 hours ago'),
-  createData('Elvin Cabbarli', 'Deactive', '2 hours ago'),
-  createData('Ferid Emioglu', 'Avtive', '2 hours ago'),
-  createData('Dasdas asdasfds', 'Deactive', '2 hours ago'),
-];
+import { useTypedSelector } from '@/store/team-slice';
+import moment from 'moment';
 
 export default function Users() {
+  const users = useTypedSelector((state) => state.teamReducer.users);
   const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'];
 
   return (
@@ -28,24 +19,26 @@ export default function Users() {
         <TableHead>
           <TableRow>
             <TableCell><b>Full Name</b></TableCell>
-            <TableCell align="center"><b>Status</b></TableCell>
-            <TableCell align="right"><b>Created At</b></TableCell>
+            <TableCell align="left"><b>Status</b></TableCell>
+            <TableCell align="left"><b>Created At</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody className='users-table'>
-          {rows.map((row,i) => (
-            <TableRow key={i}>
-              <TableCell component="th" scope="row" className='flex-start' sx={{ display: 'flex', gap: 1 }}>
-                <Avatar sx={{ bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}>
-                  {row.fullName.split(" ").map(item => item[0].toLocaleUpperCase()).join("")}
-                </Avatar>
-                {row.fullName}
+          {users.map((user) => (
+            <TableRow key={user._id}>
+              <TableCell component="th" scope="row" >
+                <Box className='flex-start' sx={{ display: 'flex', gap: 1 }}>
+                  <Avatar sx={{ bgcolor: randomTitleRound[Math.floor(Math.random() * randomTitleRound.length)] }}>
+                    {user.fullName.split(" ").map(u => u[0].toLocaleUpperCase()).join("")}
+                  </Avatar>
+                  {user.fullName}
+                </Box>
               </TableCell>
-              <TableCell style={{ width: 80 }} align="right">
-                <Box sx={{ bgcolor: '#BBDAFC', p: '3px 8px', borderRadius: '20px' }} className="flex-center">{row.status}</Box>
+              <TableCell sx={{ width: 80 }} align="left">
+                <Box sx={{ bgcolor: '#BBDAFC', p: '3px 8px', borderRadius: '20px' }} className="flex-center">{user.status}</Box>
               </TableCell>
-              <TableCell style={{ width: 120 }} align="right">
-                {row.created_at}
+              <TableCell sx={{ width: 152 }} align="left">
+                {moment(user.created_at).fromNow()}
               </TableCell>
             </TableRow>
           ))}

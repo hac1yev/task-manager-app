@@ -10,9 +10,10 @@ export async function middleware(request: NextRequest) {
     const { url,nextUrl,cookies } = request;
     const refreshToken = cookies.get("refreshToken")?.value || "";
 
+    const notAuthPage = ['/','/team'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
-    if(nextUrl.pathname === '/') {
+    if(notAuthPage.includes(nextUrl.pathname)) {
         if(isValidRefreshToken) {
             return NextResponse.next();
         }else{
@@ -32,5 +33,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login'],
+  matcher: ['/', '/login', '/team'],
 };

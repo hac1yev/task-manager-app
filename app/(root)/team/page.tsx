@@ -1,9 +1,9 @@
-import React from 'react'
+import TeamWrapper from "@/components/Team/TeamWrapper";
 
 const Team = () => {
   return (
-    <div>Team</div>
-  )
-}
+    <TeamWrapper />
+  );
+};
 
-export default Team
+export default Team;

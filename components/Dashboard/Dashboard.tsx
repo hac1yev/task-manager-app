@@ -18,6 +18,8 @@ import Link from 'next/link';
 import './Dashboard.css';
 import Image from 'next/image';
 import SidebarMenu from './SidebarMenu/SidebarMenu';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 const drawerWidth: number = 300;
 
@@ -136,6 +138,7 @@ export default function Dashboard({ children }: DashboardProps) {
   };
 
   return (
+    <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -253,5 +256,6 @@ export default function Dashboard({ children }: DashboardProps) {
         </Box>
       </Box>
     </ThemeProvider>
+    </Provider>
   );
 }

@@ -12,6 +12,9 @@ import PageViewsBarChart from "./PageViewsBarChart";
 import CustomizedDataGrid from "./CustomizedDataGrid";
 import Users from "./Users";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import TeamApiCall from "../HOC/TeamApiCall";
+
+const HOCTeamComponent = TeamApiCall(Users);
 
 const data: StatCardProps[] = [
   {
@@ -84,11 +87,11 @@ const HomeWrapper = () => {
         <Grid size={12} sx={{ mb: (theme) => theme.spacing(2) }}>
           <PageViewsBarChart />
         </Grid>
-        <Grid size={{ sm: 7.5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+        <Grid size={{ lg: 7.3, md: 12, sm: 12, xs: 12 }} sx={{ mb: (theme) => theme.spacing(2) }}>
           <CustomizedDataGrid />
         </Grid>
-        <Grid size={{ sm: 4.5 }} sx={{ mb: (theme) => theme.spacing(2) }}>
-          <Users />
+        <Grid size={{ lg: 4.7, md: 12, sm: 12, xs: 12 }} sx={{ mb: (theme) => theme.spacing(2) }}>
+          <HOCTeamComponent />
         </Grid>
       </Grid>
     </Box>
