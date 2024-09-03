@@ -81,7 +81,13 @@ export default function Users() {
                       <ListItem sx={{ alignItems: 'center' }}>
                         <ListItemAvatar>
                           <Avatar 
-                            sx={{ bgcolor: userColors.get(user._id) }}
+                            sx={{ 
+                              bgcolor: userColors.get(user._id), 
+                              fontSize: '26px', 
+                              height: '60px', 
+                              width: '60px', 
+                              mr: 2
+                            }}
                             alt="Remy Sharp"
                           >
                             {user.fullName.split(" ").map(u => u[0].toLocaleUpperCase()).join("")}
