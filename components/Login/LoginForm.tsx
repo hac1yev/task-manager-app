@@ -47,7 +47,7 @@ const LoginForm = () => {
     const userInfo = {
         email: data.get("email"),
         password: data.get("password"),
-    };
+    };    
 
     try {
         const response = await axios.post("/api/login", JSON.stringify(userInfo), {
