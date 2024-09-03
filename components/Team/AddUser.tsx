@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import uniqid from 'uniqid';
 
-const style = {
+export const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",

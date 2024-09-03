@@ -4,15 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 interface TeamState {
-    users: Array<{ 
-        created_at: string 
-        _id: string; 
-        fullName: string; 
-        email: string; 
-        role: string; 
-        title: string; 
-        status: string, 
-    }>;
+    users: Array<UserType>;
 }
 
 const initialTeamState: TeamState = {
@@ -28,6 +20,17 @@ export const teamSlice = createSlice({
         },
         addUser(state,action) {
             state.users = [...state.users, action.payload];
+        },
+        deleteUser(state,action) {
+            state.users = state.users.filter((user) => user._id !== action.payload);
+        },
+        editUser(state,action) {
+            const index = state.users.findIndex((user) => user._id === action.payload._id);
+
+            state.users[index] = {
+                ...state.users[index],
+                ...action.payload 
+            }
         }
     }
 });

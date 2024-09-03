@@ -9,3 +9,13 @@ declare type StatCardProps = {
     logo_img: React.ReactNode;
     palette: string;
 };
+
+declare type UserType = {
+    created_at: string 
+    _id: string; 
+    fullName: string; 
+    email: string; 
+    role: string; 
+    title: string; 
+    status: string, 
+};
