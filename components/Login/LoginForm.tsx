@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  styled,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, FormControl, FormLabel, styled, TextField, Typography } from "@mui/material";
 import MuiCard from "@mui/material/Card";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -38,7 +29,6 @@ const LoginForm = () => {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const navigate = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,7 +57,6 @@ const LoginForm = () => {
         localStorage.setItem("userInfo", JSON.stringify(user_data));
 
         if(response.status === 200) {
-          navigate.push('/');
           window.location.reload();        
         }
         
