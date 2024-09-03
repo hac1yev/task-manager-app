@@ -37,6 +37,12 @@
   justify-content: center;
 }
 
+.flex-column-start {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
 .flex-column-between {
   display: flex;
   flex-direction: column;

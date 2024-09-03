@@ -60,7 +60,6 @@ const theme = createTheme({
     },
     h5: {
         fontSize: '22px',
-        textAlign: 'center',
         fontWeight: '600',
         lineHeight: '32px',
         color: '#2D2D2B',

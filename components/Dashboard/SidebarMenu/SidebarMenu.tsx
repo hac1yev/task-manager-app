@@ -3,18 +3,17 @@
 import { Box,List,ListItem,ListItemButton,ListItemIcon,ListItemText, useMediaQuery } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import GridViewIcon from "@mui/icons-material/GridView";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import LoopIcon from "@mui/icons-material/Loop";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import SettingsIcon from "@mui/icons-material/Settings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
-  const matches = useMediaQuery("(min-width:769px)");
 
   return (
     <>
@@ -42,7 +41,7 @@ const SidebarMenu = () => {
             >
               <ListItemButton className="menu-item-button">
                 <ListItemIcon sx={{ minWidth: "40px" }}>
-                  <FormatListBulletedIcon
+                  <AssignmentOutlinedIcon
                     sx={{ color: pathname === "/tasks" ? "#fff" : "#0f0f0f" }}
                   />
                 </ListItemIcon>
