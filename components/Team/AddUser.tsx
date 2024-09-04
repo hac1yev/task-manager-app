@@ -6,18 +6,7 @@ import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import uniqid from 'uniqid';
-
-export const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: 500,
-  width: "100%",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 
 const AddUser = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +27,7 @@ const AddUser = () => {
         fullName: formData.get("fullName"),
         title: formData.get("title"),
         email: formData.get("email"),
-        password: 'user1234',
+        password: `${formData.get("role")}1234`,
         role: formData.get("role"),
         status: 'Active',
         created_at: new Date().toISOString()
@@ -71,7 +60,7 @@ const AddUser = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={addUserStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             ADD NEW USER
           </Typography>
@@ -146,7 +135,6 @@ const AddUser = () => {
                 onChange={(e) => setRole(e.target.value)}
                 placeholder="Role"
               >
-                <MenuItem value={"Admin"}>Admin</MenuItem>
                 <MenuItem value={"User"}>User</MenuItem>
                 <MenuItem value={"Editor"}>Editor</MenuItem>
               </Select>

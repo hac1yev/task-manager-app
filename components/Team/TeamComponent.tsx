@@ -7,15 +7,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import AddUser, { style } from "./AddUser";
+import { Avatar, Box, Button, FormControl, FormLabel, LinearProgress, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import AddUser from "./AddUser";
 import { teamSliceAction, useTypedSelector } from "@/store/team-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 
 const TeamComponent = () => {
   const users = useTypedSelector((state) => state.teamReducer.users);
+  const [isLoading,setIsLoading] = useState(true);
   const axiosPrivate = useAxiosPrivate();
   const [open, setOpen] = useState("");
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
@@ -66,6 +68,10 @@ const TeamComponent = () => {
 
     setOpen("");
   };
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
@@ -149,7 +155,7 @@ const TeamComponent = () => {
                       aria-labelledby="edit-modal"
                       aria-describedby="edit-modal-description"
                     >
-                      <Box sx={style}>
+                      <Box sx={addUserStyle}>
                         <Typography id="edit-modal" variant="h6" component="h2">
                           UPDATE USER
                         </Typography>
@@ -264,7 +270,6 @@ const TeamComponent = () => {
                               }}
                               placeholder="Role"
                             >
-                              <MenuItem value={"Admin"}>Admin</MenuItem>
                               <MenuItem value={"User"}>User</MenuItem>
                               <MenuItem value={"Editor"}>Editor</MenuItem>
                             </Select>
@@ -296,6 +301,17 @@ const TeamComponent = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {users.length === 0 && isLoading && (
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+        </Box>
+      )}
+
+      {users.length === 0 && !isLoading && (
+        <Typography className="flex-center" variant='h6' sx={{ mt: 1 }}>
+          There is no user!
+        </Typography>
+      )}
     </Box>
   );
 };

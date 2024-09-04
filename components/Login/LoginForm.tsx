@@ -1,34 +1,17 @@
 "use client";
 
-import { Box, Button, FormControl, FormLabel, styled, TextField, Typography } from "@mui/material";
-import MuiCard from "@mui/material/Card";
+import { Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import Link from "next/link";
-import React from "react";
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignSelf: "center",
-  width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-  [theme.breakpoints.up("sm")]: {
-    width: "450px",
-  },
-  ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
-  }),
-}));
+import React, { useState } from "react";
+import { Card } from "../MaterialSnippets/MaterialSnippets";
 
 const LoginForm = () => {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [isProcessing,setIsProcessing] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,6 +22,7 @@ const LoginForm = () => {
         password: data.get("password"),
     };    
 
+    setIsProcessing(true);
     try {
         const response = await axios.post("/api/login", JSON.stringify(userInfo), {
             headers: {
@@ -63,7 +47,7 @@ const LoginForm = () => {
     } catch (error) {
         console.log(error);
     }
-
+    setIsProcessing(false);
   };
 
   const validateInputs = () => {
@@ -154,8 +138,9 @@ const LoginForm = () => {
           fullWidth
           variant="contained"
           onClick={validateInputs}
+          disabled={isProcessing}
         >
-          Sign in
+          {isProcessing ? 'Processing...' : 'Submit'}
         </Button>
       </Box>
     </Card>

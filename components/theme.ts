@@ -41,7 +41,7 @@ const theme = createTheme({
       fontSize: '32px',
       color: '#2D2D2B',
       fontWeight: '700',
-      lineHeight: '44px',
+      lineHeight: '34px',
       '@media (max-width:900px)': {
         fontSize: '28px',
         lineHeight: '34px',
@@ -51,7 +51,7 @@ const theme = createTheme({
       fontSize: '26px',
       textAlign: 'center',
       fontWeight: '600',
-      lineHeight: '32px',
+      lineHeight: '30px',
       color: '#2D2D2B',
       '@media (max-width:900px)': {
         fontSize: '24px',
@@ -61,7 +61,7 @@ const theme = createTheme({
     h5: {
         fontSize: '22px',
         fontWeight: '600',
-        lineHeight: '32px',
+        lineHeight: '28px',
         color: '#2D2D2B',
         '@media (max-width:900px)': {
           fontSize: '24px',
@@ -71,7 +71,7 @@ const theme = createTheme({
     h6: {
       fontSize: '18px',
       fontWeight: '600',
-      lineHeight: '28px',
+      lineHeight: '24px',
       color: '#2D2D2B',
       '@media (max-width:900px)': {
         fontSize: '16px',
@@ -92,7 +92,7 @@ const theme = createTheme({
       fontSize: '20px',
       fontWeight: '500',
       lineHeight: '28px',
-      color: '#6D6D6B',
+      color: '#2D2D2B',
       '@media (max-width:900px)': {
         fontSize: '16px',
         lineHeight: '22px',
