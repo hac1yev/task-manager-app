@@ -6,6 +6,7 @@ import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const CompletedList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
   const colors = ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
@@ -37,7 +38,12 @@ const CompletedList = ({ title, priority_level, users, subtask, created_at }: Pa
                 HIGH PRIORITY
               </>
             )}
-            {priority_level === "LOW" && <>LOW PRIORITY</>}
+            {priority_level === "LOW" && (
+                <>
+                  <KeyboardArrowDownIcon />
+                  LOW PRIORITY
+                </>
+            )}
           </Box>
           <IconButton>
             <MoreHorizOutlinedIcon />

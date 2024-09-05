@@ -5,6 +5,7 @@ import { Avatar, Box, Button, Divider, IconButton, Stack, Typography } from "@mu
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
@@ -37,7 +38,12 @@ const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial
                 HIGH PRIORITY
               </>
             )}
-            {priority_level === "LOW" && <>LOW PRIORITY</>}
+            {priority_level === "LOW" && (
+                <>
+                  <KeyboardArrowDownIcon />
+                  LOW PRIORITY
+                </>
+            )}
           </Box>
           <IconButton>
             <MoreHorizOutlinedIcon />
