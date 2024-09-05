@@ -54,7 +54,7 @@ const Tasks = () => {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid container size={{ xs: 12, sm: 12, md: 4 }} className="flex-column-start">
+                <Grid container size={{ display: 'flex', xs: 12, sm: 12, md: 4 }} className="flex-column-start">
                     <Grid size={12}>
                         <Item className="flex-between" sx={{ mb: 2 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -87,7 +87,7 @@ const Tasks = () => {
                         ))}
                     </Grid>
                 </Grid>
-                <Grid container size={{ xs: 12, sm: 12, md: 4 }} className="flex-column-start">
+                <Grid container size={{ display: 'flex', xs: 12, sm: 12, md: 4 }} className="flex-column-start">
                     <Grid size={12}>
                         <Item className="flex-between" sx={{ mb: 2 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -120,7 +120,7 @@ const Tasks = () => {
                         ))}   
                     </Grid>
                 </Grid>
-                <Grid container size={{ xs: 12, sm: 12, md: 4 }} className="flex-column-start">
+                <Grid container size={{ display: 'flex', xs: 12, sm: 12, md: 4 }} className="flex-column-start">
                     <Grid size={12}>
                         <Item className="flex-between" sx={{ mb: 2 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
