@@ -37,7 +37,7 @@ const InProgressList = ({ title, priority_level, users, subtask, created_at }: P
                 HIGH PRIORITY
               </>
             )}
-            {priority_level === "NORMAL" && <>NORMAL PRIORITY</>}
+            {priority_level === "LOW" && <>LOW PRIORITY</>}
           </Box>
           <IconButton>
             <MoreHorizOutlinedIcon />

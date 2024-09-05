@@ -232,7 +232,7 @@ const AddTask = () => {
                 }}
                 input={<OutlinedInput />}
               >
-                {['HIGH','MEDIUM','NORMAL'].map((name) => (
+                {['HIGH','MEDIUM','LOW'].map((name) => (
                   <MenuItem
                     key={name}
                     value={name}

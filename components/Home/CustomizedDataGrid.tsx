@@ -21,7 +21,7 @@ const rows = [
   createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'Normal', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Low', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),

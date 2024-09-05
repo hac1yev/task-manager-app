@@ -37,7 +37,7 @@ const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial
                 HIGH PRIORITY
               </>
             )}
-            {priority_level === "NORMAL" && <>NORMAL PRIORITY</>}
+            {priority_level === "LOW" && <>LOW PRIORITY</>}
           </Box>
           <IconButton>
             <MoreHorizOutlinedIcon />

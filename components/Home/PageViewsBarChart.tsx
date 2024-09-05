@@ -27,7 +27,7 @@ export default function PageViewsBarChart() {
               {
                 scaleType: 'band',
                 categoryGapRatio: 0.5,
-                data: ['High', 'Medium', 'Normal'],
+                data: ['High', 'Medium', 'Low'],
               },
             ] as any
           }
