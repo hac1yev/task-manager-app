@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import { Avatar, Stack, TableHead } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TablePaginationActions } from '../MaterialSnippets/MaterialSnippets';
 
 function createData(title: string, priority: string, team: string, created_at: string) {
@@ -24,7 +25,7 @@ const rows = [
   createData('Dubmicate button', 'Low', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
-  createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
+  createData('Dubmicate button', 'Low', 'ilkin', '2 hours ago'),
   createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
 ];
 
@@ -77,6 +78,7 @@ export default function CustomPaginationActionsTable() {
                 <Box className='flex-start'>
                   {row.priority === 'Medium' && <KeyboardArrowUpIcon sx={{ color: '#CC8907' }} />}
                   {row.priority === 'High' && <KeyboardDoubleArrowUpIcon sx={{ color: '#E13722' }} />}
+                  {row.priority === 'Low' && <KeyboardArrowDownIcon sx={{ color: '#0C9046' }} />}
                   {row.priority}
                 </Box>
               </TableCell>
