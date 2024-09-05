@@ -1,9 +1,9 @@
-import React from 'react'
+import TasksWrapper from "@/components/Tasks/TasksWrapper";
 
 const Tasks = () => {
   return (
-    <div>Tasks</div>
-  )
-}
+    <TasksWrapper />
+  );
+};
 
-export default Tasks
+export default Tasks;

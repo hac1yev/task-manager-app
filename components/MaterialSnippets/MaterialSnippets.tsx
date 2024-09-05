@@ -1,6 +1,6 @@
 "use client";
 
-import { alpha, Box, InputBase, styled } from "@mui/material";
+import { alpha, Box, InputBase, Paper, styled } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import MuiCard from "@mui/material/Card";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -197,3 +197,14 @@ export const addUserStyle = {
   boxShadow: 24,
   p: 4,
 };
+
+
+export const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
