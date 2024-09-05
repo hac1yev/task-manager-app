@@ -19,3 +19,17 @@ declare type UserType = {
     title: string; 
     status: string, 
 };
+
+declare type TaskType = {
+    _id: string;
+    title: string;
+    users: string[];
+    stage: string;
+    priority_level: string;
+    created_at: string;
+    subtask: {
+        title: string;
+        created_at: string;
+        tag: string;
+    }[];
+};

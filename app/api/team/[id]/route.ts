@@ -1,3 +1,4 @@
+import { connectToDB } from "@/lib/connectToDB";
 import { verifyAccessToken } from "@/lib/verifyToken";
 import { User } from "@/models/User";
 import { NextResponse } from "next/server";
@@ -33,6 +34,8 @@ export async function POST(req: Request) {
     if(!isAccessTokenValid) {
         return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
     }    
+
+    await connectToDB();
 
     await User.updateOne({ _id: id }, { fullName, email, title, role });
 

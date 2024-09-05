@@ -38,7 +38,11 @@ export default function Users() {
   const open = Boolean(anchorEl);
 
   React.useEffect(() => {
-    setIsLoading(false);
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
+    return clearTimeout(timeout);
   }, []);
 
   return (

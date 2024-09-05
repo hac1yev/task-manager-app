@@ -1,3 +1,4 @@
+import { connectToDB } from "@/lib/connectToDB";
 import { hashPassword } from "@/lib/hashPassword";
 import { verifyAccessToken } from "@/lib/verifyToken";
 import { User } from "@/models/User";
@@ -16,6 +17,8 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await hashPassword(password);
+
+    await connectToDB();
 
     const user = new User({ fullName, email, password: hashedPassword, role, status, title });
 

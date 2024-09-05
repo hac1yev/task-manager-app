@@ -82,9 +82,9 @@ export default function CustomPaginationActionsTable() {
               </TableCell>
               <TableCell style={{ width: 130 }} align="left">
                 <Stack direction="row" className='flex-start'>
-                  <Avatar sx={{ bgcolor: '#1A65E9', width: '25px', height: '25px', fontSize: '14px' }}>H</Avatar>
-                  <Avatar sx={{ bgcolor: '#D83121', width: '25px', height: '25px', fontSize: '14px' }}>N</Avatar>
-                  <Avatar sx={{ bgcolor: '#D18805', width: '25px', height: '25px', fontSize: '14px' }}>OP</Avatar>
+                  <Avatar sx={{ bgcolor: '#1A65E9' }} className='task-avatar'>H</Avatar>
+                  <Avatar sx={{ bgcolor: '#D83121' }} className='task-avatar'>N</Avatar>
+                  <Avatar sx={{ bgcolor: '#D18805' }} className='task-avatar'>OP</Avatar>
                 </Stack>
               </TableCell>
               <TableCell style={{ width: 130 }} align="left">

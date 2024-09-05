@@ -1,26 +1,13 @@
 "use client";
 
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { teamSliceAction } from "@/store/team-slice";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  MenuItem,
-  Modal,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { useTypedSelector } from "@/store/team-slice";
+import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import uniqid from "uniqid";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
-import theme from "../theme";
+import { taskSliceActions } from "@/store/task-slice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,88 +20,80 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const AddTask = () => {
+  const users = useTypedSelector((state) => state.teamReducer.users);
+  const usersNames = users.map((user: Partial<UserType>) => {
+    return {
+      id: user._id,
+      name: user.fullName
+    }
+  }) as {
+    id: string;
+    name: string;
+  }[] || [];
+  const [taskValues,setTaskValues] = useState<Partial<TaskType>>({
+    title: "",
+    users: [],
+    stage: "",
+    created_at: new Date().toISOString().slice(0,10),
+    priority_level: ""
+  });
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleModalOpen = () => setOpen(true);
+  const handleModalClose = () => setOpen(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-
     const data = {
-      _id: uniqid(),
-      fullName: formData.get("fullName"),
-      title: formData.get("title"),
-      email: formData.get("email"),
-      password: `${formData.get("role")}1234`,
-      role: formData.get("role"),
-      status: "Active",
-      created_at: new Date().toISOString(),
+      title: taskValues.title,
+      users: taskValues.users,
+      stage: taskValues.stage,
+      created_at: taskValues.created_at,
+      priority_level: taskValues.priority_level 
     };
 
     try {
-      await axiosPrivate.post("/api/team", JSON.stringify(data), {
+      await axiosPrivate.post("/api/tasks", JSON.stringify(data), {
         headers: {
-          "Content-Type": "application/json",
-        },
+          'Content-Type': 'application/json'
+        }
       });
 
-      dispatch(teamSliceAction.addUser(data));
+      dispatch(taskSliceActions.addTask({
+        _id: uniqid(),
+        ...data,
+        subtask: []
+      }));
+
       setOpen(false);
+      setTaskValues({ title: "", users: [], stage: "", created_at: new Date().toISOString().slice(0,10), priority_level: "" });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [personName, setPersonName] = useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const { target: { value } } = event;
+    
+    setTaskValues((prev) => ({
+      ...prev,
+      users: typeof value === 'string' ? value.split(',') : value
+    }));
   };
 
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>
       <Typography variant="h4">Tasks</Typography>
-      <Button variant="contained" onClick={handleOpen}>
+      <Button variant="contained" onClick={handleModalOpen}>
         + Add Task
       </Button>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleModalClose}
         aria-labelledby="task-modal-title"
         aria-describedby="task-modal-description"
       >
@@ -142,35 +121,49 @@ const AddTask = () => {
                 name="title"
                 placeholder="Task Title"
                 autoComplete="title"
+                value={taskValues.title}
+                onChange={(e) => setTaskValues((prev) => {
+                  return {
+                    ...prev,
+                    title: e.target.value
+                  }
+                })}
                 autoFocus
                 required
                 fullWidth
                 variant="outlined"
-                sx={{ ariaLabel: "title" }}
               />
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="users">Assign Task To</FormLabel>
               <Select
-                id="users"
                 multiple
                 displayEmpty
-                value={personName}
+                value={taskValues.users}
                 onChange={handleChange}
                 input={<OutlinedInput />}
                 renderValue={(selected) => {
-                  return selected.join(", ");
+                  if (selected.length === 0) {
+                    return <em>Select User</em>;
+                  }
+                  const arr: string[] = [];
+                  usersNames.forEach((user) => {
+                    if(selected.includes(user.id)) {
+                      arr.push(user.name)
+                    }
+                  });
+                                
+                  return arr.join(', ');
                 }}
                 MenuProps={MenuProps}
-                inputProps={{ "aria-label": "Without label" }}
+                inputProps={{ 'aria-label': 'Without label' }}
               >
-                {names.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
-                    {name}
+                <MenuItem disabled value="">
+                  <em>Select User</em>
+                </MenuItem>
+                {usersNames.map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -181,15 +174,25 @@ const AddTask = () => {
                 <Select
                   id="stage"
                   displayEmpty
-                  value={personName}
-                  onChange={handleChange}
+                  value={taskValues.stage}
+                  onChange={(e) => {
+                    setTaskValues((prev) => {
+                      return {
+                        ...prev,
+                        stage: e.target.value
+                      }
+                    })
+                  }}
                   input={<OutlinedInput />}
                 >
-                  {names.map((name) => (
+                  {['TODO','IN PROGRESS','COMPLETED'].map((name) => (
                     <MenuItem
                       key={name}
                       value={name}
-                      style={getStyles(name, personName, theme)}
+                      sx={{
+                        display: 'flex',
+                        gap: '5px'
+                      }}
                     >
                       {name}
                     </MenuItem>
@@ -198,7 +201,19 @@ const AddTask = () => {
               </FormControl>
               <FormControl sx={{ width: "50%" }}>
                 <FormLabel htmlFor="task_date">Task Date</FormLabel>
-                <TextField type="date" id="task_date" />
+                <TextField 
+                  type="date" 
+                  id="task_date" 
+                  value={taskValues.created_at}
+                  onChange={(e) => {                    
+                    setTaskValues((prev) => {
+                      return {
+                        ...prev,
+                        created_at: e.target.value
+                      }
+                    })
+                  }}
+                />
               </FormControl>
             </Box>
             <FormControl>
@@ -206,15 +221,25 @@ const AddTask = () => {
               <Select
                 id="priority_level"
                 displayEmpty
-                value={personName}
-                onChange={handleChange}
+                value={taskValues.priority_level}
+                onChange={(e) => {
+                  setTaskValues((prev) => {
+                    return {
+                      ...prev,
+                      priority_level: e.target.value
+                    }
+                  })
+                }}
                 input={<OutlinedInput />}
               >
-                {names.map((name) => (
+                {['HIGH','MEDIUM','NORMAL'].map((name) => (
                   <MenuItem
                     key={name}
                     value={name}
-                    style={getStyles(name, personName, theme)}
+                    sx={{
+                      display: 'flex',
+                      gap: '5px'
+                    }}
                   >
                     {name}
                   </MenuItem>
@@ -226,7 +251,7 @@ const AddTask = () => {
                 type="submit"
                 size="large"
                 variant="outlined"
-                onClick={handleClose}
+                onClick={handleModalClose}
               >
                 Cancel
               </Button>
