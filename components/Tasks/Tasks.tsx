@@ -10,7 +10,7 @@ import InProgressList from "./InProgressList";
 import ToDoList from "./ToDoList";
 import CompletedList from "./CompletedList";
 import { useTypedSelector } from "@/store/team-slice";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const Tasks = () => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
@@ -20,32 +20,42 @@ const Tasks = () => {
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
     }); 
 
-    const modifiedTasks = tasks.map((task) => {
-        const { users } = task;
-        const userNames: string[] = [];
-
-        users?.forEach((user) => {
-            const findedUser = allUsers.find((u) => user === u._id);
-            if(findedUser?.fullName) {
-                userNames.push(findedUser?.fullName);
+    const modifiedTasks = useMemo(() => {
+        return tasks.map((task) => {
+            const { users } = task;
+            const userNames: string[] = [];
+    
+            users?.forEach((user) => {
+                const findedUser = allUsers.find((u) => user === u._id);
+                if(findedUser?.fullName) {
+                    userNames.push(findedUser?.fullName);
+                }
+            });
+            
+            return {
+                ...task,
+                users: [...userNames]
             }
         });
-        
-        return {
-            ...task,
-            users: [...userNames]
-        }
-    });
+    }, [allUsers,tasks]);
     
-    const todoTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'TODO') return task;
-    });
-    const inProgressTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'IN PROGRESS') return task;
-    });
-    const completedTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'COMPLETED') return task;
-    });
+    const todoTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'TODO') return task;
+        });
+    }, [modifiedTasks]);
+
+    const inProgressTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'IN PROGRESS') return task;
+        });
+    }, [modifiedTasks]);
+
+    const completedTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'COMPLETED') return task;
+        });
+    }, [modifiedTasks]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -112,7 +122,7 @@ const Tasks = () => {
             <Grid container spacing={2}>
                 <Grid container size={{ xs: 12, sm: 12, md: 4 }} sx={{ flexDirection: 'column' }} className="flex-column-start">
                     <Grid size={12}>
-                        <Item className="flex-between" sx={{ mb: 2 }}>
+                        <Item className="flex-between" sx={{ mb: 3 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 <Box 
                                     component={"span"} 
@@ -149,7 +159,7 @@ const Tasks = () => {
                 </Grid>
                 <Grid container size={{ xs: 12, sm: 12, md: 4 }} sx={{ flexDirection: 'column' }} className="flex-column-start">
                     <Grid size={12}>
-                        <Item className="flex-between" sx={{ mb: 2 }}>
+                        <Item className="flex-between" sx={{ mb: 3 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 <Box 
                                     component={"span"} 
@@ -186,7 +196,7 @@ const Tasks = () => {
                 </Grid>
                 <Grid container size={{ xs: 12, sm: 12, md: 4 }} sx={{ flexDirection: 'column' }} className="flex-column-start">
                     <Grid size={12}>
-                        <Item className="flex-between" sx={{ mb: 2 }}>
+                        <Item className="flex-between" sx={{ mb: 3 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 <Box 
                                     component={"span"} 

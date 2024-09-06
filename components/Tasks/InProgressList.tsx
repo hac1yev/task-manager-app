@@ -5,8 +5,10 @@ import { Avatar, Box, Button, Divider, IconButton, Stack, Typography } from "@mu
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 
 const InProgressList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
   const colors = ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
@@ -75,7 +77,14 @@ const InProgressList = ({ title, priority_level, users, subtask, created_at }: P
       </Box>
       <Divider sx={{ mt: 1 }} />
       <Box className="flex-between" sx={{ px: 0.5, py: 1 }}>
-        Users
+        <Stack sx={{ display: 'flex', gap: '10px', flexDirection: 'row', alignItems: 'center' }}>
+          <Box component='span' className="flex-center" sx={{ gap: '2px' }}>
+            <CommentOutlinedIcon sx={{ fontSize: '16px' }} /> 2
+          </Box>
+          <Box component='span' className="flex-center" sx={{ gap: '2px' }}>
+            <FormatListBulletedOutlinedIcon sx={{ fontSize: '16px' }} /> 0/{subtask?.length}
+          </Box>
+        </Stack>
         <Stack direction="row" className="flex-start">
           {users?.map((user, index) => (
             <Avatar sx={{ bgcolor: colors[index] }} key={user} className="task-avatar">
@@ -91,6 +100,7 @@ const InProgressList = ({ title, priority_level, users, subtask, created_at }: P
       </Box>
       <Divider sx={{ mb: 1 }} />
       <Box sx={{ mt: 3 }}>
+        {subtask?.length === 0 && <Typography sx={{ px: 1, mb: "5px" }}>No Sub-Task</Typography>}
         <Button variant="text" sx={{ color: "#6f6f6f" }}>
           <AddOutlinedIcon sx={{ fontSize: "20px" }} />
           <Typography sx={{ fontSize: "15px" }}>ADD SUBTASK</Typography>
