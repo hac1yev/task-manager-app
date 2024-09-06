@@ -108,7 +108,7 @@ export default function Users() {
                           <ListItemText
                             primary={<Typography variant="h5">{user.fullName}</Typography>}
                             secondary={
-                              <Box className="flex-column-start">
+                              <Box component={"span"} className="flex-column-start">
                                 <Typography
                                   component="span"
                                   variant="body2"

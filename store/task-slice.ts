@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 interface TaskState {
-    tasks: Partial<TaskType>[];
+    tasks: Partial<TaskSliceType>[];
 };
 
 const initialTaskState: TaskState = {

@@ -6,11 +6,9 @@ import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import { Item } from "../MaterialSnippets/MaterialSnippets";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
-import InProgressList from "./InProgressList";
-import ToDoList from "./ToDoList";
-import CompletedList from "./CompletedList";
 import { useTypedSelector } from "@/store/team-slice";
 import { useEffect, useMemo, useState } from "react";
+import TaskList from "./TaskList";
 
 const Tasks = () => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
@@ -18,27 +16,35 @@ const Tasks = () => {
     const [isLoading,setIsLoading] = useState(true);
     const [hideTasks,setHideTasks] = useState({
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
-    }); 
+    });     
 
     const modifiedTasks = useMemo(() => {
         return tasks.map((task) => {
             const { users } = task;
-            const userNames: string[] = [];
-    
+            const userNames: {
+                fullName: string;
+                title: string;
+                email: string;
+            }[] = [];            
+
             users?.forEach((user) => {
                 const findedUser = allUsers.find((u) => user === u._id);
-                if(findedUser?.fullName) {
-                    userNames.push(findedUser?.fullName);
+                if(findedUser) {
+                    userNames.push({
+                        fullName: findedUser?.fullName,
+                        title: findedUser.title,
+                        email: findedUser.email
+                    });
                 }
             });
             
             return {
                 ...task,
-                users: [...userNames]
+                users: userNames
             }
         });
     }, [allUsers,tasks]);
-    
+        
     const todoTasks = useMemo(() => {
         return modifiedTasks.filter(task => {
             if(task.stage === 'TODO') return task;
@@ -116,7 +122,7 @@ const Tasks = () => {
             }
         } 
     };
-
+    
     return (
         <>
             <Grid container spacing={2}>
@@ -145,7 +151,7 @@ const Tasks = () => {
                     {hideTasks.todo === 'TODO' && ( 
                         <Grid size={12}>
                             {todoTasks.map((task) => (
-                                <ToDoList  
+                                <TaskList  
                                     key={task._id}  
                                     title={task.title}
                                     priority_level={task.priority_level}
@@ -182,7 +188,7 @@ const Tasks = () => {
                     {hideTasks.inProgress === 'IN PROGRESS' && (
                         <Grid size={12}>
                             {inProgressTasks.map((task) => (
-                                <InProgressList  
+                                <TaskList  
                                     key={task._id}  
                                     title={task.title}
                                     priority_level={task.priority_level}
@@ -219,7 +225,7 @@ const Tasks = () => {
                     {hideTasks.completed === 'COMPLETED' && (
                         <Grid size={12}>
                             {completedTasks.map((task) => (
-                                <CompletedList 
+                                <TaskList 
                                     key={task._id}  
                                     title={task.title}
                                     priority_level={task.priority_level}

@@ -11,16 +11,34 @@ declare type StatCardProps = {
 };
 
 declare type UserType = {
-    created_at: string 
+    created_at: string; 
     _id: string; 
     fullName: string; 
     email: string; 
     role: string; 
     title: string; 
-    status: string, 
+    status: string; 
 };
 
 declare type TaskType = {
+    _id: string;
+    title: string;
+    users: {
+        fullName: string;
+        title: string;
+        email: string;
+    }[];
+    stage: string;
+    priority_level: string;
+    created_at: string;
+    subtask: {
+        title: string;
+        created_at: string;
+        tag: string;
+    }[];
+};
+
+declare type TaskSliceType = {
     _id: string;
     title: string;
     users: string[];
@@ -32,4 +50,11 @@ declare type TaskType = {
         created_at: string;
         tag: string;
     }[];
+};
+
+declare type CustomPopoverType = {
+    color: string;
+    userId: string;
+    anchorEl: HTMLElement | null;
+    handlePopoverClose: () => void
 };

@@ -9,9 +9,27 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import React, { useMemo } from "react";
+import CustomPopover from "../CustomPopover";
 
-const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
-  const colors = ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];  
+const TaskList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [userId,setUserId] = React.useState("");
+  const colors = useMemo(() => {
+    return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
+  }, []);
+
+  const handlePopoverOpen = (id: string, event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setUserId(id);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+    setUserId("");
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <Item sx={{ mb: 2 }}>
@@ -87,14 +105,32 @@ const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial
         </Stack>
         <Stack direction="row" className="flex-start">
           {users?.map((user, index) => (
-            <Avatar sx={{ bgcolor: colors[index] }} key={user} className="task-avatar">
-              {user.trim().includes(" ")
-                ? user
-                    .split(" ")
-                    .map((u) => u[0].toLocaleUpperCase())
-                    .join("")
-                : user[0]}
-            </Avatar>
+            <Box key={user.fullName} component="span">
+              <Avatar 
+                sx={{ bgcolor: colors[index] }} 
+                className="task-avatar"
+                aria-owns={open ? 'mouse-over-popover' : undefined}
+                onMouseLeave={handlePopoverClose} 
+                onMouseEnter={handlePopoverOpen.bind(null, user.fullName)}
+                aria-haspopup="true" 
+              >
+                {user.fullName.trim().includes(" ")
+                  ? user.fullName
+                      .split(" ")
+                      .map((u) => u[0].toLocaleUpperCase())
+                      .join("")
+                  : user.fullName[0]}
+              </Avatar>
+              <CustomPopover 
+                fullName={user.fullName}
+                title={user.title}
+                email={user.email}
+                color={colors[index]}
+                anchorEl={anchorEl}
+                userId={userId}
+                handlePopoverClose={handlePopoverClose}
+              />
+            </Box>
           ))}
         </Stack>
       </Box>
@@ -110,4 +146,4 @@ const ToDoList = ({ title, priority_level, users, subtask, created_at }: Partial
   );
 };
 
-export default ToDoList;
+export default TaskList;

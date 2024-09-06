@@ -2,7 +2,7 @@
 
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
-import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import uniqid from "uniqid";
@@ -31,7 +31,7 @@ const AddTask = () => {
     id: string;
     name: string;
   }[] || [];
-  const [taskValues,setTaskValues] = useState<Partial<TaskType>>({
+  const [taskValues,setTaskValues] = useState<Partial<TaskSliceType>>({
     title: "",
     users: [],
     stage: "",
@@ -84,6 +84,9 @@ const AddTask = () => {
       users: typeof value === 'string' ? value.split(',') : value
     }));
   };
+
+  console.log(taskValues.users);
+  
 
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>
@@ -152,7 +155,7 @@ const AddTask = () => {
                       arr.push(user.name)
                     }
                   });
-                                
+                  
                   return arr.join(', ');
                 }}
                 MenuProps={MenuProps}
