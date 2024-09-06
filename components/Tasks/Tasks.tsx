@@ -2,6 +2,7 @@
 
 import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import { Item } from "../MaterialSnippets/MaterialSnippets";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
@@ -15,6 +16,9 @@ const Tasks = () => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
     const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
     const [isLoading,setIsLoading] = useState(true);
+    const [hideTasks,setHideTasks] = useState({
+        todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
+    }); 
 
     const modifiedTasks = tasks.map((task) => {
         const { users } = task;
@@ -51,6 +55,58 @@ const Tasks = () => {
         return clearTimeout(timeout);
     }, []);    
 
+    const handleHideShow = (taskStage: string) => {
+        if(taskStage === 'TODO') {
+            if(hideTasks.todo) {
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        todo: ''
+                    }
+                })
+            }else{
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        todo: taskStage
+                    }
+                })
+            }
+        }else if(taskStage === 'IN PROGRESS') {
+            if(hideTasks.inProgress) {
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        inProgress: ''
+                    }
+                })
+            }else{
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        inProgress: taskStage
+                    }
+                })
+            }
+        }else{
+            if(hideTasks.completed) {
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        completed: ''
+                    }
+                })
+            }else{
+                setHideTasks((prev) => {
+                    return {
+                        ...prev,
+                        completed: taskStage
+                    }
+                })
+            }
+        } 
+    };
+
     return (
         <>
             <Grid container spacing={2}>
@@ -69,23 +125,27 @@ const Tasks = () => {
                                     }}></Box>
                                 To Do
                             </Box>
-                            <IconButton sx={{ p: 0.2 }}>
-                                <AddOutlinedIcon sx={{ fontSize: '20px' }} />
+                            <IconButton sx={{ p: 0.2 }} onClick={() => handleHideShow("TODO")}>
+                                {hideTasks.todo === 'TODO' 
+                                    ? <AddOutlinedIcon sx={{ fontSize: '20px' }} /> 
+                                    : <RemoveOutlinedIcon sx={{ fontSize: '20px' }} /> }
                             </IconButton>
                         </Item>
                     </Grid>
-                    <Grid size={12}>
-                        {todoTasks.map((task) => (
-                            <ToDoList  
-                                key={task._id}  
-                                title={task.title}
-                                priority_level={task.priority_level}
-                                users={task.users}
-                                subtask={task.subtask}
-                                created_at={task.created_at}
-                            />
-                        ))}
-                    </Grid>
+                    {hideTasks.todo === 'TODO' && ( 
+                        <Grid size={12}>
+                            {todoTasks.map((task) => (
+                                <ToDoList  
+                                    key={task._id}  
+                                    title={task.title}
+                                    priority_level={task.priority_level}
+                                    users={task.users}
+                                    subtask={task.subtask}
+                                    created_at={task.created_at}
+                                />
+                            ))}
+                        </Grid>
+                    )}
                 </Grid>
                 <Grid container size={{ xs: 12, sm: 12, md: 4 }} sx={{ flexDirection: 'column' }} className="flex-column-start">
                     <Grid size={12}>
@@ -102,23 +162,27 @@ const Tasks = () => {
                                     }}></Box>
                                 In Progress
                             </Box>
-                            <IconButton sx={{ p: 0.2 }}>
-                                <AddOutlinedIcon sx={{ fontSize: '20px' }} />
+                            <IconButton sx={{ p: 0.2 }} onClick={() => handleHideShow("IN PROGRESS")}>
+                                {hideTasks.inProgress === 'IN PROGRESS' 
+                                    ? <AddOutlinedIcon sx={{ fontSize: '20px' }} /> 
+                                    : <RemoveOutlinedIcon sx={{ fontSize: '20px' }} /> }
                             </IconButton>
                         </Item>
                     </Grid>
-                    <Grid size={12}>
-                        {inProgressTasks.map((task) => (
-                            <InProgressList  
-                                key={task._id}  
-                                title={task.title}
-                                priority_level={task.priority_level}
-                                users={task.users}
-                                subtask={task.subtask}
-                                created_at={task.created_at}
-                            />
-                        ))}   
-                    </Grid>
+                    {hideTasks.inProgress === 'IN PROGRESS' && (
+                        <Grid size={12}>
+                            {inProgressTasks.map((task) => (
+                                <InProgressList  
+                                    key={task._id}  
+                                    title={task.title}
+                                    priority_level={task.priority_level}
+                                    users={task.users}
+                                    subtask={task.subtask}
+                                    created_at={task.created_at}
+                                />
+                            ))}   
+                        </Grid>
+                    )}
                 </Grid>
                 <Grid container size={{ xs: 12, sm: 12, md: 4 }} sx={{ flexDirection: 'column' }} className="flex-column-start">
                     <Grid size={12}>
@@ -135,23 +199,27 @@ const Tasks = () => {
                                     }}></Box>
                                 Completed
                             </Box>
-                            <IconButton sx={{ p: 0.2 }}>
-                                <AddOutlinedIcon sx={{ fontSize: '20px' }} />
+                            <IconButton sx={{ p: 0.2 }} onClick={() => handleHideShow("COMPLETED")}>
+                                {hideTasks.completed === 'COMPLETED' 
+                                    ? <AddOutlinedIcon sx={{ fontSize: '20px' }} /> 
+                                    : <RemoveOutlinedIcon sx={{ fontSize: '20px' }} /> }
                             </IconButton>
                         </Item>
                     </Grid>
-                    <Grid size={12}>
-                        {completedTasks.map((task) => (
-                            <CompletedList 
-                                key={task._id}  
-                                title={task.title}
-                                priority_level={task.priority_level}
-                                users={task.users}
-                                subtask={task.subtask}
-                                created_at={task.created_at}
-                            />
-                        ))}
-                    </Grid>
+                    {hideTasks.completed === 'COMPLETED' && (
+                        <Grid size={12}>
+                            {completedTasks.map((task) => (
+                                <CompletedList 
+                                    key={task._id}  
+                                    title={task.title}
+                                    priority_level={task.priority_level}
+                                    users={task.users}
+                                    subtask={task.subtask}
+                                    created_at={task.created_at}
+                                />
+                            ))}
+                        </Grid>
+                    )}
                 </Grid>
             </Grid>
             {modifiedTasks.length === 0 && isLoading && (
