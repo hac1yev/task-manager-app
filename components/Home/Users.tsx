@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import { Avatar, Box, LinearProgress, List, ListItem, ListItemAvatar, ListItemText, Popover, TableHead, Typography } from '@mui/material';
 import { useTypedSelector } from '@/store/team-slice';
 import moment from 'moment';
+import CustomPopover from '../CustomPopover';
 
 export default function Users() {
   const users = useTypedSelector((state) => state.teamReducer.users);
@@ -73,62 +74,16 @@ export default function Users() {
                       {user.fullName.split(" ").map(u => u[0].toLocaleUpperCase()).join("")}
                     </Avatar>
                     {user.fullName}
-                    <Popover
+                    <CustomPopover 
+                      fullName={user.fullName}
+                      title={user.title}
                       id={user._id}
-                      sx={{ pointerEvents: 'none', p: 0 }}
-                      open={userId === user._id}
+                      email={user.email}
+                      color={userColors.get(user._id)}
                       anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                      }}
-                      onClose={handlePopoverClose}
-                      disableRestoreFocus
-                    >
-                      <List sx={{ p: 0, m: 0 }}>
-                        <ListItem sx={{ alignItems: 'center' }}>
-                          <ListItemAvatar>
-                            <Avatar 
-                              sx={{ 
-                                bgcolor: userColors.get(user._id), 
-                                fontSize: '26px', 
-                                height: '60px', 
-                                width: '60px', 
-                                mr: 2
-                              }}
-                              alt="Remy Sharp"
-                            >
-                              {user.fullName.split(" ").map(u => u[0].toLocaleUpperCase()).join("")}
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={<Typography variant="h5">{user.fullName}</Typography>}
-                            secondary={
-                              <Box component={"span"} className="flex-column-start">
-                                <Typography
-                                  component="span"
-                                  variant="body2"
-                                  sx={{ color: 'text.primary', display: 'inline' }}
-                                >
-                                  {user.title}
-                                </Typography>
-                                <Typography
-                                  component="span"
-                                  variant="body2"
-                                  sx={{ color: 'primary.main', display: 'inline', mt: '3px' }}
-                                >
-                                  {user.email}
-                                </Typography>
-                              </Box>
-                            }
-                          />
-                        </ListItem>
-                      </List>
-                    </Popover>
+                      userId={userId}
+                      handlePopoverClose={handlePopoverClose}
+                    />
                   </Box>
                 </TableCell>
                 <TableCell sx={{ width: 80 }} align="left">

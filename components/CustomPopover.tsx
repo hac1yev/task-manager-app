@@ -3,13 +3,13 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Popover, Typography } from "@mui/material";
 import React from "react";
 
-const CustomPopover = ({ fullName, title, email, color, userId, anchorEl, handlePopoverClose }: Partial<UserType> & CustomPopoverType) => {
+const CustomPopover = ({ fullName, title, email, color, userId, anchorEl, handlePopoverClose, id }: Partial<UserType> & CustomPopoverType) => {
 
   return (
     <Popover
-      id={fullName}
+      id={id ? id : fullName}
       sx={{ pointerEvents: "none", p: 0 }}
-      open={userId === fullName}
+      open={userId === (id ? id : fullName)}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "bottom",

@@ -56,7 +56,8 @@ declare type CustomPopoverType = {
     color: string;
     userId: string;
     anchorEl: HTMLElement | null;
-    handlePopoverClose: () => void
+    handlePopoverClose: () => void;
+    id?: string;
 };
 
 declare type SubTaskType = {
