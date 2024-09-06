@@ -83,10 +83,7 @@ const AddTask = () => {
       ...prev,
       users: typeof value === 'string' ? value.split(',') : value
     }));
-  };
-
-  console.log(taskValues.users);
-  
+  };  
 
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>

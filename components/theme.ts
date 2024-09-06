@@ -79,10 +79,10 @@ const theme = createTheme({
       },
     },
     subtitle1: {
-      fontSize: '20px',
-      fontWeight: '500',
-      lineHeight: '28px',
-      color: '#2D2D2B',
+      fontSize: '14px',
+      fontWeight: '400',
+      lineHeight: '17px',
+      color: '#5D5D5B',
       '@media (max-width:900px)': {
         fontSize: '16px',
         lineHeight: '22px',

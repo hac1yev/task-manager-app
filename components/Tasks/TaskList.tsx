@@ -1,7 +1,7 @@
 "use client";
 
-import { Item } from "../MaterialSnippets/MaterialSnippets";
-import { Avatar, Box, Button, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { addUserStyle, Item } from "../MaterialSnippets/MaterialSnippets";
+import { Avatar, Box, Button, Divider, FormControl, FormLabel, IconButton, Modal, Stack, TextField, Typography } from "@mui/material";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -9,15 +9,30 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import React, { useMemo } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import CustomPopover from "../CustomPopover";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { taskSliceActions } from "@/store/task-slice";
 
-const TaskList = ({ title, priority_level, users, subtask, created_at }: Partial<TaskType>) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [userId,setUserId] = React.useState("");
+const TaskList = ({ title, priority_level, users, subtask, created_at, _id }: Partial<TaskType>) => {
+  const axiosPrivate = useAxiosPrivate();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [userId,setUserId] = useState("");
+  const dispatch = useDispatch();
+  const [subtaskValues,setSubtaskValues] = useState<SubTaskType>({
+    title: "",
+    date: new Date().toISOString().slice(0,10),
+    tag: ""
+  });
   const colors = useMemo(() => {
     return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
   }, []);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
 
   const handlePopoverOpen = (id: string, event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,7 +44,23 @@ const TaskList = ({ title, priority_level, users, subtask, created_at }: Partial
     setUserId("");
   };
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl);    
+
+  const handleAddSubtask = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await axiosPrivate.post(`/api/tasks/subtask/${_id}`, JSON.stringify(subtaskValues), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));
+    } catch (error) {
+      console.log(error);
+    }
+    setModalOpen(false);
+  };
 
   return (
     <Item sx={{ mb: 2 }}>
@@ -135,12 +166,108 @@ const TaskList = ({ title, priority_level, users, subtask, created_at }: Partial
         </Stack>
       </Box>
       <Divider sx={{ mb: 1 }} />
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 2 }}>
         {subtask?.length === 0 && <Typography sx={{ px: 1, mb: "5px" }}>No Sub-Task</Typography>}
-        <Button variant="text" sx={{ color: "#6f6f6f" }}>
+        {subtask?.slice(-2)?.map((item) => (
+          <Box key={item.title}  className="flex-column-start" sx={{ mb: 2, gap: '15px' }}>
+            <Typography sx={{ color: '#2d2d2d', px: 1 }}>{item.title}</Typography>
+            <Box className="flex-start" sx={{ px: 2, gap: '15px' }}>
+              <Typography variant="subtitle1" >{item.date.slice(0,10)}</Typography>
+              <Box sx={{ bgcolor: '#E8EFFF', color: 'primary.main', p: "3px 10px", borderRadius: '20px' }}>{item.tag}</Box>
+            </Box>
+          </Box>
+        ))}
+        <Button variant="text" sx={{ color: "#6f6f6f" }} onClick={handleModalOpen}>
           <AddOutlinedIcon sx={{ fontSize: "20px" }} />
           <Typography sx={{ fontSize: "15px" }}>ADD SUBTASK</Typography>
         </Button>
+        <Modal
+          open={modalOpen}
+          onClose={handleModalClose}
+          aria-labelledby="task-modal-title"
+          aria-describedby="task-modal-description"
+        >
+          <Box sx={addUserStyle}>
+            <Typography id="task-modal-title" variant="h6" component="h2">
+              ADD SUB-TASK
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleAddSubtask}
+              noValidate
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <FormControl>
+                <FormLabel htmlFor="title">Sub-Task Title</FormLabel>
+                <TextField
+                  id="title"
+                  type="text"
+                  name="title"
+                  placeholder="title"
+                  autoComplete="title"
+                  value={subtaskValues.title}
+                  onChange={(e) => {
+                    setSubtaskValues({ ...subtaskValues, title: e.target.value });
+                  }}
+                  autoFocus
+                  required
+                  fullWidth
+                  variant="outlined"
+                />
+              </FormControl>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <FormControl sx={{ width: "50%" }}>
+                  <FormLabel htmlFor="task_date">Sub-Task Date</FormLabel>
+                  <TextField 
+                    type="date" 
+                    id="task_date" 
+                    value={subtaskValues.date}
+                    onChange={(e) => {                    
+                      setSubtaskValues({ ...subtaskValues, date: e.target.value });
+                    }}
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "50%" }}>
+                  <FormLabel htmlFor="tag">Tag</FormLabel>
+                  <TextField
+                    id="tag"
+                    type="text"
+                    name="tag"
+                    placeholder="tag"
+                    autoComplete="tag"
+                    value={subtaskValues.tag}
+                    onChange={(e) => {
+                      setSubtaskValues({ ...subtaskValues, tag: e.target.value });
+                    }}
+                    autoFocus
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                </FormControl>
+              </Box>
+              <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>
+                <Button
+                  type="submit"
+                  size="large"
+                  variant="outlined"
+                  onClick={handleModalClose}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" size="large" variant="contained">
+                  Submit
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </Modal>
       </Box>
     </Item>
   );

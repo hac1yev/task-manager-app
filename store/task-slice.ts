@@ -21,6 +21,19 @@ export const taskSlice = createSlice({
                 ...state.tasks,
                 action.payload
             ]
+        },
+        addSubtaskToTask(state, action) {
+            const indexOfTask = state.tasks.findIndex((item) => item._id === action.payload._id);
+            
+            if (indexOfTask !== -1) {
+                state.tasks[indexOfTask] = {
+                    ...state.tasks[indexOfTask],
+                    subtask: [
+                        ...(state.tasks[indexOfTask].subtask || []), 
+                        action.payload.subtask
+                    ]
+                };
+            }
         }
     }
 });

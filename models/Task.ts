@@ -6,13 +6,6 @@ const TaskSchema = new Schema({
         type: String,
         required: true,
     },
-    users: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: User,
-            required: true
-        }
-    ],
     stage: {
         type: String,
         required: true
@@ -21,17 +14,20 @@ const TaskSchema = new Schema({
         type: String,
         required: true
     },
-    created_at: {
-        type: Date,
-        default: Date.now
-    },
+    users: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: User,
+            required: true
+        }
+    ],
     subtask: [
         {
             title: {
                 type: String,
                 required: true
             },
-            created_at: {
+            date: {
                 type: Date,
                 default: Date.now
             },
@@ -40,7 +36,29 @@ const TaskSchema = new Schema({
                 required: true
             }
         }
-    ]
+    ],
+    comments: [
+        {
+            user: [
+                {
+                    type: Schema.Types.ObjectId,
+                    ref: User,
+                    required: true
+                }
+            ],
+            description: {
+                type: String,
+            },
+            adding_at: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
 });
 
 export const Task = models.Task || model("Task", TaskSchema);

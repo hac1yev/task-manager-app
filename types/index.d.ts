@@ -33,7 +33,7 @@ declare type TaskType = {
     created_at: string;
     subtask: {
         title: string;
-        created_at: string;
+        date: string;
         tag: string;
     }[];
 };
@@ -47,7 +47,7 @@ declare type TaskSliceType = {
     created_at: string;
     subtask: {
         title: string;
-        created_at: string;
+        date: string;
         tag: string;
     }[];
 };
@@ -57,4 +57,10 @@ declare type CustomPopoverType = {
     userId: string;
     anchorEl: HTMLElement | null;
     handlePopoverClose: () => void
+};
+
+declare type SubTaskType = {
+    title: string;
+    date: string;
+    tag: string;
 };

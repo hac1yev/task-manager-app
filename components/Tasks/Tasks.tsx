@@ -7,7 +7,7 @@ import { Item } from "../MaterialSnippets/MaterialSnippets";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
 import { useTypedSelector } from "@/store/team-slice";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 
 const Tasks = () => {
@@ -18,50 +18,42 @@ const Tasks = () => {
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
     });     
 
-    const modifiedTasks = useMemo(() => {
-        return tasks.map((task) => {
-            const { users } = task;
-            const userNames: {
-                fullName: string;
-                title: string;
-                email: string;
-            }[] = [];            
+    const modifiedTasks = tasks.map((task) => {
+        const { users } = task;
+        const userNames: {
+            fullName: string;
+            title: string;
+            email: string;
+        }[] = [];            
 
-            users?.forEach((user) => {
-                const findedUser = allUsers.find((u) => user === u._id);
-                if(findedUser) {
-                    userNames.push({
-                        fullName: findedUser?.fullName,
-                        title: findedUser.title,
-                        email: findedUser.email
-                    });
-                }
-            });
-            
-            return {
-                ...task,
-                users: userNames
+        users?.forEach((user) => {
+            const findedUser = allUsers.find((u) => user === u._id);
+            if(findedUser) {
+                userNames.push({
+                    fullName: findedUser?.fullName,
+                    title: findedUser.title,
+                    email: findedUser.email
+                });
             }
         });
-    }, [allUsers,tasks]);
         
-    const todoTasks = useMemo(() => {
-        return modifiedTasks.filter(task => {
-            if(task.stage === 'TODO') return task;
-        });
-    }, [modifiedTasks]);
+        return {
+            ...task,
+            users: userNames
+        }
+    });
+        
+    const todoTasks = modifiedTasks.filter(task => {
+        if(task.stage === 'TODO') return task;
+    });    
 
-    const inProgressTasks = useMemo(() => {
-        return modifiedTasks.filter(task => {
-            if(task.stage === 'IN PROGRESS') return task;
-        });
-    }, [modifiedTasks]);
+    const inProgressTasks = modifiedTasks.filter(task => {
+        if(task.stage === 'IN PROGRESS') return task;
+    });
 
-    const completedTasks = useMemo(() => {
-        return modifiedTasks.filter(task => {
-            if(task.stage === 'COMPLETED') return task;
-        });
-    }, [modifiedTasks]);
+    const completedTasks = modifiedTasks.filter(task => {
+        if(task.stage === 'COMPLETED') return task;
+    });
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -121,8 +113,8 @@ const Tasks = () => {
                 })
             }
         } 
-    };
-    
+    };    
+
     return (
         <>
             <Grid container spacing={2}>
@@ -153,6 +145,7 @@ const Tasks = () => {
                             {todoTasks.map((task) => (
                                 <TaskList  
                                     key={task._id}  
+                                    _id={task._id}
                                     title={task.title}
                                     priority_level={task.priority_level}
                                     users={task.users}
@@ -190,6 +183,7 @@ const Tasks = () => {
                             {inProgressTasks.map((task) => (
                                 <TaskList  
                                     key={task._id}  
+                                    _id={task._id}
                                     title={task.title}
                                     priority_level={task.priority_level}
                                     users={task.users}
@@ -227,6 +221,7 @@ const Tasks = () => {
                             {completedTasks.map((task) => (
                                 <TaskList 
                                     key={task._id}  
+                                    _id={task._id}
                                     title={task.title}
                                     priority_level={task.priority_level}
                                     users={task.users}
