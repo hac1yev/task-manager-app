@@ -39,13 +39,11 @@ const TaskSchema = new Schema({
     ],
     comments: [
         {
-            user: [
-                {
-                    type: Schema.Types.ObjectId,
-                    ref: User,
-                    required: true
-                }
-            ],
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: User,
+                required: true
+            },
             description: {
                 type: String,
             },

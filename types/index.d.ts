@@ -36,6 +36,11 @@ declare type TaskType = {
         date: string;
         tag: string;
     }[];
+    comments: {
+        user: string;
+        description: string;
+        adding_at:string;
+    }[];
 };
 
 declare type TaskSliceType = {
@@ -49,6 +54,11 @@ declare type TaskSliceType = {
         title: string;
         date: string;
         tag: string;
+    }[];
+    comments: {
+        user: string;
+        description: string;
+        adding_at:string;
     }[];
 };
 

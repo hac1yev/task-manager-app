@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
     await user.save();
     
-    return NextResponse.json({ message: 'Added!' });
+    return NextResponse.json({ message: 'Added!', addedUser: user });
 };
 
 export async function GET(req: Request) {

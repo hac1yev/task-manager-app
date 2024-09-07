@@ -7,10 +7,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Avatar, Box, LinearProgress, List, ListItem, ListItemAvatar, ListItemText, Popover, TableHead, Typography } from '@mui/material';
+import { Avatar, Box, LinearProgress, TableHead, Typography } from '@mui/material';
 import { useTypedSelector } from '@/store/team-slice';
 import moment from 'moment';
-import CustomPopover from '../CustomPopover';
+import CustomPopover from '../CustomPopovers/CustomPopover';
 
 export default function Users() {
   const users = useTypedSelector((state) => state.teamReducer.users);
@@ -41,11 +41,7 @@ export default function Users() {
   const open = Boolean(anchorEl);
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
       setIsLoading(false);
-    }, 5000);
-
-    return clearTimeout(timeout);
   }, []);
 
   return (
@@ -111,4 +107,4 @@ export default function Users() {
       )}
     </>
   );
-}
+};

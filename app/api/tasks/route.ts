@@ -38,5 +38,7 @@ export async function POST(req: Request) {
     const newTask = new Task({ ...data });
     await newTask.save();
 
-    return NextResponse.json({ message: 'Success' });
+    console.log(newTask);
+
+    return NextResponse.json({ message: 'Success', addedTask: newTask });
 };

@@ -2,10 +2,9 @@
 
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
-import { Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, Typography } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, SelectChangeEvent, TextField, Theme, Typography } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import uniqid from "uniqid";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 import { taskSliceActions } from "@/store/task-slice";
 
@@ -22,6 +21,10 @@ const MenuProps = {
 
 const AddTask = () => {
   const users = useTypedSelector((state) => state.teamReducer.users);
+  const colors = useMemo(() => {
+    return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
+  }, []);
+
   const usersNames = users.map((user: Partial<UserType>) => {
     return {
       id: user._id,
@@ -57,16 +60,17 @@ const AddTask = () => {
     };
 
     try {
-      await axiosPrivate.post("/api/tasks", JSON.stringify(data), {
+      const response = await axiosPrivate.post("/api/tasks", JSON.stringify(data), {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
+      const recievingData = response.data.addedTask;
+      delete recievingData.__v
+      
       dispatch(taskSliceActions.addTask({
-        _id: uniqid(),
-        ...data,
-        subtask: []
+        ...recievingData,
       }));
 
       setOpen(false);
@@ -161,9 +165,17 @@ const AddTask = () => {
                 <MenuItem disabled value="">
                   <em>Select User</em>
                 </MenuItem>
-                {usersNames.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.name}
+                {usersNames.map((user,index) => (
+                  <MenuItem key={user.id} value={user.id} sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <Avatar sx={{ width: '35px', height: '35px', fontSize: '15px', bgcolor: colors[index % usersNames.length] }}>
+                      {user.name.trim().includes(" ")
+                      ? user.name
+                          .split(" ")
+                          .map((u) => u[0].toLocaleUpperCase())
+                          .join("")
+                      : user.name[0]}
+                    </Avatar>
+                    <Typography>{user.name}</Typography>
                   </MenuItem>
                 ))}
               </Select>

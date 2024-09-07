@@ -16,7 +16,7 @@ const Tasks = () => {
     const [isLoading,setIsLoading] = useState(true);
     const [hideTasks,setHideTasks] = useState({
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
-    });     
+    }); 
 
     const modifiedTasks = tasks.map((task) => {
         const { users } = task;
@@ -56,13 +56,9 @@ const Tasks = () => {
     });
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setIsLoading(false);
-        }, 5000);
-
-        return clearTimeout(timeout);
-    }, []);    
-
+        setIsLoading(false);
+    }, [tasks]);    
+    
     const handleHideShow = (taskStage: string) => {
         if(taskStage === 'TODO') {
             if(hideTasks.todo) {
@@ -151,6 +147,7 @@ const Tasks = () => {
                                     users={task.users}
                                     subtask={task.subtask}
                                     created_at={task.created_at}
+                                    comments={task.comments}
                                 />
                             ))}
                         </Grid>
@@ -189,6 +186,7 @@ const Tasks = () => {
                                     users={task.users}
                                     subtask={task.subtask}
                                     created_at={task.created_at}
+                                    comments={task.comments}
                                 />
                             ))}   
                         </Grid>
@@ -227,6 +225,7 @@ const Tasks = () => {
                                     users={task.users}
                                     subtask={task.subtask}
                                     created_at={task.created_at}
+                                    comments={task.comments}
                                 />
                             ))}
                         </Grid>

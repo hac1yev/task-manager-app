@@ -23,7 +23,6 @@ const AddUser = () => {
     const formData = new FormData(e.currentTarget);
 
     const data = {
-        _id: uniqid(),
         fullName: formData.get("fullName"),
         title: formData.get("title"),
         email: formData.get("email"),
@@ -34,13 +33,16 @@ const AddUser = () => {
     }
 
     try {
-      await axiosPrivate.post("/api/team", JSON.stringify(data), {
+      const response = await axiosPrivate.post("/api/team", JSON.stringify(data), {
         headers: {
           'Content-Type': 'application/json'
         }
       });
       
-      dispatch(teamSliceAction.addUser(data));
+      const recievingData = response.data.addedUser;
+      delete recievingData.__v
+
+      dispatch(teamSliceAction.addUser(recievingData));
       setOpen(false);
 
     } catch (error) {

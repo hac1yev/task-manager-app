@@ -1,21 +1,18 @@
 "use client";
 
 import { addUserStyle, Item } from "../MaterialSnippets/MaterialSnippets";
-import { Avatar, Box, Button, Divider, FormControl, FormLabel, IconButton, Modal, Stack, TextField, Typography } from "@mui/material";
-import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Avatar, Box, Button, Divider, FormControl, FormLabel, Modal, Stack, TextField, Typography } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import CustomPopover from "../CustomPopover";
+import { FormEvent, useMemo, useState } from "react";
+import CustomPopover from "../CustomPopovers/CustomPopover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
+import TaskHeader from "./TaskHeader";
 
-const TaskList = ({ title, priority_level, users, subtask, created_at, _id }: Partial<TaskType>) => {
+const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comments }: Partial<TaskType>) => {
   const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [userId,setUserId] = useState("");
@@ -65,41 +62,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id }: Pa
   return (
     <Item sx={{ mb: 2 }}>
       <Box className="flex-column-start">
-        <Box sx={{ width: "100%" }} className="flex-between">
-          <Box
-            className="flex-center"
-            sx={{
-              color:
-                priority_level === "MEDIUM"
-                  ? "#D08803"
-                  : priority_level === "HIGH"
-                  ? "#E7391A"
-                  : "#0C9046",
-            }}
-          >
-            {priority_level === "MEDIUM" && (
-              <>
-                <KeyboardArrowUpIcon />
-                MEDIUM PRIORITY
-              </>
-            )}
-            {priority_level === "HIGH" && (
-              <>
-                <KeyboardDoubleArrowUpIcon />
-                HIGH PRIORITY
-              </>
-            )}
-            {priority_level === "LOW" && (
-                <>
-                  <KeyboardArrowDownIcon />
-                  LOW PRIORITY
-                </>
-            )}
-          </Box>
-          <IconButton>
-            <MoreHorizOutlinedIcon />
-          </IconButton>
-        </Box>
+        <TaskHeader priority_level={priority_level} id={_id} />
         <Box
           sx={{ display: "flex", alignItems: "center", gap: "5px", px: 0.5 }}
         >
@@ -128,7 +91,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id }: Pa
       <Box className="flex-between" sx={{ px: 0.5, py: 1 }}>
         <Stack sx={{ display: 'flex', gap: '10px', flexDirection: 'row', alignItems: 'center' }}>
           <Box component='span' className="flex-center" sx={{ gap: '2px' }}>
-            <CommentOutlinedIcon sx={{ fontSize: '16px' }} /> 2
+            <CommentOutlinedIcon sx={{ fontSize: '16px' }} /> {comments?.length}
           </Box>
           <Box component='span' className="flex-center" sx={{ gap: '2px' }}>
             <FormatListBulletedOutlinedIcon sx={{ fontSize: '16px' }} /> 0/{subtask?.length}
@@ -138,7 +101,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id }: Pa
           {users?.map((user, index) => (
             <Box key={user.fullName} component="span">
               <Avatar 
-                sx={{ bgcolor: colors[index] }} 
+                sx={{ bgcolor: colors[index % users.length] }} 
                 className="task-avatar"
                 aria-owns={open ? 'mouse-over-popover' : undefined}
                 onMouseLeave={handlePopoverClose} 

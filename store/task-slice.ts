@@ -22,6 +22,9 @@ export const taskSlice = createSlice({
                 action.payload
             ]
         },
+        deleteTask(state,action) {
+            state.tasks = state.tasks.filter((task) => task._id !== action.payload);
+        },
         addSubtaskToTask(state, action) {
             const indexOfTask = state.tasks.findIndex((item) => item._id === action.payload._id);
             

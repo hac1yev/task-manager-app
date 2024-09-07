@@ -8,7 +8,7 @@ import { taskSliceActions } from '@/store/task-slice';
 const TasksApiCall = <P extends object>(WrappedComponent: ComponentType<P>) => {
   const HOC: ComponentType<P> = (props) => {
     const dispatch = useDispatch();
-    const axiosPrivate = useAxiosPrivate();
+    const axiosPrivate = useAxiosPrivate();    
 
     useEffect(() => {
       const fetchData = async () => {
