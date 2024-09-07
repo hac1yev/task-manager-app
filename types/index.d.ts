@@ -75,3 +75,9 @@ declare type SubTaskType = {
     date: string;
     tag: string;
 };
+
+declare type CustomModalType = {
+    setOpen: (value: boolean) => void;
+    open: boolean;
+    id?: string;
+};

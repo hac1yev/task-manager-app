@@ -5,9 +5,11 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useState } from 'react';
 import CustomTaskSettingPopover from '../CustomPopovers/CustomTaskSettingPopover';
+import CustomEditTaskModal from '../CustomModal/CustomEditTaskModal';
 
 const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined, id: string | undefined }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const handleOpenSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -55,9 +57,15 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
                 <MoreHorizOutlinedIcon />
             </IconButton>
             <CustomTaskSettingPopover 
-                open={open}
-                anchorEl={anchorEl}
                 handlePopoverClose={handleClose}
+                setOpenModal={setOpenModal}
+                anchorEl={anchorEl}
+                open={open}
+                id={id}
+            />
+            <CustomEditTaskModal 
+                setOpen={setOpenModal} 
+                open={openModal} 
                 id={id}
             />
         </Box>

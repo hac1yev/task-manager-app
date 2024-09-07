@@ -11,14 +11,18 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 
-const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open }: Partial<UserType> & Partial<CustomPopoverType> & { open: boolean }) => {
+const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open, setOpenModal }: Partial<UserType> & Partial<CustomPopoverType> & { open: boolean, setOpenModal: (value: boolean) => void }) => {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
+  const handleOpenEditTaskModal = () => {
+    setOpenModal(true);
+  };
+
   const handleDeleteTask = async () => {
     try {
-        await axiosPrivate.delete(`/api/tasks/${id}`);
-        dispatch(taskSliceActions.deleteTask(id));
+      await axiosPrivate.delete(`/api/tasks/${id}`);
+      dispatch(taskSliceActions.deleteTask(id));
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +53,8 @@ const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open }: Pa
             </ListItemButton>
           </ListItem>
         </Link>
-        <ListItem disablePadding>
+
+        <ListItem disablePadding onClick={handleOpenEditTaskModal}>
           <ListItemButton sx={{ py: 0, px: 1 }}>
             <ListItemIcon sx={{ minWidth: "40px" }}>
               <EditIcon />
@@ -57,6 +62,7 @@ const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open }: Pa
             <ListItemText primary="Edit" />
           </ListItemButton>
         </ListItem>
+
         <ListItem disablePadding>
           <ListItemButton sx={{ py: 0, px: 1 }}>
             <ListItemIcon sx={{ minWidth: "40px" }}>

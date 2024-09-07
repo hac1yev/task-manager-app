@@ -22,6 +22,16 @@ export const taskSlice = createSlice({
                 action.payload
             ]
         },
+        editTask(state,action) {
+            const indexOfTask = state.tasks.findIndex((task) => task._id === action.payload._id);
+
+            if(indexOfTask !== -1) {
+                state.tasks[indexOfTask] = {
+                    ...state.tasks[indexOfTask],
+                    ...action.payload
+                }
+            }
+        },
         deleteTask(state,action) {
             state.tasks = state.tasks.filter((task) => task._id !== action.payload);
         },
