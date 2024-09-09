@@ -54,9 +54,8 @@ const Tasks = ({ stage }: { stage: string }) => {
             </Typography>
             <Grid container spacing={2}>
                 {resultTasks.map((task) => (
-                    <Grid size={{ xs: 12, sm: 12, md: 4 }}>
+                    <Grid size={{ xs: 12, sm: 12, md: 4 }} key={task._id}>
                         <TaskList 
-                            key={task._id}  
                             _id={task._id}
                             title={task.title}
                             priority_level={task.priority_level}
