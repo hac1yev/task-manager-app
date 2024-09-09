@@ -1,9 +1,9 @@
-import React from 'react'
+import FilteredTasks from "@/components/FilteredTasks/FilteredTasks";
 
 const ToDo = () => {
   return (
-    <div>ToDo</div>
-  )
-}
+    <FilteredTasks stage={"TODO"} />
+  );
+};
 
-export default ToDo
+export default ToDo;

@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
     await connectToDB();
 
-    const tasks = await Task.find();
+    const tasks = await Task.find({ isDeleted: false });
 
     return NextResponse.json({ message: 'Success', tasks });
 };

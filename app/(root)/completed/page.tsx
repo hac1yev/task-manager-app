@@ -1,9 +1,9 @@
-import React from 'react'
+import FilteredTasks from "@/components/FilteredTasks/FilteredTasks";
 
 const Completed = () => {
   return (
-    <div>Completed</div>
-  )
-}
+    <FilteredTasks stage={"COMPLETED"} />
+  );
+};
 
-export default Completed
+export default Completed;

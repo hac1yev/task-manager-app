@@ -1,8 +1,8 @@
-import React from 'react'
+import TrashWrapper from "@/components/Trash/TrashWrapper"
 
 const Trash = () => {
   return (
-    <div>Trash</div>
+    <TrashWrapper />
   )
 }
 

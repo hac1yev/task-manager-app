@@ -1,9 +1,9 @@
-import React from 'react'
+import FilteredTasks from "@/components/FilteredTasks/FilteredTasks";
 
-const InProgress = () => {
+const inProgress = () => {
   return (
-    <div>InProgress</div>
-  )
-}
+    <FilteredTasks stage={"IN PROGRESS"} />
+  );
+};
 
-export default InProgress
+export default inProgress;

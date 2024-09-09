@@ -5,6 +5,7 @@ const TaskSchema = new Schema({
     title: {
         type: String,
         required: true,
+        unique: true
     },
     stage: {
         type: String,
@@ -57,6 +58,10 @@ const TaskSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 });
 
 export const Task = models.Task || model("Task", TaskSchema);

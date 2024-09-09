@@ -18,7 +18,7 @@ export async function GET(req: Request) {
         })
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
-        .setExpirationTime('30s')
+        .setExpirationTime('1h')
         .sign(jwtSecretKey);
 
         return NextResponse.json({

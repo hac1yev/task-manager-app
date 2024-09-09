@@ -4,7 +4,6 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Popover } f
 import Link from "next/link";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -21,7 +20,7 @@ const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open, setO
 
   const handleDeleteTask = async () => {
     try {
-      await axiosPrivate.delete(`/api/tasks/${id}`);
+      await axiosPrivate.post(`/api/trash/${id}`);
       dispatch(taskSliceActions.deleteTask(id));
     } catch (error) {
       console.log(error);
@@ -60,15 +59,6 @@ const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open, setO
               <EditIcon />
             </ListItemIcon>
             <ListItemText primary="Edit" />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton sx={{ py: 0, px: 1 }}>
-            <ListItemIcon sx={{ minWidth: "40px" }}>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add Sub-Task" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
