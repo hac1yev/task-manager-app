@@ -16,6 +16,8 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
     }
 
+    await connectToDB();
+
     await User.deleteOne({ _id: id });
 
     return NextResponse.json({ message: 'Success' });

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
     const bearer = req.headers.get("Authorization");
 
-    const accessToken = bearer?.split(" ")[1] || "";
+    const accessToken = bearer?.split(" ")[1] || "";    
 
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
@@ -38,7 +38,9 @@ export async function GET(req: Request) {
         return NextResponse.json({ message: 'Access token is not valid!' }, { status: 403 });
     }
 
-    const users = await User.find();
+    await connectToDB();
+
+    const users = await User.find();    
 
     const filtererUser = JSON.parse(JSON.stringify(users)).filter((user: Partial<UserType>) => user.role !== 'Admin');
 

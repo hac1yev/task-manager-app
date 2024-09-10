@@ -9,7 +9,7 @@ const isAuthPage = (url: string) => authPages.includes(url);
 export async function middleware(request: NextRequest) {
     const { url,nextUrl,cookies } = request;
     const refreshToken = cookies.get("refreshToken")?.value || "";
-
+    
     const notAuthPage = ['/', '/team', '/tasks'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
