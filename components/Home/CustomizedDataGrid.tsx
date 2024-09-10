@@ -17,7 +17,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TablePaginationActions } from '../MaterialSnippets/MaterialSnippets';
 import { useTypedTaskSelector } from '@/store/task-slice';
 import { useTypedSelector } from '@/store/team-slice';
-import CustomPopover from '../CustomPopovers/CustomPopover';
 
 export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
@@ -26,8 +25,6 @@ export default function CustomPaginationActionsTable() {
   const allUsers = useTypedSelector(state => state.teamReducer.users);
   const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
   const isLoading = useTypedTaskSelector(state => state.taskReducer.isLoading);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [userId,setUserId] = React.useState("");
 
   const userColors = React.useMemo(() => {
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
@@ -80,18 +77,6 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
-  const handlePopoverOpen = (id: string, event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setUserId(id);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-    setUserId("");
-  };
-
-  const open = Boolean(anchorEl);    
-
   return (
     <>
       <TableContainer component={Paper}>
@@ -127,14 +112,10 @@ export default function CustomPaginationActionsTable() {
                 <TableCell style={{ width: 130 }} align="left">
                   <Stack direction="row" className='flex-start'>
                     {row.users?.map((user) => (
-                      <Box key={user.fullName} component="span">
+                      <Box key={user._id} component="span">
                         <Avatar 
                           sx={{ bgcolor: userColors.get(user._id) }} 
                           className="task-avatar"
-                          aria-owns={open ? 'mouse-over-popover' : undefined}
-                          onMouseLeave={handlePopoverClose} 
-                          onMouseEnter={handlePopoverOpen.bind(null, user.fullName)}
-                          aria-haspopup="true" 
                         >
                           {user.fullName.trim().includes(" ")
                             ? user.fullName
@@ -143,15 +124,6 @@ export default function CustomPaginationActionsTable() {
                                 .join("")
                             : user.fullName[0]}
                         </Avatar>
-                        <CustomPopover 
-                          fullName={user.fullName}
-                          title={user.title}
-                          email={user.email}
-                          color={userColors.get(user._id)}
-                          anchorEl={anchorEl}
-                          userId={userId}
-                          handlePopoverClose={handlePopoverClose}
-                        />
                       </Box>
                     ))}
                   </Stack>
