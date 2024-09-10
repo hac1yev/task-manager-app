@@ -11,10 +11,11 @@ import './Home.css';
 import PageViewsBarChart from "./PageViewsBarChart";
 import CustomizedDataGrid from "./CustomizedDataGrid";
 import Users from "./Users";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import TeamApiCall from "../HOC/TeamApiCall";
+import TasksApiCall from "../HOC/TasksApiCall";
 
 const HOCTeamComponent = TeamApiCall(Users);
+const HOCTaskComponent = TasksApiCall(CustomizedDataGrid);
 
 const data: StatCardProps[] = [
   {
@@ -48,17 +49,6 @@ const data: StatCardProps[] = [
 ];
 
 const HomeWrapper = () => {
-  const axiosPrivate = useAxiosPrivate();
-  
-  const handleS = async () => {
-    try {
-      const response = await axiosPrivate.get("/api/tasks");
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
       <Grid
@@ -68,7 +58,7 @@ const HomeWrapper = () => {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }} onClick={handleS}>
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
             <StatCard 
                 logo_img={card.logo_img} 
                 count={card.count} 
@@ -88,7 +78,7 @@ const HomeWrapper = () => {
           <PageViewsBarChart />
         </Grid>
         <Grid size={{ lg: 7.3, md: 12, sm: 12, xs: 12 }} sx={{ mb: (theme) => theme.spacing(2) }}>
-          <CustomizedDataGrid />
+          <HOCTaskComponent />
         </Grid>
         <Grid size={{ lg: 4.7, md: 12, sm: 12, xs: 12 }} sx={{ mb: (theme) => theme.spacing(2) }}>
           <HOCTeamComponent />
