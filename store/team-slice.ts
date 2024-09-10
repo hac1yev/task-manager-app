@@ -5,16 +5,21 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 interface TeamState {
     users: Array<UserType>;
+    isLoading: boolean;
 }
 
 const initialTeamState: TeamState = {
-    users: []
+    users: [],
+    isLoading: true
 };
 
 export const teamSlice = createSlice({
     name: 'teamSlice',
     initialState: initialTeamState,
     reducers: {
+        setIsLoading(state,action) {
+            state.isLoading = action.payload;
+        },
         getAllUsers(state,action) {
             state.users = action.payload;
         },

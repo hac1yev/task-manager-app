@@ -12,12 +12,12 @@ import AddUser from "./AddUser";
 import { teamSliceAction, useTypedSelector } from "@/store/team-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 
 const TeamComponent = () => {
   const users = useTypedSelector((state) => state.teamReducer.users);
-  const [isLoading,setIsLoading] = useState(true);
+  const isLoading = useTypedSelector((state) => state.teamReducer.isLoading);
   const axiosPrivate = useAxiosPrivate();
   const [open, setOpen] = useState("");
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
@@ -68,10 +68,6 @@ const TeamComponent = () => {
 
     setOpen("");
   };
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>

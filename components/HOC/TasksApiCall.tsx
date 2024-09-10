@@ -12,12 +12,14 @@ const TasksApiCall = <P extends object>(WrappedComponent: ComponentType<P>) => {
 
     useEffect(() => {
       const fetchData = async () => {
+        dispatch(taskSliceActions.setIsLoading(true));
         try {
           const response = await axiosPrivate.get("/api/tasks");          
           dispatch(taskSliceActions.getAllTasks(response.data.tasks));        
         } catch (error) {
           console.error(error);
         }
+        dispatch(taskSliceActions.setIsLoading(false));
       };
 
       fetchData();

@@ -4,13 +4,12 @@ import { Box, LinearProgress, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
 import { useTypedSelector } from "@/store/team-slice";
-import { useEffect, useState } from "react";
 import TaskList from "../Tasks/TaskList";
 
 const Tasks = ({ stage }: { stage: string }) => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
     const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
-    const [isLoading,setIsLoading] = useState(true);
+    const isLoading = useTypedTaskSelector(state => state.taskReducer.tasks);
 
     const modifiedTasks = tasks.map((task) => {
         const { users } = task;
@@ -40,10 +39,6 @@ const Tasks = ({ stage }: { stage: string }) => {
     const resultTasks = modifiedTasks.filter(task => {
         if(task.stage === stage) return task;
     });
-
-    useEffect(() => {
-        setIsLoading(false);
-    }, [tasks]);    
     
     return (
         <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>

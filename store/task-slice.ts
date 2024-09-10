@@ -3,18 +3,23 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 interface TaskState {
     tasks: Partial<TaskSliceType>[];
+    isLoading: boolean;
 };
 
 const initialTaskState: TaskState = {
-    tasks: []
+    tasks: [],
+    isLoading: true
 };
 
 export const taskSlice = createSlice({
     name: 'taskSlice',
     initialState: initialTaskState,
     reducers: {
+        setIsLoading(state,action) {
+            state.isLoading = action.payload;
+        },
         getAllTasks(state, action) {
-            state.tasks = action.payload
+            state.tasks = action.payload;
         },
         addTask(state, action) {
             state.tasks = [

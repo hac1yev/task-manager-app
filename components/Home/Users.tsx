@@ -14,9 +14,9 @@ import CustomPopover from '../CustomPopovers/CustomPopover';
 
 export default function Users() {
   const users = useTypedSelector((state) => state.teamReducer.users);
+  const isLoading = useTypedSelector(state => state.teamReducer.isLoading);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [userId,setUserId] = React.useState("");
-  const [isLoading,setIsLoading] = React.useState(true);
 
   const userColors = React.useMemo(() => {
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
@@ -39,10 +39,6 @@ export default function Users() {
   };
 
   const open = Boolean(anchorEl);
-
-  React.useEffect(() => {
-      setIsLoading(false);
-  }, []);
 
   return (
     <>

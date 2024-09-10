@@ -7,13 +7,13 @@ import { Item } from "../MaterialSnippets/MaterialSnippets";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
 import { useTypedSelector } from "@/store/team-slice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TaskList from "./TaskList";
 
 const Tasks = () => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
     const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
-    const [isLoading,setIsLoading] = useState(true);
+    const isLoading = useTypedTaskSelector(state => state.taskReducer.isLoading);
     const [hideTasks,setHideTasks] = useState({
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
     }); 
@@ -55,10 +55,6 @@ const Tasks = () => {
         if(task.stage === 'COMPLETED') return task;
     });
 
-    useEffect(() => {
-        setIsLoading(false);
-    }, [tasks]);    
-    
     const handleHideShow = (taskStage: string) => {
         if(taskStage === 'TODO') {
             if(hideTasks.todo) {
