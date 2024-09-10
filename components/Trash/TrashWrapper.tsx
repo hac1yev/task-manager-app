@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -12,42 +12,27 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { trashSliceActions, useTypedTrashSelector } from "@/store/trash-slice";
 import { useDispatch } from "react-redux";
 
-function createData(title: string, priority: string, team: string, created_at: string) {
-    return { title, priority, team, created_at };
-};
-  
-const rows = [
-    createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'Low', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'Medium', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'Low', 'ilkin', '2 hours ago'),
-    createData('Dubmicate button', 'High', 'ilkin', '2 hours ago'),
-];
-
 const TrashWrapper = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(8);
     const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'];
     const axiosPrivate = useAxiosPrivate();
     const trashTasks = useTypedTrashSelector(state => state.trashReducer.trashTasks);
+    const [isLoading,setIsLoading] = useState(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
         (async function() {
+            setIsLoading(true);
             try {
                 const response = await axiosPrivate.get("/api/trash");
                 dispatch(trashSliceActions.getAllTrash(response.data.tasks));                
             } catch (error) {
                 console.log(error);
             }
+            setIsLoading(false);
         })()
     }, [axiosPrivate,dispatch]);
-
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -187,18 +172,13 @@ const TrashWrapper = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[8, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={4}
-                                count={rows.length}
+                                count={trashTasks.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 slotProps={{
@@ -217,6 +197,18 @@ const TrashWrapper = () => {
                     </TableFooter>
                 </Table>
             </TableContainer>
+
+            {trashTasks.length === 0 && isLoading && (
+                <Box sx={{ width: '100%' }}>
+                    <LinearProgress />
+                </Box>
+            )}
+
+            {trashTasks.length === 0 && !isLoading && (
+                <Typography className="flex-center" variant='h6' sx={{ mt: 1 }}>
+                    Trash is empty!
+                </Typography>
+            )}
         </Box>
     );
 };
