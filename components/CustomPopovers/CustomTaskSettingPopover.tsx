@@ -6,25 +6,17 @@ import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { useDispatch } from "react-redux";
-import { taskSliceActions } from "@/store/task-slice";
 
-const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open, setOpenModal }: Partial<UserType> & Partial<CustomPopoverType> & { open: boolean, setOpenModal: (value: boolean) => void }) => {
-  const axiosPrivate = useAxiosPrivate();
-  const dispatch = useDispatch();
+const CustomTaskSettingPopover = ({ 
+  anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
+ }: 
+ Partial<UserType> & 
+ Partial<CustomPopoverType> & 
+ { open: boolean, setOpenModal: (value: boolean) => void, handleDialogOpen: () => void }
+) => {
 
   const handleOpenEditTaskModal = () => {
     setOpenModal(true);
-  };
-
-  const handleDeleteTask = async () => {
-    try {
-      await axiosPrivate.post(`/api/trash/${id}`);
-      dispatch(taskSliceActions.deleteTask(id));
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -69,7 +61,7 @@ const CustomTaskSettingPopover = ({ anchorEl, handlePopoverClose, id, open, setO
             <ListItemText primary="Duplicate" />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding onClick={handleDeleteTask}>
+        <ListItem disablePadding onClick={handleDialogOpen}>
           <ListItemButton
             sx={{ py: 0, px: 1, color: "rgba(231, 57, 26, 0.9)" }}
           >

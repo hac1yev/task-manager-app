@@ -6,10 +6,16 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useState } from 'react';
 import CustomTaskSettingPopover from '../CustomPopovers/CustomTaskSettingPopover';
 import CustomEditTaskModal from '../CustomModal/CustomEditTaskModal';
+import DialogModal from '../CustomModal/DialogModal';
 
 const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined, id: string | undefined }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [openModal, setOpenModal] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+
+    const handleDialogOpen = () => {
+        setOpenDialog(true);
+    };
 
     const handleOpenSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -58,6 +64,7 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
             </IconButton>
             <CustomTaskSettingPopover 
                 handlePopoverClose={handleClose}
+                handleDialogOpen={handleDialogOpen}
                 setOpenModal={setOpenModal}
                 anchorEl={anchorEl}
                 open={open}
@@ -66,6 +73,11 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
             <CustomEditTaskModal 
                 setOpen={setOpenModal} 
                 open={openModal} 
+                id={id}
+            />
+            <DialogModal 
+                setOpenDialog={setOpenDialog}
+                openDialog={openDialog}
                 id={id}
             />
         </Box>
