@@ -6,8 +6,26 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
+import { useTypedTaskSelector } from '@/store/task-slice';
 
 export default function PageViewsBarChart() {
+  const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
+  const [data,setData] = React.useState({HIGH: 0, MEDIUM: 0, LOW: 0});
+  
+  React.useEffect(() => {
+    const updatedData = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+
+    tasks.forEach((item) => {
+      const { priority_level } = item;
+
+      if (priority_level === 'HIGH' || priority_level === 'MEDIUM' || priority_level === 'LOW') {
+        updatedData[priority_level] += 1;
+      }
+    });
+
+    setData(updatedData);
+  }, [tasks])  
+
   const theme = useTheme();
   const colorPalette = [
     theme.palette.primary.dark,
@@ -36,7 +54,7 @@ export default function PageViewsBarChart() {
           yAxis={[
             {
               scaleType: 'linear', 
-              max: 8, 
+              max: tasks.length, 
               min: 0, 
             },
           ]}
@@ -44,7 +62,7 @@ export default function PageViewsBarChart() {
             {
               id: 'task',
               label: 'Task',
-              data: [3,4,1],
+              data: Object.values(data),
               stack: 'A',
             },
             
