@@ -1,0 +1,4 @@
+.task-inner-tabs > div > div{
+    display: flex!important;
+    gap: 10px!important;
+}

@@ -63,7 +63,7 @@ const CustomTaskSettingPopover = ({
         sx={{ display: "flex", flexDirection: "column", px: "9px", gap: "5px" }}
         onClick={handlePopoverClose}
       >
-        <Link href="/">
+        <Link href={`/tasks/${id}`}>
           <ListItem disablePadding>
             <ListItemButton sx={{ py: 0, px: 1 }}>
               <ListItemIcon sx={{ minWidth: "40px" }}>

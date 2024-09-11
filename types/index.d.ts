@@ -86,4 +86,21 @@ declare type DialogModalType = {
     setOpenDialog: (value: boolean) => void;
     openDialog: boolean;
     id?: string;
-}
+};
+
+declare interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+};
+
+declare type ParamsType = {
+    params: {
+        id: string;
+    };
+};
+
+declare type TaskDetailType = {
+    taskData: TaskSliceType | null;
+    userNames: { fullName: string; title: string }[];
+}; 
