@@ -6,6 +6,10 @@ import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { taskSliceActions } from "@/store/task-slice";
+import toast from 'react-hot-toast';
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -15,8 +19,33 @@ const CustomTaskSettingPopover = ({
  { open: boolean, setOpenModal: (value: boolean) => void, handleDialogOpen: () => void }
 ) => {
 
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useDispatch();
+
   const handleOpenEditTaskModal = () => {
     setOpenModal(true);
+  };
+
+  const handleDuplicate = async () => {
+    try {
+      const response = await axiosPrivate.post("/api/duplicate", JSON.stringify(id), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });      
+
+      const recievingData = response.data.duplicateTask;
+      delete recievingData.__v
+  
+      dispatch(taskSliceActions.addTask({
+        ...recievingData,
+      }));
+
+      toast.success('Task duplicated!');
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -53,7 +82,8 @@ const CustomTaskSettingPopover = ({
             <ListItemText primary="Edit" />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding>
+
+        <ListItem disablePadding onClick={handleDuplicate}>
           <ListItemButton sx={{ py: 0, px: 1 }}>
             <ListItemIcon sx={{ minWidth: "40px" }}>
               <ContentCopyIcon />
@@ -61,6 +91,7 @@ const CustomTaskSettingPopover = ({
             <ListItemText primary="Duplicate" />
           </ListItemButton>
         </ListItem>
+
         <ListItem disablePadding onClick={handleDialogOpen}>
           <ListItemButton
             sx={{ py: 0, px: 1, color: "rgba(231, 57, 26, 0.9)" }}

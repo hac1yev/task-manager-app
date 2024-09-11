@@ -55,7 +55,7 @@ const CustomPopover = ({ fullName, title, email, color, userId, anchorEl, handle
                 <Typography
                   component="span"
                   variant="body2"
-                  sx={{ color: "primary.main", display: "inline", mt: "3px" }}
+                  sx={{ color: "primary.main", display: "inline", mt: "1px" }}
                 >
                   {email}
                 </Typography>

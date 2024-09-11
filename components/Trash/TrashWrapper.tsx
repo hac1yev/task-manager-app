@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { trashSliceActions, useTypedTrashSelector } from "@/store/trash-slice";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 const TrashWrapper = () => {
     const [page, setPage] = useState(0);
@@ -52,6 +53,7 @@ const TrashWrapper = () => {
         try {
             axiosPrivate.put("/api/trash", JSON.stringify("DELETE"));
             dispatch(trashSliceActions.deleteAll());
+            toast.success('All tasks deleted from trash!');
         } catch (error) {
             console.log(error);
         }
@@ -61,6 +63,7 @@ const TrashWrapper = () => {
         try {
             axiosPrivate.put("/api/trash", JSON.stringify("RESTORE"));
             dispatch(trashSliceActions.deleteAll());
+            toast.success('All tasks restored!');
         } catch (error) {
             console.log(error);
         }
@@ -72,6 +75,7 @@ const TrashWrapper = () => {
             
             axiosPrivate.put(`/api/trash/${id}`, JSON.stringify("DELETE"));
             dispatch(trashSliceActions.deleteOne(id));
+            toast.success('Task deleted from trash!');
         } catch (error) {
             console.log(error);
         }
@@ -83,6 +87,7 @@ const TrashWrapper = () => {
 
             axiosPrivate.put(`/api/trash/${id}`, JSON.stringify("RESTORE"));
             dispatch(trashSliceActions.deleteOne(id));
+            toast.success('Task restored!');
         } catch (error) {
             console.log(error);
         }

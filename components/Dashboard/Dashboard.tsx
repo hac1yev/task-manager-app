@@ -16,6 +16,7 @@ import SidebarMenu from "./SidebarMenu/SidebarMenu";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import { AppBar, Drawer, Search, SearchIconWrapper, StyledInputBase } from "../MaterialSnippets/MaterialSnippets";
+import { Toaster } from "react-hot-toast";
 
 export default function Dashboard({ children }: DashboardProps) {
   const [open, setOpen] = useState(true);
@@ -176,6 +177,12 @@ export default function Dashboard({ children }: DashboardProps) {
             {children}
           </Box>
         </Box>
+
+        <Toaster 
+          position="bottom-right"
+          reverseOrder={false}
+        />
+
       </ThemeProvider>
     </Provider>
   );
