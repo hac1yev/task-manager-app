@@ -8,6 +8,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TablePaginationActions } from '../MaterialSnippets/MaterialSnippets';
 import { useTypedTaskSelector } from '@/store/task-slice';
 import { useTypedSelector } from '@/store/team-slice';
+import moment from 'moment';
 
 export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
@@ -120,7 +121,7 @@ export default function CustomPaginationActionsTable() {
                   </Stack>
                 </TableCell>
                 <TableCell style={{ width: 130 }} align="left">
-                  {row.created_at?.slice(0,10)}
+                  {moment(row.created_at).fromNow()}
                 </TableCell>
               </TableRow>
             ))}
