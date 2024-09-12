@@ -8,7 +8,7 @@ import { useState } from "react";
 const TaskInnerRightbar = ({ comments }: { comments: { user: string; description: string; adding_at:string; }[] }) => {
     const [commentText,setCommentText] = useState("");
 
-    const handleAddComment = async (e) => {
+    const handleAddComment = async () => {
         
     };
 
