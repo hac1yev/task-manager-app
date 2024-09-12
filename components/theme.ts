@@ -82,7 +82,7 @@ const theme = createTheme({
       fontSize: '14px',
       fontWeight: '400',
       lineHeight: '17px',
-      color: '#5D5D5B',
+      color: '#6D6D6B',
       '@media (max-width:900px)': {
         fontSize: '16px',
         lineHeight: '22px',

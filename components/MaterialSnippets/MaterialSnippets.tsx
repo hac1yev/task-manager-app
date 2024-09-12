@@ -93,7 +93,6 @@ export const Search = styled("form")(({ theme }) => ({
   marginLeft: 0,
   width: "90%",
   [theme.breakpoints.up("md")]: {
-    marginLeft: theme.spacing(3),
     width: "70%",
   },
 }));
@@ -127,7 +126,7 @@ interface TablePaginationActionsProps {
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number,
   ) => void;
-}
+};
 
 export function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
@@ -183,8 +182,7 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
       </IconButton>
     </Box>
   );
-}
-
+};
 
 export const addUserStyle = {
   position: "absolute" as "absolute",
@@ -224,11 +222,11 @@ export function CustomTabPanel(props: TabPanelProps) {
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
-}
+};
 
 export function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
-}
+};

@@ -35,6 +35,7 @@ declare type TaskType = {
         title: string;
         date: string;
         tag: string;
+        _id?: string;
     }[];
     comments: {
         user: string;
@@ -54,6 +55,7 @@ declare type TaskSliceType = {
         title: string;
         date: string;
         tag: string;
+        _id?: string;
     }[];
     comments: {
         user: string;
@@ -103,4 +105,5 @@ declare type ParamsType = {
 declare type TaskDetailType = {
     taskData: TaskSliceType | null;
     userNames: { fullName: string; title: string }[];
+    isLoading: Boolean;
 }; 

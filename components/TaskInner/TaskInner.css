@@ -2,3 +2,7 @@
     display: flex!important;
     gap: 10px!important;
 }
+
+.text-comment-input input {
+    padding-left: 15px!important;
+}
