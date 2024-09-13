@@ -93,7 +93,7 @@ export const Search = styled("form")(({ theme }) => ({
   marginLeft: 0,
   width: "90%",
   [theme.breakpoints.up("md")]: {
-    width: "70%",
+    width: "100%",
   },
 }));
 

@@ -39,10 +39,8 @@ const TaskSchema = new Schema({
     ],
     comments: [
         {
-            user: {
-                type: Schema.Types.ObjectId,
-                ref: User,
-                required: true
+            fullName: {
+                type: String,
             },
             description: {
                 type: String,
@@ -50,7 +48,21 @@ const TaskSchema = new Schema({
             adding_at: {
                 type: Date,
                 default: Date.now
-            }
+            },
+            responses: [
+                {
+                    fullName: {
+                        type: String
+                    },
+                    description: {
+                        type: String,
+                    },
+                    adding_at: {
+                        type: Date,
+                        default: Date.now
+                    },
+                }
+            ]
         }
     ],
     created_at: {

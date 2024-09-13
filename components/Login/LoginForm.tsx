@@ -33,9 +33,15 @@ const LoginForm = () => {
         const user_data: {
           accessToken: string;
           role: string;
+          userId: string;
+          email: string;
+          fullName: string;
         } = {
           accessToken: response.data.accessToken,
-          role: response.data.role
+          fullName: response.data.fullName,
+          email: response.data.email,
+          userId: response.data._id,
+          role: response.data.role,
         };
 
         localStorage.setItem("userInfo", JSON.stringify(user_data));

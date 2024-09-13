@@ -1,4 +1,5 @@
 import { verifyRefreshToken } from "@/lib/verifyToken";
+import { User } from "@/models/User";
 import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
 
@@ -12,6 +13,8 @@ export async function GET(req: Request) {
     if(isValidRefreshToken) {
         const jwtSecretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
 
+        const user = await User.findOne({ email: isValidRefreshToken.email });
+
         const newAccessToken = await new SignJWT({ 
             email: isValidRefreshToken.email,
             role: isValidRefreshToken.role 
@@ -24,7 +27,10 @@ export async function GET(req: Request) {
         return NextResponse.json({
             role: isValidRefreshToken.role, 
             message: 'New access token created!', 
-            newAccessToken 
+            newAccessToken,
+            _id: user._id,
+            fullName: user.fullName,
+            email: isValidRefreshToken.email 
         }); 
     }
 

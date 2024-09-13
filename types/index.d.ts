@@ -38,9 +38,16 @@ declare type TaskType = {
         _id?: string;
     }[];
     comments: {
+        _id?: string;
         user: string;
         description: string;
         adding_at:string;
+        responses: {
+            _id?: string;
+            fullName: string;
+            description: string;
+            adding_at:string;
+        }[];
     }[];
 };
 
@@ -58,9 +65,16 @@ declare type TaskSliceType = {
         _id?: string;
     }[];
     comments: {
-        user: string;
+        _id?: string;
+        fullName: string;
         description: string;
         adding_at:string;
+        responses: {
+            _id?: string;
+            fullName: string;
+            description: string;
+            adding_at:string;
+        }[];
     }[];
 };
 
@@ -103,7 +117,14 @@ declare type ParamsType = {
 };
 
 declare type TaskDetailType = {
-    taskData: TaskSliceType | null;
     userNames: { fullName: string; title: string }[];
     isLoading: Boolean;
 }; 
+
+declare type UserInfo = {
+    userId: string;
+    fullName: string;
+    email: string;
+    role: string;
+    accessToken: string;
+};

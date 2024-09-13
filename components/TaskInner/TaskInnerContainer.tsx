@@ -9,14 +9,17 @@ import { a11yProps } from '../MaterialSnippets/MaterialSnippets';
 import TaskDetail from "./TaskDetail";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 
 const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
-    const [taskData,setTaskData] = useState<TaskSliceType | null>(null);
+    const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const [userNames, setUserNames] = useState<{ fullName: string; title: string }[]>([]);
     const [isLoading,setIsLoading] = useState(true);
     const [value, setValue] = useState(0);
-    const axiosPrivate = useAxiosPrivate();    
+    const axiosPrivate = useAxiosPrivate();        
+    const dispatch = useDispatch();
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
@@ -27,13 +30,15 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             setIsLoading(true);
             try {
                 const response = await axiosPrivate.get(`/api/tasks/${taskId}`);
-                setTaskData(response.data.data)
+                const taskDetailData = response.data.data;
+                delete taskDetailData.__v;
+                dispatch(taskDetailSliceActions.getTaskDetailData(taskDetailData));
             } catch (error) {
                 console.log(error);
             }
             setIsLoading(false);
         })();
-    }, [axiosPrivate, taskId]);
+    }, [axiosPrivate, taskId, dispatch]);
 
     useEffect(() => {
         if(taskData) {
@@ -84,7 +89,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <TaskDetail taskData={taskData} userNames={userNames} isLoading={isLoading} />
+                <TaskDetail userNames={userNames} isLoading={isLoading} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
 

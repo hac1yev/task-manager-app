@@ -7,8 +7,10 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import TaskInnerRightbar from "./TaskInnerRightbar";
+import { useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 
-const TaskDetail = ({ taskData,userNames,isLoading }: TaskDetailType) => {
+const TaskDetail = ({ userNames,isLoading }: TaskDetailType) => {
+    const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
 
     if(!taskData && isLoading) {
@@ -39,12 +41,14 @@ const TaskDetail = ({ taskData,userNames,isLoading }: TaskDetailType) => {
                                         ? "#D08803"
                                         : taskData?.priority_level === "HIGH"
                                         ? "#E7391A"
-                                        : "#0C9046",
+                                        :  taskData?.priority_level === "LOW" 
+                                        ? "#0C9046" : "#fff",
                                     bgcolor: taskData?.priority_level === "MEDIUM"
                                         ? "rgba(208, 136, 3, 0.2)"
                                         : taskData?.priority_level === "HIGH"
                                         ? "rgba(231, 57, 26, 0.2)"
-                                        : "rgba(12, 144, 70, 0.2)",
+                                        : taskData?.priority_level === "LOW"
+                                        ? "rgba(12, 144, 70, 0.2)" : '#fff',
                                     p: '4px 15px',
                                     borderRadius: '20px'
                                 }}
@@ -73,7 +77,8 @@ const TaskDetail = ({ taskData,userNames,isLoading }: TaskDetailType) => {
                                         ? "#D08803"
                                         : taskData?.priority_level === "HIGH"
                                         ? "#E7391A"
-                                        : "#0C9046", width: '15px', height: '15px', flexShrink: 0, borderRadius: '50%' }}></Box>
+                                        :  taskData?.priority_level === "LOW" 
+                                        ? "#0C9046" : "#fff", width: '15px', height: '15px', flexShrink: 0, borderRadius: '50%' }}></Box>
                                 IN PROGRESS
                             </Box>
                         </Box>
@@ -122,7 +127,7 @@ const TaskDetail = ({ taskData,userNames,isLoading }: TaskDetailType) => {
                     </Box>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6 }}>
-                    <TaskInnerRightbar comments={taskData ? taskData?.comments : []} />
+                    <TaskInnerRightbar  />
                 </Grid>
             </Grid>
         </Box>

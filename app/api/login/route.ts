@@ -41,9 +41,12 @@ export async function POST(req: NextRequest) {
     .setIssuedAt()
     .setExpirationTime('30d')
     .sign(refreshSecretKey);
-                                                                        
+    
     const response = NextResponse.json({ 
+        _id: user._id,
         role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user', 
+        fullName: user.fullName,
+        email,
         message: "Login successfully!", 
         accessToken, 
     }, { status: 200 });
