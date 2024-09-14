@@ -27,7 +27,7 @@ const TaskComments = () => {
     return (
         <Box className="comment-section-wrapper">
             <List sx={{ p: 2 }}>
-                {comments && comments.toSorted((a,b) => new Date(b.adding_at).getTime() - new Date(a.adding_at).getTime()).map((comment) => (
+                {comments && comments.toSorted((a,b) => new Date(a.adding_at).getTime() - new Date(b.adding_at).getTime()).map((comment) => (
                     <ListItem sx={{ p: 0, mb: 2 }} className='comment-list-item' key={comment._id}>
                         <Paper className='comment-paper'>
                             <ListItemAvatar>
@@ -107,6 +107,9 @@ const TaskComments = () => {
                         </Paper>
                     </ListItem>
                 ))}
+                {comments.length === 0 && (
+                    <Typography align='center' variant='h6'>There is no comment!</Typography>
+                )}
             </List>
         </Box>
     );
