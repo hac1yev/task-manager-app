@@ -50,7 +50,6 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
     
             users?.forEach((user) => {
                 const findedUser = allUsers.find((u) => user === u._id);
-                console.log(allUsers);
                 
                 if(findedUser) {
                     userNames.push({

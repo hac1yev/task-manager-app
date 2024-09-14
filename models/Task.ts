@@ -49,20 +49,6 @@ const TaskSchema = new Schema({
                 type: Date,
                 default: Date.now
             },
-            responses: [
-                {
-                    fullName: {
-                        type: String
-                    },
-                    description: {
-                        type: String,
-                    },
-                    adding_at: {
-                        type: Date,
-                        default: Date.now
-                    },
-                }
-            ]
         }
     ],
     created_at: {

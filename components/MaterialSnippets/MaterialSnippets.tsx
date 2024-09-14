@@ -91,10 +91,7 @@ export const Search = styled("form")(({ theme }) => ({
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: "90%",
-  [theme.breakpoints.up("md")]: {
-    width: "100%",
-  },
+  width: "100%",
 }));
 
 export const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -213,6 +210,7 @@ export function CustomTabPanel(props: TabPanelProps) {
   return (
     <div
       role="tabpanel"
+      className="task-detail-tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}

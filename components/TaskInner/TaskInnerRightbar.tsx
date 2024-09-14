@@ -3,7 +3,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Search, StyledInputBase } from "../MaterialSnippets/MaterialSnippets";
 import SendIcon from '@mui/icons-material/Send';
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import TaskComments from "./TaskComments";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 const TaskInnerRightbar = () => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const [commentText,setCommentText] = useState("");
+    const commentTextRef = useRef<HTMLInputElement | null>(null);
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     const userInfo: Partial<UserInfo> = typeof window !== "undefined" && localStorage.getItem("userInfo") 
@@ -36,6 +37,7 @@ const TaskInnerRightbar = () => {
             });
             
             dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
+            setCommentText("");
 
         } catch (error) {
             console.log(error);
@@ -64,6 +66,7 @@ const TaskInnerRightbar = () => {
                         inputProps={{ "aria-label": "search" }}
                         onChange={(e) => setCommentText(e.target.value)}
                         value={commentText}
+                        ref={commentTextRef}
                     />
                     <Button
                         type="submit"              

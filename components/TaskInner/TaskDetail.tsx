@@ -31,8 +31,8 @@ const TaskDetail = ({ userNames,isLoading }: TaskDetailType) => {
 
     return (
         <Box sx={{ p: 1 }}>
-            <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 12, md: 6 }}>
+            <Grid container spacing={4}>
+                <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6 }}>
                     <Box className="flex-column-start">
                         <Box className="flex-start" sx={{ gap: '10px' }}>
                             <Box className="flex-center" sx={{
@@ -126,7 +126,7 @@ const TaskDetail = ({ userNames,isLoading }: TaskDetailType) => {
                         )}
                     </Box>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 12, md: 6 }}>
+                <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6  }}>
                     <TaskInnerRightbar  />
                 </Grid>
             </Grid>

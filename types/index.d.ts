@@ -42,12 +42,6 @@ declare type TaskType = {
         user: string;
         description: string;
         adding_at:string;
-        responses: {
-            _id?: string;
-            fullName: string;
-            description: string;
-            adding_at:string;
-        }[];
     }[];
 };
 
@@ -69,12 +63,6 @@ declare type TaskSliceType = {
         fullName: string;
         description: string;
         adding_at:string;
-        responses: {
-            _id?: string;
-            fullName: string;
-            description: string;
-            adding_at:string;
-        }[];
     }[];
 };
 

@@ -13,14 +13,25 @@
     gap: 20px;
 }
 
-.comment-box {
-    padding: 0 15px;
+.comment-box .quill {
+    height: auto!important;
+    width: 90%;
+    border: none;
+    margin: 0!important;
+}
+
+.comment-box .quill .ql-toolbar {
+    display: none;
+}
+
+.comment-box .ql-container.ql-snow {
+    border: none;
 }
 
 .comment-paper {
     position: relative;
     width: 100%;
-    background-color: #fff; 
+    background-color: #EEF2F3; 
     border-radius: 20px!important; 
     display: flex; 
     align-items: flex-start;
@@ -116,6 +127,17 @@
     display: none;
 }
 
+.comment-section-wrapper {
+    height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.comment-section-wrapper ul {
+    padding: 2px 10px 2px 2px;
+}
+
 @media screen and (max-width: 1199.5px) {
     .post-list {
         width: 100%;
@@ -134,8 +156,27 @@
     .post-grid {
         margin-top: 15px;
     }
-}
 
+    .post-list > div {
+        overflow: initial;
+        -ms-overflow-style: initial;
+        height: auto;
+    }    
+
+    .comment-section-wrapper {
+        height: auto;
+        overflow-y: initial;
+    } 
+
+    .task-detail-tabpanel {
+        padding: 0;
+    }
+
+    .task-detail-tabpanel > div {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
 
 @media screen and (min-width: 900px) {
     .comment-box .css-1sbtzft {
