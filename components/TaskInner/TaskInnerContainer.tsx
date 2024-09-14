@@ -4,7 +4,7 @@ import { useTypedSelector } from "@/store/team-slice";
 import { CustomTabPanel } from "../MaterialSnippets/MaterialSnippets";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, LinearProgress, Tab, Tabs, Typography } from "@mui/material";
 import { a11yProps } from '../MaterialSnippets/MaterialSnippets';
 import TaskDetail from "./TaskDetail";
 import { useEffect, useState } from "react";
@@ -64,6 +64,14 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
         }
     }, [allUsers,taskData]);
 
+    if(taskData.comments.length === 0 && isLoading) {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
+
     return (
         <>
             <Typography align="left" variant="h4" sx={{ py: 2 }}>{taskData?.title}</Typography>
@@ -93,6 +101,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             <CustomTabPanel value={value} index={1}>
 
             </CustomTabPanel>
+            
         </>
     );
 };
