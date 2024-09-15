@@ -2,12 +2,12 @@
 
 import { Box, Button, Typography } from "@mui/material";
 import CustomAddTaskModal from "../CustomModal/CustomAddTaskModal";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const AddTask = () => {
   const [open, setOpen] = useState(false);
 
-  const handleModalOpen = () => setOpen(true);
+  const handleModalOpen = useCallback(() => setOpen(true), []);
 
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>

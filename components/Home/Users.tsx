@@ -12,7 +12,7 @@ import { useTypedSelector } from '@/store/team-slice';
 import moment from 'moment';
 import CustomPopover from '../CustomPopovers/CustomPopover';
 
-export default function Users() {
+function Users() {
   const users = useTypedSelector((state) => state.teamReducer.users);
   const isLoading = useTypedSelector(state => state.teamReducer.isLoading);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -28,15 +28,15 @@ export default function Users() {
     return colorMap;
   }, [users]);
 
-  const handlePopoverOpen = (id: string, event: React.MouseEvent<HTMLElement>) => {
+  const handlePopoverOpen = React.useCallback((id: string, event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     setUserId(id);
-  };
+  }, []);
 
-  const handlePopoverClose = () => {
+  const handlePopoverClose = React.useCallback(() => {
     setAnchorEl(null);
     setUserId("");
-  };
+  }, []);
 
   const open = Boolean(anchorEl);
 
@@ -104,3 +104,5 @@ export default function Users() {
     </>
   );
 };
+
+export default React.memo(Users);

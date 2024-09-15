@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, TextField, Typography, SelectChangeEvent } from "@mui/material";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { taskSliceActions, useTypedTaskSelector } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -284,4 +284,4 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
   );
 };
 
-export default CustomEditTaskModal;
+export default memo(CustomEditTaskModal);

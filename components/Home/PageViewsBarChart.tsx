@@ -8,7 +8,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
 import { useTypedTaskSelector } from '@/store/task-slice';
 
-export default function PageViewsBarChart() {
+function PageViewsBarChart() {
   const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
   const [data,setData] = React.useState({HIGH: 0, MEDIUM: 0, LOW: 0});
   
@@ -80,3 +80,5 @@ export default function PageViewsBarChart() {
     </Card>
   );
 }
+
+export default React.memo(PageViewsBarChart);

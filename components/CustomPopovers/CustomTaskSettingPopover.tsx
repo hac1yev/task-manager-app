@@ -10,6 +10,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
+import { memo } from "react";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -107,4 +108,4 @@ const CustomTaskSettingPopover = ({
   );
 };
 
-export default CustomTaskSettingPopover;
+export default memo(CustomTaskSettingPopover);

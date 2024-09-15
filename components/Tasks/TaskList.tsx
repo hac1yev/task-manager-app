@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Divider, FormControl, FormLabel, Modal, Stack, Tex
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import CustomPopover from "../CustomPopovers/CustomPopover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
@@ -28,22 +28,24 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
+  const handleModalOpen = useCallback(() => setModalOpen(true), []);
+  const handleModalClose = useCallback(() => setModalOpen(false), []);
 
-  const handlePopoverOpen = (id: string, event: React.MouseEvent<HTMLElement>) => {
+  const handlePopoverOpen = useCallback((id: string, event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     setUserId(id);
-  };
+  }, []);
 
-  const handlePopoverClose = () => {
+  const handlePopoverClose = useCallback(() => {
     setAnchorEl(null);
     setUserId("");
-  };
+  }, []);
 
-  const open = Boolean(anchorEl);    
+  const open = useMemo(() => {
+    return Boolean(anchorEl);
+  }, [anchorEl]);    
 
-  const handleAddSubtask = async (e: FormEvent) => {
+  const handleAddSubtask = useCallback(async (e: FormEvent) => {
     e.preventDefault();
 
     try {
@@ -57,7 +59,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       console.log(error);
     }
     setModalOpen(false);
-  };
+  }, [_id,axiosPrivate,dispatch,subtaskValues]);
 
   return (
     <Item sx={{ mb: 2 }}>

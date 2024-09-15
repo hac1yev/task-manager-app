@@ -10,14 +10,14 @@ import { useTypedTaskSelector } from '@/store/task-slice';
 import { useTypedSelector } from '@/store/team-slice';
 import moment from 'moment';
 
-export default function CustomPaginationActionsTable() {
+function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(8);
   const randomTitleRound = ['#D18805','#1A65E9','#0B8A49','#D83121','#6D36D4'];
   const allUsers = useTypedSelector(state => state.teamReducer.users);
   const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
   const isLoading = useTypedTaskSelector(state => state.taskReducer.isLoading);
-
+  
   const userColors = React.useMemo(() => {
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
     const colorMap = new Map();
@@ -28,46 +28,43 @@ export default function CustomPaginationActionsTable() {
     return colorMap;
   }, [allUsers]);
 
-  const modifiedTasks = tasks.map((task) => {
-    const { users } = task;
-    const userNames: {
-        _id: string;
-        fullName: string;
-        title: string;
-        email: string;
-    }[] = [];            
-
-    users?.forEach((user) => {
-        const findedUser = allUsers.find((u) => user === u._id);
-        if(findedUser) {
-            userNames.push({
-                _id: findedUser?._id,
-                fullName: findedUser?.fullName,
-                title: findedUser.title,
-                email: findedUser.email
-            });
-        }
+  const modifiedTasks = React.useMemo(() => {
+    return tasks.map((task) => {
+      const { users } = task;
+      const userNames: {
+          _id: string;
+          fullName: string;
+          title: string;
+          email: string;
+      }[] = [];            
+  
+      users?.forEach((user) => {
+          const findedUser = allUsers.find((u) => user === u._id);
+          if(findedUser) {
+              userNames.push({
+                  _id: findedUser?._id,
+                  fullName: findedUser?.fullName,
+                  title: findedUser.title,
+                  email: findedUser.email
+              });
+          }
+      });
+      
+      return {
+          ...task,
+          users: userNames
+      }
     });
-    
-    return {
-        ...task,
-        users: userNames
-    }
-  });
+  }, [allUsers,tasks]);
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
+  const handleChangePage = React.useCallback((event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
-  };
+  }, []);
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChangeRowsPerPage = React.useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+  }, []);
 
   return (
     <>
@@ -165,3 +162,5 @@ export default function CustomPaginationActionsTable() {
     </>
   );
 }
+
+export default React.memo(CustomPaginationActionsTable);

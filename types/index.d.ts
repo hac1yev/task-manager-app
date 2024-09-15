@@ -39,7 +39,7 @@ declare type TaskType = {
     }[];
     comments: {
         _id?: string;
-        user: string;
+        fullName: string;
         description: string;
         adding_at:string;
     }[];

@@ -11,6 +11,7 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import SettingsIcon from "@mui/icons-material/Settings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { memo } from "react";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
@@ -150,4 +151,4 @@ const SidebarMenu = () => {
   );
 };
 
-export default SidebarMenu;
+export default memo(SidebarMenu);

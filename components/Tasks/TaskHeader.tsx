@@ -1,9 +1,11 @@
+"use client";
+
 import { Box, IconButton } from '@mui/material'
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import CustomTaskSettingPopover from '../CustomPopovers/CustomTaskSettingPopover';
 import CustomEditTaskModal from '../CustomModal/CustomEditTaskModal';
 import DialogModal from '../CustomModal/DialogModal';
@@ -13,19 +15,49 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
     const [openModal, setOpenModal] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleDialogOpen = () => {
+    const handleDialogOpen = useCallback(() => {
         setOpenDialog(true);
-    };
+    }, []);
 
-    const handleOpenSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOpenSettings = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-    };
+    }, []);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setAnchorEl(null);
-    };
+    }, []);
 
-    const open = Boolean(anchorEl);
+    const open = useMemo(() => {
+        return Boolean(anchorEl);
+    }, [anchorEl]);
+
+    const priorityDisplay = useMemo(() => {
+        switch (priority_level) {
+            case "MEDIUM":
+                return (
+                    <>
+                        <KeyboardArrowUpIcon />
+                        MEDIUM PRIORITY
+                    </>
+                );
+            case "HIGH":
+                return (
+                    <>
+                        <KeyboardDoubleArrowUpIcon />
+                        HIGH PRIORITY
+                    </>
+                );
+            case "LOW":
+                return (
+                    <>
+                        <KeyboardArrowDownIcon />
+                        LOW PRIORITY
+                    </>
+                );
+            default:
+                return null;
+        }
+    }, [priority_level]);
 
     return (
         <Box sx={{ width: "100%" }} className="flex-between">
@@ -40,24 +72,7 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
                     : "#0C9046",
                 }}
             >
-                {priority_level === "MEDIUM" && (
-                <>
-                    <KeyboardArrowUpIcon />
-                    MEDIUM PRIORITY
-                </>
-                )}
-                {priority_level === "HIGH" && (
-                <>
-                    <KeyboardDoubleArrowUpIcon />
-                    HIGH PRIORITY
-                </>
-                )}
-                {priority_level === "LOW" && (
-                    <>
-                    <KeyboardArrowDownIcon />
-                    LOW PRIORITY
-                    </>
-                )}
+                {priorityDisplay}
             </Box>
             <IconButton aria-describedby={id} onClick={handleOpenSettings}>
                 <MoreHorizOutlinedIcon />
@@ -84,4 +99,4 @@ const TaskHeader = ({ priority_level, id }: { priority_level: string | undefined
     );
 };
 
-export default TaskHeader;
+export default memo(TaskHeader);

@@ -10,6 +10,7 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
+import { memo } from 'react';
 
 const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const axiosPrivate = useAxiosPrivate();
@@ -60,4 +61,4 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     );
 };
 
-export default DialogModal;
+export default memo(DialogModal);

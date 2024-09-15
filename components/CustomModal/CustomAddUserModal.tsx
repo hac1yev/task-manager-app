@@ -3,7 +3,7 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { teamSliceAction } from "@/store/team-slice";
 import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 
@@ -155,4 +155,4 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
   );
 };
 
-export default CustomAddUserModal;
+export default memo(CustomAddUserModal);

@@ -7,7 +7,7 @@ import { Item } from "../MaterialSnippets/MaterialSnippets";
 import Grid from "@mui/material/Grid2";
 import { useTypedTaskSelector } from "@/store/task-slice";
 import { useTypedSelector } from "@/store/team-slice";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import TaskList from "./TaskList";
 
 const Tasks = () => {
@@ -18,44 +18,52 @@ const Tasks = () => {
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
     }); 
 
-    const modifiedTasks = tasks.map((task) => {
-        const { users } = task;
-        const userNames: {
-            fullName: string;
-            title: string;
-            email: string;
-        }[] = [];            
-
-        users?.forEach((user) => {
-            const findedUser = allUsers.find((u) => user === u._id);
-            if(findedUser) {
-                userNames.push({
-                    fullName: findedUser?.fullName,
-                    title: findedUser.title,
-                    email: findedUser.email
-                });
+    const modifiedTasks = useMemo(() => {
+        return tasks.map((task) => {
+            const { users } = task;
+            const userNames: {
+                fullName: string;
+                title: string;
+                email: string;
+            }[] = [];            
+    
+            users?.forEach((user) => {
+                const findedUser = allUsers.find((u) => user === u._id);
+                if(findedUser) {
+                    userNames.push({
+                        fullName: findedUser?.fullName,
+                        title: findedUser.title,
+                        email: findedUser.email
+                    });
+                }
+            });
+            
+            return {
+                ...task,
+                users: userNames
             }
         });
+    }, [allUsers,tasks]);
         
-        return {
-            ...task,
-            users: userNames
-        }
-    });
-        
-    const todoTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'TODO') return task;
-    });    
+    const todoTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'TODO') return task;
+        });    
+    }, [modifiedTasks]);
 
-    const inProgressTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'IN PROGRESS') return task;
-    });
+    const inProgressTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'IN PROGRESS') return task;
+        });
+    }, [modifiedTasks]);
 
-    const completedTasks = modifiedTasks.filter(task => {
-        if(task.stage === 'COMPLETED') return task;
-    });
+    const completedTasks = useMemo(() => {
+        return modifiedTasks.filter(task => {
+            if(task.stage === 'COMPLETED') return task;
+        });
+    }, [modifiedTasks]);
 
-    const handleHideShow = (taskStage: string) => {
+    const handleHideShow = useCallback((taskStage: string) => {
         if(taskStage === 'TODO') {
             if(hideTasks.todo) {
                 setHideTasks((prev) => {
@@ -105,7 +113,7 @@ const Tasks = () => {
                 })
             }
         } 
-    };    
+    }, [hideTasks.inProgress, hideTasks.completed, hideTasks.todo]);
 
     return (
         <>
@@ -243,4 +251,4 @@ const Tasks = () => {
     );
 };
 
-export default Tasks;
+export default memo(Tasks);

@@ -14,44 +14,46 @@ import Users from "./Users";
 import TeamApiCall from "../HOC/TeamApiCall";
 import TasksApiCall from "../HOC/TasksApiCall";
 import { useTypedTaskSelector } from "@/store/task-slice";
+import { useMemo } from "react";
 
 const HOCTeamComponent = TeamApiCall(Users);
 const HOCTaskComponent = TasksApiCall(CustomizedDataGrid);
 
-
 const HomeWrapper = () => {
   const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
 
-  const data: StatCardProps[] = [
-    {
-      id: "total",
-      title: "TOTAL TASKS",
-      count: tasks.length,
-      logo_img: <ListAltIcon sx={{ color: '#fff' }} />,
-      palette: '#1D53E3'
-    },
-    {
-      id: "total",
-      title: "COMPLETED TASKS",
-      count: tasks.filter((task) => task.stage === "COMPLETED").length,
-      logo_img: <EventAvailableOutlinedIcon sx={{ color: '#fff' }} />,
-      palette: '#0B6F70'
-    },
-    {
-      id: "total",
-      title: "TASKS IN PROGRESS",
-      count: tasks.filter((task) => task.stage === "IN PROGRESS").length,
-      logo_img: <FindReplaceOutlinedIcon sx={{ color: '#fff' }} />,
-      palette: '#FDA003'
-    },
-    {
-      id: "total",
-      title: "TODOS",
-      count: tasks.filter((task) => task.stage === "TODO").length,
-      logo_img: <DriveFileMoveOutlinedIcon sx={{ color: '#fff' }} />,
-      palette: '#C52E5C'
-    },
-  ];  
+  const data: StatCardProps[] = useMemo(() => {
+    return [
+      {
+        id: "total",
+        title: "TOTAL TASKS",
+        count: tasks.length,
+        logo_img: <ListAltIcon sx={{ color: '#fff' }} />,
+        palette: '#1D53E3'
+      },
+      {
+        id: "total",
+        title: "COMPLETED TASKS",
+        count: tasks.filter((task) => task.stage === "COMPLETED").length,
+        logo_img: <EventAvailableOutlinedIcon sx={{ color: '#fff' }} />,
+        palette: '#0B6F70'
+      },
+      {
+        id: "total",
+        title: "TASKS IN PROGRESS",
+        count: tasks.filter((task) => task.stage === "IN PROGRESS").length,
+        logo_img: <FindReplaceOutlinedIcon sx={{ color: '#fff' }} />,
+        palette: '#FDA003'
+      },
+      {
+        id: "total",
+        title: "TODOS",
+        count: tasks.filter((task) => task.stage === "TODO").length,
+        logo_img: <DriveFileMoveOutlinedIcon sx={{ color: '#fff' }} />,
+        palette: '#C52E5C'
+      },
+    ]
+  }, [tasks]);  
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>

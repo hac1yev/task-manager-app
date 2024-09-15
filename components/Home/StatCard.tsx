@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardMedia, Stack, Typography } from "@mui/material";
+import { memo } from "react";
 
 const StatCard = ({ logo_img, title, count, palette }: Partial<StatCardProps>) => {
   return (
@@ -32,4 +33,4 @@ const StatCard = ({ logo_img, title, count, palette }: Partial<StatCardProps>) =
   )
 }
 
-export default StatCard
+export default memo(StatCard);
