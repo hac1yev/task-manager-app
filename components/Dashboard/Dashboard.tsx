@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Toolbar, Typography, Divider, IconButton, Box, CssBaseline, Stack, Avatar, Badge } from "@mui/material"; 
 import { ThemeProvider } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -42,9 +42,9 @@ export default function Dashboard({ children }: DashboardProps) {
     });
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  };
+  }, []);
 
   return (
     <Provider store={store}>

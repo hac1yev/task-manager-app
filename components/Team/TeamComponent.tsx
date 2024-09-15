@@ -12,7 +12,7 @@ import AddUser from "./AddUser";
 import { teamSliceAction, useTypedSelector } from "@/store/team-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, memo, useCallback, useMemo, useState } from "react";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 
 const TeamComponent = () => {
@@ -33,26 +33,26 @@ const TeamComponent = () => {
     return colorMap;
   }, [users]);
 
-  const handleOpenEdit = (id: string) => {
+  const handleOpenEdit = useCallback( (id: string) => {
     const selectedUser = users.find((user) => user._id === id);
     if (selectedUser) {
       setEditedUser(selectedUser);
     }
     setOpen(id);
-  };
+  }, [users])
 
-  const handleClose = () => setOpen("");
+  const handleClose = useCallback(() => setOpen(""), []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       await axiosPrivate.delete(`/api/team/${id}`);
       dispatch(teamSliceAction.deleteUser(id));
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [axiosPrivate,dispatch]);
 
-  const handleEdit = async (id: string, e: FormEvent<HTMLFormElement>) => {
+  const handleEdit = useCallback(async (id: string, e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -67,7 +67,7 @@ const TeamComponent = () => {
     }
 
     setOpen("");
-  };
+  }, [axiosPrivate,dispatch,editedUser]);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
@@ -312,4 +312,6 @@ const TeamComponent = () => {
   );
 };
 
-export default TeamComponent;
+const MemoizationTeamComponent = memo(TeamComponent);
+
+export default MemoizationTeamComponent;

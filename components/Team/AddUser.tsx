@@ -2,12 +2,12 @@
 
 import { Box, Button, Typography } from "@mui/material";
 import CustomAddUserModal from "../CustomModal/CustomAddUserModal";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 const AddUser = () => {
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = useCallback(() => setOpen(true), []);
 
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>
@@ -20,4 +20,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default memo(AddUser);
