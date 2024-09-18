@@ -4,7 +4,7 @@ import { Box, Button, LinearProgress, Paper, Stack, Table, TableBody, TableCell,
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TablePaginationActions } from "../MaterialSnippets/MaterialSnippets";
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -35,21 +35,16 @@ const TrashWrapper = () => {
         })()
     }, [axiosPrivate,dispatch]);
 
-    const handleChangePage = (
-        event: React.MouseEvent<HTMLButtonElement> | null,
-        newPage: number,
-    ) => {
+    const handleChangePage = useCallback((event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
-    };
+    }, []);
 
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
+    const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
+    }, []);
 
-    const handleDeleteAll = () => {
+    const handleDeleteAll = useCallback(() => {
         try {
             axiosPrivate.put("/api/trash", JSON.stringify("DELETE"));
             dispatch(trashSliceActions.deleteAll());
@@ -57,9 +52,9 @@ const TrashWrapper = () => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate,dispatch]);
 
-    const handleRestoreAll = () => {
+    const handleRestoreAll = useCallback(() => {
         try {
             axiosPrivate.put("/api/trash", JSON.stringify("RESTORE"));
             dispatch(trashSliceActions.deleteAll());
@@ -67,9 +62,9 @@ const TrashWrapper = () => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate,dispatch]);
 
-    const handleDeleteOne = (id: string | undefined) => {
+    const handleDeleteOne = useCallback((id: string | undefined) => {
         try {
             if (!id) return;
             
@@ -79,9 +74,9 @@ const TrashWrapper = () => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate,dispatch]);
 
-    const handleRestoreOne = (id: string | undefined) => {
+    const handleRestoreOne = useCallback((id: string | undefined) => {
         try {
             if (!id) return;
 
@@ -91,7 +86,7 @@ const TrashWrapper = () => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate,dispatch]);
 
     return (
         <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
