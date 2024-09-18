@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
+import TaskTimeline from "./TaskTimeline";
 
 const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
@@ -74,7 +75,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
 
     return (
         <>
-            <Typography align="left" variant="h4" sx={{ py: 2 }}>{taskData?.title}</Typography>
+            <Typography align="left" variant="h4" sx={{ pb: 2 }}>{taskData?.title}</Typography>
             <Box sx={{ width: 'max-content', background: 'transparent' }}>
                 <Tabs
                     value={value}
@@ -99,7 +100,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                 <TaskDetail userNames={userNames} isLoading={isLoading} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-
+                <TaskTimeline taskId={taskId} />
             </CustomTabPanel>
             
         </>

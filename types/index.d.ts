@@ -43,6 +43,12 @@ declare type TaskType = {
         description: string;
         adding_at:string;
     }[];
+    activities: {
+        _id?: string;
+        name: string;
+        description: string;
+        created_at: string;
+    }[];
 };
 
 declare type TaskSliceType = {
@@ -63,6 +69,12 @@ declare type TaskSliceType = {
         fullName: string;
         description: string;
         adding_at:string;
+    }[];
+    activities: {
+        _id?: string;
+        name: string;
+        description: string;
+        created_at: string;
     }[];
 };
 

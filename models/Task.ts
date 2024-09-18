@@ -51,6 +51,22 @@ const TaskSchema = new Schema({
             },
         }
     ],
+    activities: [
+        {
+            name: {
+                type: String,
+                required: true
+            },
+            created_at: {
+                type: Date,
+                default: Date.now
+            },
+            description: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     created_at: {
         type: Date,
         default: Date.now

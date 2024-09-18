@@ -145,6 +145,21 @@
     padding: 2px;
 }
 
+.timeline-container {
+    padding-left: 0!important;
+    padding-right: 0!important;
+}
+
+.timeline-container li {
+    min-height: 100px!important;
+}
+
+.timeline-container .css-1ms7hib-MuiTimelineItem-root::before {
+    flex: none!important;
+    -webkit-flex: none!important;
+    padding: 0!important;
+}
+
 @media screen and (max-width: 1199.5px) {
     .post-list {
         width: 100%;

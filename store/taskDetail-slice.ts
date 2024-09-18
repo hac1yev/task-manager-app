@@ -15,6 +15,7 @@ const initialTaskDetailState: TaskDetailState = {
     created_at: "",
     subtask: [],
     comments: [],
+    activities: [],
   },
 };
 
@@ -28,9 +29,21 @@ export const taskDetailSlice = createSlice({
     addComment(state, action) {
       state.taskDetailData = {
         ...state.taskDetailData,
-        comments: [...state.taskDetailData.comments, { ...action.payload }],
+        comments: [
+          ...state.taskDetailData.comments, 
+          { ...action.payload }
+        ]
       };
     },
+    addActivities(state,action) {
+      state.taskDetailData = {
+        ...state.taskDetailData,
+        activities: [
+          ...state.taskDetailData.activities, 
+          { ...action.payload }
+        ]
+      };
+    }
   },
 });
 
