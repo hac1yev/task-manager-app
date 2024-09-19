@@ -106,7 +106,7 @@ const LoginForm = () => {
             id="email"
             type="email"
             name="email"
-            placeholder="your@email.com"
+            placeholder="ilkinhaciyev955@gmail.com"
             autoComplete="email"
             autoFocus
             required
@@ -124,7 +124,7 @@ const LoginForm = () => {
             error={passwordError}
             helperText={passwordErrorMessage}
             name="password"
-            placeholder="••••••"
+            placeholder="hilkin08"
             type="password"
             id="password"
             autoComplete="current-password"
