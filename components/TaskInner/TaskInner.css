@@ -154,7 +154,7 @@
     min-height: 100px!important;
 }
 
-.timeline-container .css-1ms7hib-MuiTimelineItem-root::before {
+.timeline-container li::before {
     flex: none!important;
     -webkit-flex: none!important;
     padding: 0!important;
