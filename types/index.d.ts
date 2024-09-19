@@ -118,7 +118,6 @@ declare type ParamsType = {
 
 declare type TaskDetailType = {
     userNames: { fullName: string; title: string }[];
-    isLoading: Boolean;
 }; 
 
 declare type UserInfo = {

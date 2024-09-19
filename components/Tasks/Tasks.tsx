@@ -237,7 +237,7 @@ const Tasks = () => {
                 </Grid>
             </Grid>
             {modifiedTasks.length === 0 && isLoading && (
-                <Box sx={{ width: '100%' }}>
+                <Box sx={{ width: '100%', bgcolor: '#fff', p: 4 }}>
                     <LinearProgress />
                 </Box>
             )}

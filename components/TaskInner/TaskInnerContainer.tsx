@@ -65,13 +65,8 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
         }
     }, [allUsers,taskData]);
 
-    if(taskData.comments.length === 0 && isLoading) {
-        return (
-            <Box sx={{ width: '100%' }}>
-                <LinearProgress />
-            </Box>
-        )
-    }
+    console.log(taskData);
+    
 
     return (
         <>
@@ -96,13 +91,26 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                     } sx={{ bgcolor: 'background.paper' }} {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            <CustomTabPanel value={value} index={0}>
-                <TaskDetail userNames={userNames} isLoading={isLoading} />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <TaskTimeline taskId={taskId} />
-            </CustomTabPanel>
-            
+            {taskData.comments.length > 0 && (
+                <>
+                    <CustomTabPanel value={value} index={0}>
+                        <TaskDetail userNames={userNames} />
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={1}>
+                        <TaskTimeline taskId={taskId} />
+                    </CustomTabPanel>
+                </>
+            )}
+            {taskData?.comments?.length === 0 && isLoading && (
+                <Box sx={{ width: '100%', bgcolor: '#fff', p: 4, mt: 2 }}>
+                    <LinearProgress />
+                </Box>
+            )}
+            {taskData?.comments?.length === 0 && !isLoading && (
+                <Typography className="flex-center" variant='h6' sx={{ mt: 2 }}>
+                    There is no task data!
+                </Typography>
+            )}
         </>
     );
 };

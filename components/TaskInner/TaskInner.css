@@ -31,7 +31,7 @@
 .comment-paper {
     position: relative;
     width: 100%;
-    background-color: #EEF2F3; 
+    background-color: #EEF2F3!important; 
     border-radius: 20px!important; 
     display: flex; 
     align-items: flex-start;

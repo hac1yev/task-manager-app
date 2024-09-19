@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Box, Divider, LinearProgress, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Avatar, Box, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -9,25 +9,9 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import TaskInnerRightbar from "./TaskInnerRightbar";
 import { useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 
-const TaskDetail = ({ userNames,isLoading }: TaskDetailType) => {
+const TaskDetail = ({ userNames }: TaskDetailType) => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
-
-    if(!taskData && isLoading) {
-        return (
-            <Box sx={{ width: '100%' }}>
-                <LinearProgress />
-            </Box>
-        )
-    }
-
-    if(!taskData && !isLoading) {
-        return (
-            <Typography className="flex-center" variant='h6' sx={{ mt: 1 }}>
-                There is no task data!
-            </Typography>
-        )
-    }
 
     return (
         <Box sx={{ p: 1 }}>
