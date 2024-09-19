@@ -127,7 +127,7 @@
 }
 
 .comment-section-wrapper {
-    height: 90vh;
+    height: 65vh;
     overflow-y: auto;
     scrollbar-color: #888 #f1f1f1;
 }

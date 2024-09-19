@@ -15,52 +15,57 @@ import PestControlIcon from "@mui/icons-material/PestControl";
 import CachedIcon from "@mui/icons-material/Cached";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 import moment from "moment";
+import { useMemo } from "react";
 
 const TimelineComponent = () => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);    
+    
+    const getIcon = useMemo(() => {
+       const iconComponent = (name: string) => {
+            switch(name) {
+                case 'Started':
+                    return (
+                        <TimelineDot sx={{ bgcolor: 'primary.main' }}>
+                            <ThumbUpIcon />
+                        </TimelineDot>
+                    );
+                case 'Completed':
+                    return (
+                        <TimelineDot sx={{ bgcolor: 'green' }}>
+                            <AddTaskIcon />
+                        </TimelineDot>
+                    );
+                case 'In Progress':
+                    return (
+                        <TimelineDot sx={{ bgcolor: '#0B6F70' }}>
+                            <CachedIcon />
+                        </TimelineDot>
+                    );
+                case 'Commented':
+                    return (
+                        <TimelineDot sx={{ bgcolor: '#6B7283' }}>
+                            <CommentIcon />
+                        </TimelineDot>
+                    );
+                case 'Bug':
+                    return (
+                        <TimelineDot sx={{ bgcolor: '#fff' }}>
+                            <PestControlIcon sx={{ color: 'red' }} />
+                        </TimelineDot>
+                    );
+                case 'Assigned':
+                    return (
+                        <TimelineDot sx={{ bgcolor: '#FDA003' }}>
+                            <AssignmentLateIcon />
+                        </TimelineDot>
+                    );
+                default:
+                    return null;
+            }
+        };
 
-    const getIcon = (name: string) => {
-        switch(name) {
-            case 'Started':
-                return (
-                    <TimelineDot sx={{ bgcolor: 'primary.main' }}>
-                        <ThumbUpIcon />
-                    </TimelineDot>
-                );
-            case 'Completed':
-                return (
-                    <TimelineDot sx={{ bgcolor: 'green' }}>
-                        <AddTaskIcon />
-                    </TimelineDot>
-                );
-            case 'In Progress':
-                return (
-                    <TimelineDot sx={{ bgcolor: '#0B6F70' }}>
-                        <CachedIcon />
-                    </TimelineDot>
-                );
-            case 'Commented':
-                return (
-                    <TimelineDot sx={{ bgcolor: '#6B7283' }}>
-                        <CommentIcon />
-                    </TimelineDot>
-                );
-            case 'Bug':
-                return (
-                    <TimelineDot sx={{ bgcolor: '#fff' }}>
-                        <PestControlIcon sx={{ color: 'red' }} />
-                    </TimelineDot>
-                );
-            case 'Assigned':
-                return (
-                    <TimelineDot sx={{ bgcolor: '#FDA003' }}>
-                        <AssignmentLateIcon />
-                    </TimelineDot>
-                );
-            default:
-                return null;
-        }
-    };
+        return iconComponent;
+    }, [])
 
   return (
     <Box>

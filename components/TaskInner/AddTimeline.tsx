@@ -8,18 +8,9 @@ import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useDispatch } from "react-redux";
 import { taskDetailSliceActions } from "@/store/taskDetail-slice";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import uniqid from "uniqid";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-
-const activityNames = [
-  { name: "Started" },
-  { name: "Completed" },
-  { name: "In Progress" },
-  { name: "Commented" },
-  { name: "Bug" },
-  { name: "Assigned" },
-];
 
 const AddTimeline = ({ taskId }: { taskId: string }) => {
   const [activityData, setActivityData] = useState<
@@ -33,7 +24,18 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
   const dispatch = useDispatch();
   const [description, setDescription] = useState("");
 
-  const handleChange = (name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+  const activityNames = useMemo(() => {
+    return [
+      { name: "Started" },
+      { name: "Completed" },
+      { name: "In Progress" },
+      { name: "Commented" },
+      { name: "Bug" },
+      { name: "Assigned" },
+    ];
+  }, []);
+
+  const handleChange = useCallback((name: string, event: React.ChangeEvent<HTMLInputElement>) => {
     if(activityData.name !== name) {
         setActivityData({
             _id: uniqid(),
@@ -43,9 +45,9 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
     }else{
         setActivityData({});
     }
-  };  
+  }, [activityData.name]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
 
     if (activityData.name) {
@@ -74,7 +76,7 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
     } else {
       console.log("Please select an activity.");
     }
-  };
+  }, [activityData, axiosPrivate, description, dispatch, taskId]);
 
   return (
     <Box className="flex-column">
