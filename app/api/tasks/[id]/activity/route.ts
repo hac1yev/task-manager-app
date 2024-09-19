@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     const bearer = req.headers.get("Authorization");    
     const data = await req.json();
-
-    console.log(data);
     
     const url = req.url;
     const id = url.split("/").at(-2);

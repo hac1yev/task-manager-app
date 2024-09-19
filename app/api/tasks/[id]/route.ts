@@ -28,8 +28,6 @@ export async function POST(req: Request) {
     const url = req.url;
     const id = url.split("/").at(-1);
     const data = await req.json();
-
-    console.log(data);
         
     const accessToken = bearer?.split(" ")[1] || "";
 
