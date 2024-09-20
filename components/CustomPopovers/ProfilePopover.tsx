@@ -12,6 +12,7 @@ import { memo, useCallback } from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LogoutIcon from '@mui/icons-material/Logout';
+import axios from "axios";
 
 const ProfilePopover = ({
   anchorEl,
@@ -20,7 +21,6 @@ const ProfilePopover = ({
   open,
   userInfo,
   setOpenProfileModal,
-  setEditedUser
 }: {
   open: boolean;
   anchorEl: HTMLElement | null;
@@ -28,7 +28,6 @@ const ProfilePopover = ({
   id?: string;
   userInfo: Partial<UserInfo> | null;
   setOpenProfileModal: (value: string) => void;
-  setEditedUser: (value: Partial<UserType>) => void
 }) => {
 
   const handleOpenEdit = useCallback((userId: string | undefined) => {
@@ -36,6 +35,18 @@ const ProfilePopover = ({
       setOpenProfileModal(userId);
     }
   }, [setOpenProfileModal]);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/logout");
+      if(typeof window !== 'undefined') {
+        localStorage.removeItem("userInfo");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Popover
@@ -70,7 +81,7 @@ const ProfilePopover = ({
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding>
+        <ListItem disablePadding onClick={handleLogout}>
           <ListItemButton sx={{ py: 0, px: 1 }}>
             <ListItemIcon sx={{ minWidth: "40px" }}>
                 <LogoutIcon />

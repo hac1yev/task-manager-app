@@ -135,7 +135,6 @@ const handleEdit = useCallback(
             id={"avatar-settings"}
             anchorEl={anchorEl}
             userInfo={userInfo}
-            setEditedUser={setEditedUser}
           />
           <UserProfileModal
             openProfileModal={openProfileModal}
