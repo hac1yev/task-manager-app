@@ -126,7 +126,7 @@ const LoginForm = () => {
             error={passwordError}
             helperText={passwordErrorMessage}
             name="password"
-            placeholder="hilkin08"
+            placeholder="admin1234"
             type="password"
             id="password"
             autoComplete="current-password"
