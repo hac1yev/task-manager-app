@@ -21,6 +21,7 @@ const ProfilePopover = ({
   open,
   userInfo,
   setOpenProfileModal,
+  setOpenChangePasswordModal,
 }: {
   open: boolean;
   anchorEl: HTMLElement | null;
@@ -28,6 +29,7 @@ const ProfilePopover = ({
   id?: string;
   userInfo: Partial<UserInfo> | null;
   setOpenProfileModal: (value: string) => void;
+  setOpenChangePasswordModal: (value: string) => void;
 }) => {
 
   const handleOpenEdit = useCallback((userId: string | undefined) => {
@@ -46,6 +48,10 @@ const ProfilePopover = ({
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleOpenConfirmPassword = () => {
+    setOpenChangePasswordModal("open-change-password");
   };
 
   return (
@@ -72,7 +78,7 @@ const ProfilePopover = ({
             </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding>
+        <ListItem disablePadding onClick={handleOpenConfirmPassword}>
           <ListItemButton sx={{ py: 0, px: 1 }}>
             <ListItemIcon sx={{ minWidth: "40px" }}>
                 <VpnKeyIcon />

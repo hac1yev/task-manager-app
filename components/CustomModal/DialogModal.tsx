@@ -51,7 +51,7 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions sx={{ pb: 2 }}>
-                <Button onClick={handleClose} color="inherit" variant='outlined'>Cancel</Button>
+                <Button type="button" onClick={handleClose} color="inherit" variant='outlined'>Cancel</Button>
                 <Button onClick={handleDelete} color="error" variant='contained' autoFocus>
                     Delete
                 </Button>

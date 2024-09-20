@@ -11,6 +11,8 @@ import UserProfileModal from "../CustomModal/UserProfileModal";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { teamSliceAction } from "@/store/team-slice";
+import ChangePasswordModal from "../CustomModal/ChangePasswordModal";
+import toast from "react-hot-toast";
 
 const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDrawer: () => void, handleSubmit: (e: FormEvent) => void }) => {
   const matches = useMediaQuery("(min-width:769px)");
@@ -18,6 +20,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
   const [openProfileModal,setOpenProfileModal] = useState("");
+  const [openChangePasswordModal,setOpenChangePasswordModal] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
   
@@ -33,34 +36,37 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   }, []);
 
   const handleCloseModal = useCallback(() => setOpenProfileModal(""), []);
+  const handleCloseChangePasswordModal = useCallback(() => setOpenChangePasswordModal(""), []);
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
 
-const openProfilePopover = useMemo(() => {
-    return Boolean(anchorEl);
-}, [anchorEl]);
+  const openProfilePopover = useMemo(() => {
+      return Boolean(anchorEl);
+  }, [anchorEl]);
 
-const handleEdit = useCallback(
-  async (id: string, e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();    
-    
-    try {
-      await axiosPrivate.post(`/api/team/${id}`, JSON.stringify(editedUser), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      dispatch(teamSliceAction.editUser({ _id: id, ...editedUser }));
-    } catch (error) {
-      console.log(error);
-    }
+  const handleEdit = useCallback(
+    async (id: string, e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();    
+      
+      try {
+        await axiosPrivate.post(`/api/team/${id}`, JSON.stringify(editedUser), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        dispatch(teamSliceAction.editUser({ _id: id, ...editedUser }));
 
-    setOpenProfileModal("");
-  },
-  [axiosPrivate, dispatch, editedUser]
-);
+        toast.success('Profile updated successfully!');
+      } catch (error) {
+        console.log(error);
+      }
+
+      setOpenProfileModal("");
+    },
+    [axiosPrivate, dispatch, editedUser]
+  );
 
   return (
     <AppBar position="absolute" open={open}>
@@ -135,6 +141,7 @@ const handleEdit = useCallback(
             id={"avatar-settings"}
             anchorEl={anchorEl}
             userInfo={userInfo}
+            setOpenChangePasswordModal={setOpenChangePasswordModal}
           />
           <UserProfileModal
             openProfileModal={openProfileModal}
@@ -143,6 +150,11 @@ const handleEdit = useCallback(
             editedUser={editedUser}
             handleEdit={handleEdit}
             userInfo={userInfo}
+          />
+          <ChangePasswordModal 
+            handleCloseChangePasswordModal={handleCloseChangePasswordModal}
+            openChangePasswordModal={openChangePasswordModal}
+            setOpenChangePasswordModal={setOpenChangePasswordModal}
           />
         </Stack>
       </Toolbar>

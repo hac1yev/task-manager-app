@@ -151,7 +151,7 @@ const UserProfileModal = ({
           </FormControl>
           <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>
             <Button
-              type="submit"
+              type="button"
               size="large"
               variant="outlined"
               onClick={handleClose}
