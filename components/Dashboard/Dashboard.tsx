@@ -1,13 +1,10 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Toolbar, Typography, Divider, IconButton, Box, CssBaseline, Stack, Avatar, Badge } from "@mui/material"; 
+import { Toolbar, Typography, Divider, IconButton, Box, CssBaseline } from "@mui/material"; 
 import { ThemeProvider } from "@mui/material/styles";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import theme from "../theme";
 import { useMediaQuery } from "@mui/material";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 import "./Dashboard.css";
@@ -15,8 +12,9 @@ import Image from "next/image";
 import SidebarMenu from "./SidebarMenu/SidebarMenu";
 import { Provider } from "react-redux";
 import { store } from "@/store";
-import { AppBar, Drawer, Search, SearchIconWrapper, StyledInputBase } from "../MaterialSnippets/MaterialSnippets";
+import { Drawer } from "../MaterialSnippets/MaterialSnippets";
 import { Toaster } from "react-hot-toast";
+import Navbar from "./Navbar";
 
 export default function Dashboard({ children }: DashboardProps) {
   const [open, setOpen] = useState(true);
@@ -51,67 +49,11 @@ export default function Dashboard({ children }: DashboardProps) {
       <ThemeProvider theme={theme}>
         <Box sx={{ display: "flex" }}>
           <CssBaseline />
-          <AppBar position="absolute" open={open}>
-            <Toolbar
-              sx={{
-                p: 1,
-                px: "24px",
-                minHeight: "65px",
-              }}
-            >
-              <Typography
-                component="h1"
-                variant="h6"
-                color="#000"
-                noWrap
-                sx={{
-                  flexGrow: 1,
-                  display: "flex",
-                  pl: "3px",
-                  alignItems: "center",
-                }}
-              >
-                {!matches && <IconButton
-                  edge="start"
-                  aria-label="open drawer"
-                  onClick={toggleDrawer}
-                  sx={{
-                    marginRight: "10px",
-                    display: "block",
-                  }}
-                >
-                  <MenuIcon
-                    sx={{
-                      fontSize: "30px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  />
-                </IconButton>}
-                <Search sx={{ height: "100%" }} onSubmit={handleSubmit}>
-                  <SearchIconWrapper>
-                    <SearchIcon />
-                  </SearchIconWrapper>
-                  <StyledInputBase
-                    name="searchText"
-                    placeholder="Axtar…"
-                    sx={{ width: "100%" }}
-                    inputProps={{ "aria-label": "search" }}
-                  />
-                </Search>
-              </Typography>
-              <Stack direction="row" spacing={matches ? 2 : 1}>
-                <IconButton>
-                  <Badge badgeContent={2} color="error">
-                    <NotificationsNoneIcon />
-                  </Badge>
-                </IconButton>
-                <Link href="/profile">
-                  <Avatar alt="Remy Sharp" src="" />
-                </Link>
-              </Stack>
-            </Toolbar>
-          </AppBar>
+          <Navbar
+            open={open}
+            toggleDrawer={toggleDrawer}
+            handleSubmit={(e) => handleSubmit}
+          />
           <Drawer variant="permanent" open={open}>
             <Toolbar
               sx={{

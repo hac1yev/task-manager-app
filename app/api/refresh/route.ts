@@ -29,6 +29,7 @@ export async function GET(req: Request) {
             message: 'New access token created!', 
             newAccessToken,
             _id: user._id,
+            title: user.title,
             fullName: user.fullName,
             email: isValidRefreshToken.email 
         }); 

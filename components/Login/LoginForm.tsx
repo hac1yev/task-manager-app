@@ -36,12 +36,14 @@ const LoginForm = () => {
           userId: string;
           email: string;
           fullName: string;
+          title: string;
         } = {
           accessToken: response.data.accessToken,
           fullName: response.data.fullName,
           email: response.data.email,
           userId: response.data._id,
           role: response.data.role,
+          title: response.data.title
         };
 
         localStorage.setItem("userInfo", JSON.stringify(user_data));

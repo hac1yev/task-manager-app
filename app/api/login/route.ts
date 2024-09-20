@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const accessToken = await new SignJWT({ 
         email,
-        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user' 
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'Admin' : 'User' 
     })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     const refreshToken = await new SignJWT({ 
         email,
-        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user' 
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'Admin' : 'User' 
     })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -44,8 +44,9 @@ export async function POST(req: NextRequest) {
     
     const response = NextResponse.json({ 
         _id: user._id,
-        role: email === 'ilkinhaciyev955@gmail.com' ? 'admin' : 'user', 
+        role: email === 'ilkinhaciyev955@gmail.com' ? 'Admin' : 'User', 
         fullName: user.fullName,
+        title: user.title,
         email,
         message: "Login successfully!", 
         accessToken, 

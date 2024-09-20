@@ -43,6 +43,6 @@ export async function GET(req: Request) {
     const users = await User.find();    
 
     const filtererUser = JSON.parse(JSON.stringify(users)).filter((user: Partial<UserType>) => user.role !== 'Admin');
-
+    
     return NextResponse.json({ message: 'Success', users: filtererUser }, { status: 200 });
 };
