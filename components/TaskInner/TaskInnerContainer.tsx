@@ -63,10 +63,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             setUserNames(userNames);
             
         }
-    }, [allUsers,taskData]);
-
-    console.log(taskData);
-    
+    }, [allUsers,taskData]);    
 
     return (
         <>

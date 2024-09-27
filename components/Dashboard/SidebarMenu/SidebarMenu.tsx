@@ -11,10 +11,19 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import SettingsIcon from "@mui/icons-material/Settings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
+  const [role,setRole] = useState("");
+
+  useEffect(() => {
+    const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
+      ? JSON.parse(localStorage.getItem("userInfo") || "{}").role 
+      : "";   
+    
+    setRole(role);
+  }, []);
 
   return (
     <>
@@ -97,36 +106,40 @@ const SidebarMenu = () => {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link href="/team">
-            <ListItem
-              disablePadding
-              className={pathname === "/team" ? "active-menu-item" : ""}
-            >
-              <ListItemButton className="menu-item-button">
-                <ListItemIcon sx={{ minWidth: "40px" }}>
-                  <PeopleOutlineIcon
-                    sx={{ color: pathname === "/team" ? "#fff" : "#0f0f0f" }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Team" />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link href="/trash">
-            <ListItem
-              disablePadding
-              className={pathname === "/trash" ? "active-menu-item" : ""}
-            >
-              <ListItemButton className="menu-item-button">
-                <ListItemIcon sx={{ minWidth: "40px" }}>
-                  <DeleteOutlineIcon
-                    sx={{ color: pathname === "/trash" ? "#fff" : "#0f0f0f" }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Trash" />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+          {role === 'Admin' && (
+            <>
+              <Link href="/team">
+                <ListItem
+                  disablePadding
+                  className={pathname === "/team" ? "active-menu-item" : ""}
+                >
+                  <ListItemButton className="menu-item-button">
+                    <ListItemIcon sx={{ minWidth: "40px" }}>
+                      <PeopleOutlineIcon
+                        sx={{ color: pathname === "/team" ? "#fff" : "#0f0f0f" }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary="Team" />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+              <Link href="/trash">
+                <ListItem
+                  disablePadding
+                  className={pathname === "/trash" ? "active-menu-item" : ""}
+                >
+                  <ListItemButton className="menu-item-button">
+                    <ListItemIcon sx={{ minWidth: "40px" }}>
+                      <DeleteOutlineIcon
+                        sx={{ color: pathname === "/trash" ? "#fff" : "#0f0f0f" }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary="Trash" />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </>
+          )}
         </List>
       </Box>
       <List

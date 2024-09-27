@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Divider, FormControl, FormLabel, Modal, Stack, Tex
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import { FormEvent, useCallback, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import CustomPopover from "../CustomPopovers/CustomPopover";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [userId,setUserId] = useState("");
   const dispatch = useDispatch();
+  const [role,setRole] = useState(""); 
   const [subtaskValues,setSubtaskValues] = useState<SubTaskType>({
     title: "",
     date: new Date().toISOString().slice(0,10),
@@ -44,6 +45,15 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
   const open = useMemo(() => {
     return Boolean(anchorEl);
   }, [anchorEl]);    
+
+ 
+  useEffect(() => {
+    const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
+      ? JSON.parse(localStorage.getItem("userInfo") || "{}").role 
+      : "";   
+    
+    setRole(role);
+  }, []);
 
   const handleAddSubtask = useCallback(async (e: FormEvent) => {
     e.preventDefault();
@@ -134,7 +144,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       <Box sx={{ mt: 2 }}>
         {subtask?.length === 0 && <Typography sx={{ px: 1, mb: "5px" }}>No Sub-Task</Typography>}
         {subtask?.slice(-2)?.map((item) => (
-          <Box key={item.title}  className="flex-column-start" sx={{ mb: 2, gap: '15px' }}>
+          <Box key={item._id}  className="flex-column-start" sx={{ mb: 2, gap: '15px' }}>
             <Typography sx={{ color: '#2d2d2d', px: 1 }}>{item.title}</Typography>
             <Box className="flex-start" sx={{ px: 2, gap: '15px' }}>
               <Typography variant="subtitle1" >{item.date.slice(0,10)}</Typography>
@@ -142,97 +152,101 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
             </Box>
           </Box>
         ))}
-        <Button variant="text" sx={{ color: "#6f6f6f" }} onClick={handleModalOpen}>
-          <AddOutlinedIcon sx={{ fontSize: "20px" }} />
-          <Typography sx={{ fontSize: "15px" }}>ADD SUBTASK</Typography>
-        </Button>
-        <Modal
-          open={modalOpen}
-          onClose={handleModalClose}
-          aria-labelledby="task-modal-title"
-          aria-describedby="task-modal-description"
-        >
-          <Box sx={addUserStyle}>
-            <Typography id="task-modal-title" variant="h6" component="h2">
-              ADD SUB-TASK
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleAddSubtask}
-              noValidate
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                gap: 2,
-                mt: 2,
-              }}
+        {(role === ('Admin' || 'Editor')) && (
+          <>
+            <Button variant="text" sx={{ color: "#6f6f6f" }} onClick={handleModalOpen}>
+              <AddOutlinedIcon sx={{ fontSize: "20px" }} />
+              <Typography sx={{ fontSize: "15px" }}>ADD SUBTASK</Typography>
+            </Button>
+            <Modal
+              open={modalOpen}
+              onClose={handleModalClose}
+              aria-labelledby="task-modal-title"
+              aria-describedby="task-modal-description"
             >
-              <FormControl>
-                <FormLabel htmlFor="title">Sub-Task Title</FormLabel>
-                <TextField
-                  id="title"
-                  type="text"
-                  name="title"
-                  placeholder="title"
-                  autoComplete="title"
-                  value={subtaskValues.title}
-                  onChange={(e) => {
-                    setSubtaskValues({ ...subtaskValues, title: e.target.value });
+              <Box sx={addUserStyle}>
+                <Typography id="task-modal-title" variant="h6" component="h2">
+                  ADD SUB-TASK
+                </Typography>
+                <Box
+                  component="form"
+                  onSubmit={handleAddSubtask}
+                  noValidate
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                    gap: 2,
+                    mt: 2,
                   }}
-                  autoFocus
-                  required
-                  fullWidth
-                  variant="outlined"
-                />
-              </FormControl>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <FormControl sx={{ width: "50%" }}>
-                  <FormLabel htmlFor="task_date">Sub-Task Date</FormLabel>
-                  <TextField 
-                    type="date" 
-                    id="task_date" 
-                    value={subtaskValues.date}
-                    onChange={(e) => {                    
-                      setSubtaskValues({ ...subtaskValues, date: e.target.value });
-                    }}
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "50%" }}>
-                  <FormLabel htmlFor="tag">Tag</FormLabel>
-                  <TextField
-                    id="tag"
-                    type="text"
-                    name="tag"
-                    placeholder="tag"
-                    autoComplete="tag"
-                    value={subtaskValues.tag}
-                    onChange={(e) => {
-                      setSubtaskValues({ ...subtaskValues, tag: e.target.value });
-                    }}
-                    autoFocus
-                    required
-                    fullWidth
-                    variant="outlined"
-                  />
-                </FormControl>
-              </Box>
-              <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>
-                <Button
-                  type="submit"
-                  size="large"
-                  variant="outlined"
-                  onClick={handleModalClose}
                 >
-                  Cancel
-                </Button>
-                <Button type="submit" size="large" variant="contained">
-                  Submit
-                </Button>
+                  <FormControl>
+                    <FormLabel htmlFor="title">Sub-Task Title</FormLabel>
+                    <TextField
+                      id="title"
+                      type="text"
+                      name="title"
+                      placeholder="title"
+                      autoComplete="title"
+                      value={subtaskValues.title}
+                      onChange={(e) => {
+                        setSubtaskValues({ ...subtaskValues, title: e.target.value });
+                      }}
+                      autoFocus
+                      required
+                      fullWidth
+                      variant="outlined"
+                    />
+                  </FormControl>
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <FormControl sx={{ width: "50%" }}>
+                      <FormLabel htmlFor="task_date">Sub-Task Date</FormLabel>
+                      <TextField 
+                        type="date" 
+                        id="task_date" 
+                        value={subtaskValues.date}
+                        onChange={(e) => {                    
+                          setSubtaskValues({ ...subtaskValues, date: e.target.value });
+                        }}
+                      />
+                    </FormControl>
+                    <FormControl sx={{ width: "50%" }}>
+                      <FormLabel htmlFor="tag">Tag</FormLabel>
+                      <TextField
+                        id="tag"
+                        type="text"
+                        name="tag"
+                        placeholder="tag"
+                        autoComplete="tag"
+                        value={subtaskValues.tag}
+                        onChange={(e) => {
+                          setSubtaskValues({ ...subtaskValues, tag: e.target.value });
+                        }}
+                        autoFocus
+                        required
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>
+                    <Button
+                      type="submit"
+                      size="large"
+                      variant="outlined"
+                      onClick={handleModalClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" size="large" variant="contained">
+                      Submit
+                    </Button>
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
-        </Modal>
+            </Modal>
+          </>
+        )}
       </Box>
     </Item>
   );

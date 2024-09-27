@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     const { url,nextUrl,cookies } = request;
     const refreshToken = cookies.get("refreshToken")?.value || "";
     
-    const notAuthPage = ['/', '/team'];
+    const notAuthPage = ['/', '/team', '/in-progress', '/completed', '/to-do'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
     if(notAuthPage.includes(nextUrl.pathname) || nextUrl.pathname.startsWith('/tasks')) {

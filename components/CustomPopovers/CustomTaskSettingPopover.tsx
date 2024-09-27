@@ -10,7 +10,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -19,6 +19,16 @@ const CustomTaskSettingPopover = ({
  Partial<CustomPopoverType> & 
  { open: boolean, setOpenModal: (value: boolean) => void, handleDialogOpen: () => void }
 ) => {
+
+  const [role,setRole] = useState("");
+
+  useEffect(() => {
+    const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
+      ? JSON.parse(localStorage.getItem("userInfo") || "{}").role 
+      : "";   
+    
+    setRole(role);
+  }, []);
 
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
@@ -75,34 +85,38 @@ const CustomTaskSettingPopover = ({
           </ListItem>
         </Link>
 
-        <ListItem disablePadding onClick={handleOpenEditTaskModal}>
-          <ListItemButton sx={{ py: 0, px: 1 }}>
-            <ListItemIcon sx={{ minWidth: "40px" }}>
-              <EditIcon />
-            </ListItemIcon>
-            <ListItemText primary="Edit" />
-          </ListItemButton>
-        </ListItem>
+        {(role === ('Admin' || 'Editor')) &&  (
+          <>
+            <ListItem disablePadding onClick={handleOpenEditTaskModal}>
+              <ListItemButton sx={{ py: 0, px: 1 }}>
+                <ListItemIcon sx={{ minWidth: "40px" }}>
+                  <EditIcon />
+                </ListItemIcon>
+                <ListItemText primary="Edit" />
+              </ListItemButton>
+            </ListItem>
 
-        <ListItem disablePadding onClick={handleDuplicate}>
-          <ListItemButton sx={{ py: 0, px: 1 }}>
-            <ListItemIcon sx={{ minWidth: "40px" }}>
-              <ContentCopyIcon />
-            </ListItemIcon>
-            <ListItemText primary="Duplicate" />
-          </ListItemButton>
-        </ListItem>
+            <ListItem disablePadding onClick={handleDuplicate}>
+              <ListItemButton sx={{ py: 0, px: 1 }}>
+                <ListItemIcon sx={{ minWidth: "40px" }}>
+                  <ContentCopyIcon />
+                </ListItemIcon>
+                <ListItemText primary="Duplicate" />
+              </ListItemButton>
+            </ListItem>
 
-        <ListItem disablePadding onClick={handleDialogOpen}>
-          <ListItemButton
-            sx={{ py: 0, px: 1, color: "rgba(231, 57, 26, 0.9)" }}
-          >
-            <ListItemIcon sx={{ minWidth: "40px" }}>
-              <DeleteIcon sx={{ color: "rgba(231, 57, 26, 0.8)" }} />
-            </ListItemIcon>
-            <ListItemText primary="Delete" />
-          </ListItemButton>
-        </ListItem>
+            <ListItem disablePadding onClick={handleDialogOpen}>
+              <ListItemButton
+                sx={{ py: 0, px: 1, color: "rgba(231, 57, 26, 0.9)" }}
+              >
+                <ListItemIcon sx={{ minWidth: "40px" }}>
+                  <DeleteIcon sx={{ color: "rgba(231, 57, 26, 0.8)" }} />
+                </ListItemIcon>
+                <ListItemText primary="Delete" />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )}
       </List>
     </Popover>
   );

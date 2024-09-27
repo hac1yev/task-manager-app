@@ -4,28 +4,37 @@ import { ListItem,ListItemAvatar,ListItemText,Avatar, List, Box, Typography, Ico
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useTypedTaskDetailSelector } from '@/store/taskDetail-slice';
 
 const TaskComments = () => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
+    const [role,setRole] = useState(""); 
     const { comments } = taskData;
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [selectedPopover, setSelectedPopover] = useState("");
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
+ 
+    useEffect(() => {
+      const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
+        ? JSON.parse(localStorage.getItem("userInfo") || "{}").role 
+        : "";   
+      
+      setRole(role);
+    }, []);
 
-    const handleLikeComment = async (commentId: string) => {
-        try {
-                        
-        } catch (error) {
-            console.log(error);
-        }
-    };    
-
-    console.log(comments);
+    console.log(role);
     
+
+    // const handleLikeComment = async (commentId: string) => {
+    //     try {
+                        
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };        
 
     return (
         <Box className="comment-section-wrapper">
@@ -67,51 +76,53 @@ const TaskComments = () => {
                                     </Typography>
                                 </Box> */}
                             </Box>
-                            <IconButton className='more-icon' aria-describedby={id} onClick={(e) => {
-                                setAnchorEl(e.currentTarget);
-                                setSelectedPopover(comment._id ? comment._id : "");
-                            }}>
-                                <MoreHorizIcon />
-                            </IconButton>
-                            <Popover
-                                className='comment-popover'
-                                id={id}
-                                open={selectedPopover === comment._id}
-                                anchorEl={anchorEl}
-                                onClose={() => {
-                                    setAnchorEl(null);
-                                    setSelectedPopover("");
-                                }}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                            >
-                                <List sx={{ pb: '10px', width: '130px' }}>
-                                    <ListItem
-                                        disablePadding
-                                        className="sidebar-list-item"
-                                    >
-                                        <ListItemButton sx={{ py: 0 }}>
-                                            <ListItemIcon sx={{ minWidth: '40px' }}>
-                                                <VisibilityOffOutlinedIcon />
-                                            </ListItemIcon>
-                                            <ListItemText primary="Gizlət" />
-                                        </ListItemButton>
-                                    </ListItem>
-                                    <ListItem
-                                        disablePadding
-                                        className="sidebar-list-item"
-                                    >
-                                        <ListItemButton sx={{ py: 0 }}>
-                                            <ListItemIcon sx={{ minWidth: '40px' }}>
-                                                <DeleteIcon />
-                                            </ListItemIcon>
-                                            <ListItemText primary="Sil" />
-                                        </ListItemButton>
-                                    </ListItem>
-                                </List>
-                            </Popover>
+                            {(role === 'Editor') && <>
+                                <IconButton className='more-icon' aria-describedby={id} onClick={(e) => {
+                                    setAnchorEl(e.currentTarget);
+                                    setSelectedPopover(comment._id ? comment._id : "");
+                                }}>
+                                    <MoreHorizIcon />
+                                </IconButton>
+                                <Popover
+                                    className='comment-popover'
+                                    id={id}
+                                    open={selectedPopover === comment._id}
+                                    anchorEl={anchorEl}
+                                    onClose={() => {
+                                        setAnchorEl(null);
+                                        setSelectedPopover("");
+                                    }}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                >
+                                    <List sx={{ pb: '10px', width: '130px' }}>
+                                        <ListItem
+                                            disablePadding
+                                            className="sidebar-list-item"
+                                        >
+                                            <ListItemButton sx={{ py: 0 }}>
+                                                <ListItemIcon sx={{ minWidth: '40px' }}>
+                                                    <VisibilityOffOutlinedIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Gizlət" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <ListItem
+                                            disablePadding
+                                            className="sidebar-list-item"
+                                        >
+                                            <ListItemButton sx={{ py: 0 }}>
+                                                <ListItemIcon sx={{ minWidth: '40px' }}>
+                                                    <DeleteIcon />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Sil" />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </List>
+                                </Popover>
+                            </>}
                         </Paper>
                     </ListItem>
                 ))}

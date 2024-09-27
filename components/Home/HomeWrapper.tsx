@@ -29,7 +29,7 @@ const HomeWrapper = () => {
         title: "TOTAL TASKS",
         count: tasks.length,
         logo_img: <ListAltIcon sx={{ color: '#fff' }} />,
-        palette: '#1D53E3'
+        palette: '#1D53E3'  
       },
       {
         id: "total",
