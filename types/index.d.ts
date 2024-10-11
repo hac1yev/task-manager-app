@@ -118,6 +118,7 @@ declare type ParamsType = {
 
 declare type TaskDetailType = {
     userNames: { fullName: string; title: string }[];
+    taskId: string;
 }; 
 
 declare type UserInfo = {
@@ -126,4 +127,5 @@ declare type UserInfo = {
     email: string;
     role: string;
     accessToken: string;
+    title: string;
 };

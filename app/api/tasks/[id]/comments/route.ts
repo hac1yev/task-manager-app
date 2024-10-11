@@ -4,8 +4,8 @@ import { Task } from "@/models/Task";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-    const { taskId,fullName,description,adding_at } = await req.json();
-
+    const { fullName,description,adding_at } = await req.json();
+    const taskId = req.url.split("/").at(-2);
     const bearer = req.headers.get("Authorization");    
 
     const accessToken = bearer?.split(" ")[1] || "";

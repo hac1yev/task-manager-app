@@ -91,7 +91,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             {taskData.comments.length > 0 && (
                 <>
                     <CustomTabPanel value={value} index={0}>
-                        <TaskDetail userNames={userNames} />
+                        <TaskDetail userNames={userNames} taskId={taskId} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <TaskTimeline taskId={taskId} />

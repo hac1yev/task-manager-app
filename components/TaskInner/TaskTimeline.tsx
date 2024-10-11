@@ -23,7 +23,7 @@ const TaskTimeline = ({ taskId }: { taskId: string }) => {
                 <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6 }}>
                     <TimelineComponent />
                 </Grid>
-                {role === ('Admin' || 'Editor') && (
+                {(role === 'Admin' || role === 'Editor') && (
                     <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6 }}>
                         <AddTimeline taskId={taskId} />
                     </Grid>

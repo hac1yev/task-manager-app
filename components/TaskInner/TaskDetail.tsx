@@ -9,7 +9,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import TaskInnerRightbar from "./TaskInnerRightbar";
 import { useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 
-const TaskDetail = ({ userNames }: TaskDetailType) => {
+const TaskDetail = ({ userNames, taskId }: TaskDetailType) => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
 
@@ -111,7 +111,7 @@ const TaskDetail = ({ userNames }: TaskDetailType) => {
                     </Box>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6  }}>
-                    <TaskInnerRightbar  />
+                    <TaskInnerRightbar taskId={taskId}  />
                 </Grid>
             </Grid>
         </Box>

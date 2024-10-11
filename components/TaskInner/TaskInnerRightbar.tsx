@@ -9,7 +9,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 import { useDispatch } from "react-redux";
 
-const TaskInnerRightbar = () => {
+const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const [commentText,setCommentText] = useState("");
     const commentTextRef = useRef<HTMLInputElement | null>(null);
@@ -24,13 +24,12 @@ const TaskInnerRightbar = () => {
 
         try {
             const data = {
-                taskId: taskData._id,
                 fullName: userInfo.fullName,
                 description: commentText,
                 adding_at: new Date(),
             };            
 
-            const response = await axiosPrivate.post("/api/tasks/comments", JSON.stringify(data), {
+            const response = await axiosPrivate.post(`/api/tasks/${taskId}/comments`, JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -77,7 +76,7 @@ const TaskInnerRightbar = () => {
                     </Button>
                 </Search>
             </Box> 
-            <TaskComments />
+            <TaskComments id={taskId} />
         </Box>   
     );
 };

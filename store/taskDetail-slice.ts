@@ -35,6 +35,13 @@ export const taskDetailSlice = createSlice({
         ]
       };
     },
+    deleteComment(state,action) {
+      const filteredComments = state.taskDetailData.comments.filter(comment => comment._id !== action.payload);
+      state.taskDetailData = {
+        ...state.taskDetailData,
+        comments: filteredComments
+      };
+    },
     addActivities(state,action) {
       state.taskDetailData = {
         ...state.taskDetailData,
