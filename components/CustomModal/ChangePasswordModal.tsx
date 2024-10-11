@@ -36,7 +36,7 @@ const ChangePasswordModal = ({ openChangePasswordModal, handleCloseChangePasswor
     } catch (error) {
       console.log(error);
     }
-  }, [axiosPrivate]);
+  }, [axiosPrivate,setOpenChangePasswordModal]);
 
   return (
     <Modal
