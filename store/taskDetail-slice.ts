@@ -42,6 +42,20 @@ export const taskDetailSlice = createSlice({
         comments: filteredComments
       };
     },
+    likeComment(state,action) {
+      if(action.payload.type === 'like') {
+        const indexOfComment = state.taskDetailData.comments.findIndex((comment) => comment._id === action.payload.commentId);
+        state.taskDetailData.comments[indexOfComment].likes = [
+          ...state.taskDetailData.comments[indexOfComment].likes,
+          action.payload.userId
+        ]
+      }else{
+        const indexOfComment = state.taskDetailData.comments.findIndex((comment) => comment._id === action.payload.commentId);
+        state.taskDetailData.comments[indexOfComment].likes = state.taskDetailData.comments[indexOfComment].likes.filter((user) => (
+          user !== action.payload.userId
+        ));
+      }
+    },
     addActivities(state,action) {
       state.taskDetailData = {
         ...state.taskDetailData,
@@ -50,7 +64,7 @@ export const taskDetailSlice = createSlice({
           { ...action.payload }
         ]
       };
-    }
+    },
   },
 });
 

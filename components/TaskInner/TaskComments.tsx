@@ -4,7 +4,7 @@ import { ListItem,ListItemAvatar,ListItemText,Avatar, List, Box, Typography, Ico
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from '@/store/taskDetail-slice';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
@@ -36,15 +36,21 @@ const TaskComments = ({ id }: { id: string }) => {
       setUserInfo(userInfo);
     }, []);
     
-    const handleLikeComment = async (commentId: string) => {
+    const handleLikeComment = useCallback(async ({ commentId, type }: { commentId: string | undefined, type: string }) => {
         try {
-                         
+            await axiosPrivate.post(`/api/tasks/${id}/comments/${commentId}`, JSON.stringify({ userId: userInfo.userId, type }), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            dispatch(taskDetailSliceActions.likeComment({ commentId, userId: userInfo.userId, type }));
         } catch (error) {
             console.log(error);
         }
-    };        
-
-    const handleDeleteComment = async (commentId: string | undefined) => {
+    },[userInfo.userId, id, axiosPrivate, dispatch]);  
+    
+    const handleDeleteComment = useCallback(async (commentId: string | undefined) => {
         try {
             if(commentId) {
                 await axiosPrivate.delete(`/api/tasks/${id}/comments/${commentId}`);
@@ -53,7 +59,7 @@ const TaskComments = ({ id }: { id: string }) => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate, dispatch, id]);
 
     return (
         <Box className="comment-section-wrapper">
@@ -83,10 +89,10 @@ const TaskComments = ({ id }: { id: string }) => {
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: '8px' }}>
                                     <Typography 
                                         variant='subtitle1' 
-                                        sx={{ cursor: 'pointer' }}
-                                        onClick={() => handleLikeComment(comment._id ? comment._id : "")}
+                                        sx={{ cursor: 'pointer', color: comment.likes.includes(userInfo.userId) ? 'primary.main' : '#6d6d6b' }}
+                                        onClick={() => handleLikeComment(comment.likes.includes(userInfo.userId) ? { commentId: comment._id, type: 'dislike' } : { commentId: comment._id, type: 'like' })}
                                     >
-                                        2 Likes 
+                                        {comment.likes.length === 0 ? 'Like' : `${comment.likes.length} Likes`} 
                                     </Typography>
                                     <Typography 
                                         variant='subtitle1' 

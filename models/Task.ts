@@ -49,6 +49,12 @@ const TaskSchema = new Schema({
                 type: Date,
                 default: Date.now
             },
+            likes: [
+                {
+                    type: String,
+                    ref: User,
+                }
+            ]
         }
     ],
     activities: [

@@ -156,7 +156,7 @@ function CustomPaginationActionsTable() {
 
       {tasks.length === 0 && !isLoading && (
         <Typography className="flex-center" variant='h6' sx={{ mt: 1 }}>
-          There is no user!
+          There is no task!
         </Typography>
       )}
     </>

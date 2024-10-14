@@ -42,6 +42,7 @@ declare type TaskType = {
         fullName: string;
         description: string;
         adding_at:string;
+        likes: string[];
     }[];
     activities: {
         _id?: string;
@@ -69,6 +70,7 @@ declare type TaskSliceType = {
         fullName: string;
         description: string;
         adding_at:string;
+        likes: string[];
     }[];
     activities: {
         _id?: string;

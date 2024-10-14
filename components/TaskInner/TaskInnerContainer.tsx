@@ -65,6 +65,9 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
         }
     }, [allUsers,taskData]);    
 
+    console.log(taskData);
+    
+
     return (
         <>
             <Typography align="left" variant="h4" sx={{ pb: 2 }}>{taskData?.title}</Typography>
@@ -88,7 +91,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                     } sx={{ bgcolor: 'background.paper' }} {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            {taskData.comments.length > 0 && (
+            {taskData.title && (
                 <>
                     <CustomTabPanel value={value} index={0}>
                         <TaskDetail userNames={userNames} taskId={taskId} />
@@ -98,12 +101,12 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                     </CustomTabPanel>
                 </>
             )}
-            {taskData?.comments?.length === 0 && isLoading && (
+            {!taskData?.title && isLoading && (
                 <Box sx={{ width: '100%', bgcolor: '#fff', p: 4, mt: 2 }}>
                     <LinearProgress />
                 </Box>
             )}
-            {taskData?.comments?.length === 0 && !isLoading && (
+            {!taskData?.title && !isLoading && (
                 <Typography className="flex-center" variant='h6' sx={{ mt: 2 }}>
                     There is no task data!
                 </Typography>

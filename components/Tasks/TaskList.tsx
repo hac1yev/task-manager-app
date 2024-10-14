@@ -46,7 +46,6 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
     return Boolean(anchorEl);
   }, [anchorEl]);    
 
- 
   useEffect(() => {
     const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
       ? JSON.parse(localStorage.getItem("userInfo") || "{}").role 
@@ -69,7 +68,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       console.log(error);
     }
     setModalOpen(false);
-  }, [_id,axiosPrivate,dispatch,subtaskValues]);
+  }, [_id,axiosPrivate,dispatch,subtaskValues]);  
 
   return (
     <Item sx={{ mb: 2 }}>
@@ -152,7 +151,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
             </Box>
           </Box>
         ))}
-        {(role === ('Admin' || 'Editor')) && (
+        {(role === 'Admin' || role === 'Editor') && (
           <>
             <Button variant="text" sx={{ color: "#6f6f6f" }} onClick={handleModalOpen}>
               <AddOutlinedIcon sx={{ fontSize: "20px" }} />
