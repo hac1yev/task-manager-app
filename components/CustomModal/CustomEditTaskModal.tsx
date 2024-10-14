@@ -42,7 +42,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         title: findedTask?.title,
         users: findedTask?.users,
         stage: findedTask?.stage,
-        created_at: findedTask?.created_at && new Date(findedTask?.created_at).toISOString().slice(0,10),
+        created_at: findedTask?.created_at && new Date(findedTask?.created_at).toISOString(),
         priority_level: findedTask?.priority_level
     });
     const axiosPrivate = useAxiosPrivate();
@@ -223,14 +223,16 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
               <TextField
                 type="date"
                 id="task_date"
-                value={taskValues.created_at}
+                value={taskValues.created_at?.slice(0,10)}
                 onChange={(e) => {
+                  const currentDate = new Date().toISOString().slice(10);
+                  
                   setTaskValues((prev) => {
                     return {
                       ...prev,
-                      created_at: e.target.value,
+                      created_at: `${e.target.value}${currentDate}`,
                     };
-                  });
+                  }); 
                 }}
               />
             </FormControl>

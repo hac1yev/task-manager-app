@@ -85,7 +85,7 @@ const CustomTaskSettingPopover = ({
           </ListItem>
         </Link>
 
-        {(role === ('Admin' || 'Editor')) &&  (
+        {(role === 'Admin' || role === 'Editor') &&  (
           <>
             <ListItem disablePadding onClick={handleOpenEditTaskModal}>
               <ListItemButton sx={{ py: 0, px: 1 }}>
