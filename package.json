@@ -29,6 +29,7 @@
     "react-hot-toast": "^2.4.1",
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",
+    "socket.io-client": "^4.8.0",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {

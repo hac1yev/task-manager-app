@@ -10,25 +10,35 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
+import { socket } from '@/socket-client';
 
 const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setOpenDialog(false);
-    };
+    }, [setOpenDialog]);
 
-    const handleDelete = async () => {
+    const handleDelete = useCallback(async () => {
         try {
             await axiosPrivate.post(`/api/trash/${id}`);
             dispatch(taskSliceActions.deleteTask(id));
+            socket.emit("deleteTask", id);
+
+            await axiosPrivate.post('/api/notification', {
+                type: 'deleteTask',
+                message: `Task with ID ${id} has been deleted.`,
+                taskId: id, 
+                visibility: 'public'
+            });
+
         } catch (error) {
             console.log(error);
         }
         setOpenDialog(false);
-    };
+    }, [axiosPrivate,dispatch,id,setOpenDialog]);
 
     return (
         <Dialog

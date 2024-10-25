@@ -7,7 +7,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import { Box, LinearProgress, Tab, Tabs, Typography } from "@mui/material";
 import { a11yProps } from '../MaterialSnippets/MaterialSnippets';
 import TaskDetail from "./TaskDetail";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
@@ -22,9 +22,9 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
     const axiosPrivate = useAxiosPrivate();        
     const dispatch = useDispatch();
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      setValue(newValue);
-    };
+    const handleChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    }, []);
 
     useEffect(() => {
         (async function() {
@@ -63,10 +63,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             setUserNames(userNames);
             
         }
-    }, [allUsers,taskData]);    
-
-    console.log(taskData);
-    
+    }, [allUsers,taskData]);        
 
     return (
         <>
@@ -91,7 +88,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                     } sx={{ bgcolor: 'background.paper' }} {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            {taskData.title && (
+            {taskData._id === taskId && (
                 <>
                     <CustomTabPanel value={value} index={0}>
                         <TaskDetail userNames={userNames} taskId={taskId} />
@@ -101,12 +98,12 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                     </CustomTabPanel>
                 </>
             )}
-            {!taskData?.title && isLoading && (
+            {!(taskData?._id === taskId) && isLoading && (
                 <Box sx={{ width: '100%', bgcolor: '#fff', p: 4, mt: 2 }}>
                     <LinearProgress />
                 </Box>
             )}
-            {!taskData?.title && !isLoading && (
+            {!(taskData?._id === taskId) && !isLoading && (
                 <Typography className="flex-center" variant='h6' sx={{ mt: 2 }}>
                     There is no task data!
                 </Typography>

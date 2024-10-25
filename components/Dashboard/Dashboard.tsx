@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Toolbar, Typography, Divider, IconButton, Box, CssBaseline } from "@mui/material"; 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
@@ -15,10 +15,22 @@ import { store } from "@/store";
 import { Drawer } from "../MaterialSnippets/MaterialSnippets";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./Navbar";
+import { socket } from "@/socket-client";
 
 export default function Dashboard({ children }: DashboardProps) {
   const [open, setOpen] = useState(true);
   const matches = useMediaQuery("(min-width:769px)");
+  const user = useMemo(() => {
+    if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+      return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+    }else{
+      return "";
+    }
+  }, [])
+
+  useEffect(() => {
+    socket.emit("newUser", user.fullName);
+  }, [user.fullName]);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -42,6 +54,8 @@ export default function Dashboard({ children }: DashboardProps) {
 
   const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    
   }, []);
 
   return (
@@ -73,6 +87,7 @@ export default function Dashboard({ children }: DashboardProps) {
                   width={"50"}
                   height={"50"}
                   alt="logo"
+                  priority
                 />
                 <Typography
                   variant="h4"

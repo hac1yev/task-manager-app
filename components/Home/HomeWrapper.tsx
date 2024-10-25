@@ -20,7 +20,7 @@ const HOCTeamComponent = TeamApiCall(Users);
 const HOCTaskComponent = TasksApiCall(CustomizedDataGrid);
 
 const HomeWrapper = () => {
-  const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
+  const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);    
 
   const data: StatCardProps[] = useMemo(() => {
     return [

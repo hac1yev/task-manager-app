@@ -2,13 +2,13 @@
 
 import { ListItem,ListItemAvatar,ListItemText,Avatar, List, Box, Typography, IconButton, Paper, Popover, ListItemIcon, ListItemButton } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from '@/store/taskDetail-slice';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
+import { socket } from '@/socket-client';
 
 const TaskComments = ({ id }: { id: string }) => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
@@ -36,7 +36,7 @@ const TaskComments = ({ id }: { id: string }) => {
       setUserInfo(userInfo);
     }, []);
     
-    const handleLikeComment = useCallback(async ({ commentId, type }: { commentId: string | undefined, type: string }) => {
+    const handleLikeComment = useCallback(async ({ commentId, type, fullName }: { commentId: string | undefined, type: string, fullName: string }) => {
         try {
             await axiosPrivate.post(`/api/tasks/${id}/comments/${commentId}`, JSON.stringify({ userId: userInfo.userId, type }), {
                 headers: {
@@ -45,10 +45,22 @@ const TaskComments = ({ id }: { id: string }) => {
             });
             
             dispatch(taskDetailSliceActions.likeComment({ commentId, userId: userInfo.userId, type }));
+            if(type === 'like' && fullName !== userInfo.fullName) {
+                socket.emit("likeComment", { fullName, userId: userInfo.userId, type }); 
+
+                await axiosPrivate.post('/api/notification', {
+                    fullName, 
+                    message: `${userInfo.fullName} liked your comment!`,
+                    type: 'likeComment',
+                    visibility: 'private',
+                    isRead: false,
+                    createdAt: new Date().toISOString(),
+                }); 
+            }           
         } catch (error) {
             console.log(error);
         }
-    },[userInfo.userId, id, axiosPrivate, dispatch]);  
+    }, [userInfo.userId, id, axiosPrivate, dispatch, userInfo.fullName]);  
     
     const handleDeleteComment = useCallback(async (commentId: string | undefined) => {
         try {
@@ -89,8 +101,8 @@ const TaskComments = ({ id }: { id: string }) => {
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: '8px' }}>
                                     <Typography 
                                         variant='subtitle1' 
-                                        sx={{ cursor: 'pointer', color: comment.likes.includes(userInfo.userId) ? 'primary.main' : '#6d6d6b' }}
-                                        onClick={() => handleLikeComment(comment.likes.includes(userInfo.userId) ? { commentId: comment._id, type: 'dislike' } : { commentId: comment._id, type: 'like' })}
+                                        sx={{ cursor: 'pointer', color: comment.likes.includes(userInfo.userId) ? 'primary.main' : '#6d6d6b', fontWeight: comment.likes.includes(userInfo.userId) ? 600 : 400 }}
+                                        onClick={() => handleLikeComment(comment.likes.includes(userInfo.userId) ? { commentId: comment._id, type: 'dislike', fullName: comment.fullName } : { commentId: comment._id, type: 'like', fullName: comment.fullName })}
                                     >
                                         {comment.likes.length === 0 ? 'Like' : `${comment.likes.length} Likes`} 
                                     </Typography>

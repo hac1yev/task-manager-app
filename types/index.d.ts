@@ -131,3 +131,14 @@ declare type UserInfo = {
     accessToken: string;
     title: string;
 };
+
+declare type NotificationType = {
+    taskId: string;
+    commentId: string;
+    isRead: boolean;
+    message: string;
+    createdAt: string;
+    visibility: string;
+    type: string;
+    fullName: string;
+}[];

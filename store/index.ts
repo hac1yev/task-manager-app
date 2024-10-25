@@ -5,12 +5,14 @@ import { teamSlice } from "./team-slice";
 import { taskSlice } from "./task-slice";
 import { trashSlice } from "./trash-slice";
 import { taskDetailSlice } from "./taskDetail-slice";
+import { notificationSlice } from "./notification-slice";
 
 export const store = configureStore({
     reducer: {
         teamReducer: teamSlice.reducer,
         taskReducer: taskSlice.reducer,
         trashReducer: trashSlice.reducer,
-        taskDetailReducer: taskDetailSlice.reducer
+        taskDetailReducer: taskDetailSlice.reducer,
+        notificationReducer: notificationSlice.reducer
     },
 });
