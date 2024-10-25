@@ -42,7 +42,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
 
   const lengthOfNotification = useMemo(() => {
     return notifications.filter((notification) => notification?.fullName === userInfo?.fullName).length + notifications.filter((notification) => notification?.visibility === 'public').length;
-  }, [notifications]);
+  }, [notifications,userInfo?.fullName]);
 
   const handleNotificationOpen = () => setNotificationModalOpen(true);
   const handleNotificationClose = () => setNotificationModalOpen(false);
@@ -204,9 +204,9 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              {notifications.map((notification) => (
+              {notifications.map((notification,index) => (
                 notification?.visibility === 'private' && userInfo?.fullName === notification?.fullName && (
-                  <Typography id="modal-modal-title" variant="h6" component="h2">
+                  <Typography id="modal-modal-title" key={index} variant="h6" component="h2">
                     Text in a modal
                   </Typography>
                 )
