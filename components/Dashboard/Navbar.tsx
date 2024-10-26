@@ -92,7 +92,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
     };
-  }, [dispatch]);
+  }, [dispatch, userInfo?.fullName]);
   
   useEffect(() => {
     if (typeof window !== "undefined") {
