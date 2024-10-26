@@ -2,4 +2,4 @@
 
 import { io } from "socket.io-client";
 
-export const socket = io("https://socket-io-rea1.onrender.com");
+export const socket = io("https://socket-io-server-y9ux.onrender.com");
