@@ -21,7 +21,7 @@ export const notificationSlice = createSlice({
                 ...state.notifications,
                 action.payload
             ]
-        }
+        },
     }
 });
 

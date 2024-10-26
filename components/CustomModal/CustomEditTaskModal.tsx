@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { taskSliceActions, useTypedTaskSelector } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
+import { socket } from "@/socket-client";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -68,10 +69,19 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
           }
         });
   
-        dispatch(taskSliceActions.editTask({
-            _id: id,
-          ...data,
-        }));
+        dispatch(taskSliceActions.editTask({ _id: id, ...data }));
+        socket.emit("editTask", id);
+
+        await axiosPrivate.post('/api/notification', JSON.stringify({
+          type: 'editTask',
+          message: `Task with ID ${id} has been updated.`,
+          taskId: id, 
+          visibility: 'public'
+        }), {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
   
         setOpen(false);
       } catch (error) {

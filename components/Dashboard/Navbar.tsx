@@ -51,9 +51,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     (async function() {
       try {
         const response = await axiosPrivate.get("/api/notification");
-        dispatch(notificationSliceActions.getAllNotifications(response.data.notifications));
-        console.log(response.data.notifications);
-        
+        dispatch(notificationSliceActions.getAllNotifications(response.data.notifications));        
       } catch (error) {
         console.log(error);
       }
@@ -65,6 +63,17 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       dispatch(notificationSliceActions.addNotification({ 
           message: `Task with ID ${id} has been deleted.`,
           type: 'deleteTask',
+          visibility: 'public',
+          isRead: false,
+          createdAt: new Date().toISOString(),
+          taskId: id, 
+      }));
+    };
+
+    const handleEditTaskNotification = (id: string) => {
+      dispatch(notificationSliceActions.addNotification({ 
+          message: `Task with ID ${id} has been updated.`,
+          type: 'editTask',
           visibility: 'public',
           isRead: false,
           createdAt: new Date().toISOString(),
@@ -86,10 +95,12 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     };
 
     socket.on("sendDeleteTaskNotification", handleDeleteTaskNotification);
+    socket.on("sendEditTaskNotification", handleEditTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
 
     return () => {
       socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
+      socket.off("sendEditTaskNotification", handleEditTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
     };
   }, [dispatch, userInfo?.fullName]);
@@ -137,6 +148,8 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     },
     [axiosPrivate, dispatch, editedUser]
   );
+
+  console.log(notifications);
 
   return (
     <AppBar position="absolute" open={open}>
