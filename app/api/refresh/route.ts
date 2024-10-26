@@ -1,3 +1,4 @@
+import { connectToDB } from "@/lib/connectToDB";
 import { verifyRefreshToken } from "@/lib/verifyToken";
 import { User } from "@/models/User";
 import { SignJWT } from "jose";
@@ -10,8 +11,10 @@ export async function GET(req: Request) {
 
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
     
-    if(isValidRefreshToken) {
-        const jwtSecretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
+    if(isValidRefreshToken) {   
+        const jwtSecretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);    
+            
+        await connectToDB();
 
         const user = await User.findOne({ email: isValidRefreshToken.email });
 

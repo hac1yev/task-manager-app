@@ -2,4 +2,4 @@
 
 import { io } from "socket.io-client";
 
-export const socket = io("https://socket-io-server-y9ux.onrender.com");
+export const socket = io(process.env.SOCKET_IO_DOMAIN || "http://localhost:4000");
