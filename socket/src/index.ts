@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
  
 const io = new Server({
     cors: {
-        origin: 'http://localhost:3000'
+        origin: 'https://taskzen-management.vercel.app'
     }
 });
 
@@ -44,4 +44,4 @@ io.on("connection", (socket) => {
     });
 });
 
-io.listen(4000);
+io.listen(parseInt(process.env.PORT || "4000", 10));
