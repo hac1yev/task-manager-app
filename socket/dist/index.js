@@ -34,4 +34,4 @@ io.on("connection", (socket) => {
         removeUser(socket.id);
     });
 });
-io.listen(parseInt(process.env.PORT || "4000", 10));
+io.listen(4000);

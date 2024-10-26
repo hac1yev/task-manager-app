@@ -44,4 +44,4 @@ io.on("connection", (socket) => {
     });
 });
 
-io.listen(parseInt(process.env.PORT || "4000", 10));
+io.listen(4000);
