@@ -123,7 +123,7 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
                         ))}
                     </List>
                 )}
-                {allPossibleNotifications.length > 0 && <Box className="flex-between" sx={{ width: '100%', mt: 1, px: 4, py: 1, borderTopLeftRadius: '30px', borderTopRightRadius: '30px', bgcolor: '#f9f9f9' }}>
+                {allPossibleNotifications.length > 0 && <Box className="flex-between" sx={{ width: '100%', px: 4, py: 1, borderTopLeftRadius: '30px', borderTopRightRadius: '30px', bgcolor: '#f9f9f9' }}>
                     <Button sx={{ textTransform: 'capitalize' }} onClick={handleNotificationPopoverClose}>Cancel</Button>
                     <Button sx={{ textTransform: 'capitalize' }}>Mark All Read</Button>
                 </Box>}
