@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 type NotificationState = {
-    notifications: Partial<NotificationType>
+    notifications: Partial<NotificationType>[]
 };
 
 const initialNotificationState: NotificationState = {

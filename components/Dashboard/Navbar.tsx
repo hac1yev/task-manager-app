@@ -1,10 +1,9 @@
 "use client";
 
-import { Avatar, Badge, Box, IconButton, Modal, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { Avatar, Box, IconButton, Stack, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { AppBar, Search, SearchIconWrapper, StyledInputBase } from "../MaterialSnippets/MaterialSnippets";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { FormEvent, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ProfilePopover from "../CustomPopovers/ProfilePopover";
 import UserProfileModal from "../CustomModal/UserProfileModal";
@@ -15,18 +14,7 @@ import ChangePasswordModal from "../CustomModal/ChangePasswordModal";
 import toast from "react-hot-toast";
 import { socket } from "@/socket-client";
 import { notificationSliceActions, useTypedNotificationSelector } from "@/store/notification-slice";
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import NotificationPopover from "../CustomPopovers/NotificationPopover";
 
 const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDrawer: () => void, handleSubmit: (e: FormEvent) => void }) => {
   const matches = useMediaQuery("(min-width:769px)");
@@ -34,7 +22,6 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
   const [openProfileModal,setOpenProfileModal] = useState("");
-  const [notificationModalOpen,setNotificationModalOpen] = useState(false);
   const [openChangePasswordModal,setOpenChangePasswordModal] = useState("");
   const notifications = useTypedNotificationSelector(state => state.notificationReducer.notifications);
   const axiosPrivate = useAxiosPrivate();
@@ -43,9 +30,6 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   const lengthOfNotification = useMemo(() => {
     return notifications.filter((notification) => notification?.fullName === userInfo?.fullName).length + notifications.filter((notification) => notification?.visibility === 'public').length;
   }, [notifications,userInfo?.fullName]);
-
-  const handleNotificationOpen = () => setNotificationModalOpen(true);
-  const handleNotificationClose = () => setNotificationModalOpen(false);
 
   useEffect(() => {
     (async function() {
@@ -149,8 +133,6 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     [axiosPrivate, dispatch, editedUser]
   );
 
-  console.log(notifications);
-
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -204,28 +186,11 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
           </Search>
         </Typography>
         <Stack direction="row" spacing={matches ? 2 : 1}>
-          <IconButton onClick={handleNotificationOpen}>
-            {lengthOfNotification > 0 && <Badge badgeContent={lengthOfNotification} color="error">
-              <NotificationsNoneIcon />
-            </Badge>}
-            {lengthOfNotification === 0 && <NotificationsNoneIcon />}
-          </IconButton>
-          <Modal
-            open={notificationModalOpen}
-            onClose={handleNotificationClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              {notifications.map((notification,index) => (
-                notification?.visibility === 'private' && userInfo?.fullName === notification?.fullName && (
-                  <Typography id="modal-modal-title" key={index} variant="h6" component="h2">
-                    Text in a modal
-                  </Typography>
-                )
-              ))}
-            </Box>
-          </Modal>
+          <NotificationPopover 
+            lengthOfNotification={lengthOfNotification}
+            notifications={notifications}
+            userInfo={userInfo}
+          />
           <Box component={"button"} id={"avatar-settings"} sx={{ border: 'none', bgcolor: 'transparent', cursor: 'pointer' }} onClick={handleOpenAvatar}>
             <Avatar alt="Remy Sharp" sx={{ bgcolor: 'primary.main' }}>
                 {userInfo?.fullName?.includes(" ") 

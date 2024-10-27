@@ -133,6 +133,7 @@ declare type UserInfo = {
 };
 
 declare type NotificationType = {
+    _id: string;
     taskId: string;
     commentId: string;
     isRead: boolean;
@@ -141,4 +142,10 @@ declare type NotificationType = {
     visibility: string;
     type: string;
     fullName: string;
-}[];
+};
+
+declare type NotificationPopoverType = {
+    lengthOfNotification: number;
+    notifications: Partial<NotificationType>[];
+    userInfo: Partial<UserInfo> | null;
+}; 
