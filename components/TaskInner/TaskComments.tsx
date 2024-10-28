@@ -46,7 +46,7 @@ const TaskComments = ({ id }: { id: string }) => {
             
             dispatch(taskDetailSliceActions.likeComment({ commentId, userId: userInfo.userId, type }));
             if(type === 'like' && fullName !== userInfo.fullName) {
-                socket.emit("likeComment", { fullName, userId: userInfo.userId, type }); 
+                socket.emit("likeComment", { fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
 
                 await axiosPrivate.post('/api/notification', {
                     fullName, 
