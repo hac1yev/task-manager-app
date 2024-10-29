@@ -39,6 +39,9 @@ const TaskSchema = new Schema({
     ],
     comments: [
         {
+            userId: {
+                type: String,
+            },
             fullName: {
                 type: String,
             },

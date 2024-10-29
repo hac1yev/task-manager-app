@@ -40,6 +40,7 @@ declare type TaskType = {
     comments: {
         _id?: string;
         fullName: string;
+        userId: string;
         description: string;
         adding_at:string;
         likes: string[];
@@ -67,6 +68,7 @@ declare type TaskSliceType = {
     }[];
     comments: {
         _id?: string;
+        userId: string;
         fullName: string;
         description: string;
         adding_at:string;

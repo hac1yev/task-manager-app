@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import { model, models, Schema } from "mongoose";
+import { User } from "./User";
 
-const NotificationSchema = new mongoose.Schema({
+const NotificationSchema = new Schema({
     fullName: {
         type: String,
     },
@@ -16,10 +17,12 @@ const NotificationSchema = new mongoose.Schema({
     taskId: { 
         type: String,  
     },
-    isRead: { 
-        type: Boolean, 
-        default: false 
-    },
+    isReadUsers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: User
+        }
+    ],
     visibility: { 
         type: String, 
         enum: ['public', 'private'], 
@@ -31,4 +34,4 @@ const NotificationSchema = new mongoose.Schema({
     }
 });
 
-export const Notification = mongoose.models.Notification || mongoose.model('Notification', NotificationSchema);
+export const Notification = models.Notification || model('Notification', NotificationSchema);

@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     const notAuthPage = ['/', '/team', '/in-progress', '/completed', '/to-do'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
-    if(notAuthPage.includes(nextUrl.pathname) || nextUrl.pathname.startsWith('/tasks')) {
+    if(notAuthPage.includes(nextUrl.pathname) || nextUrl.pathname.startsWith('/tasks')) {        
         if(isValidRefreshToken) {
             return NextResponse.next();
         }else{

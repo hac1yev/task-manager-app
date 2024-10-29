@@ -20,9 +20,12 @@ export async function POST(req: Request) {
     const task = await Task.findOne({ _id: id });
 
     const obj = JSON.parse(JSON.stringify(task));
-
     delete obj._id;    
-    
+    obj.created_at = new Date().toISOString();
+    obj.comments = [];
+    obj.subtask = [];
+    obj.activities = [];
+
     const newTask = new Task({ ...obj });
     await newTask.save();
 

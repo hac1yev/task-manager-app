@@ -65,6 +65,17 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       }));
     };
     
+    const handleDuplicateTaskNotification = (id: string) => {
+      dispatch(notificationSliceActions.addNotification({ 
+        message: `Task with ID ${id} has been duplicated.`,
+        type: 'duplicateTask',
+        visibility: 'public',
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        taskId: id, 
+      }));
+    };
+
     const handleUserLikeNotification = ({ fullName,type,message }: { fullName: string, type: string, message: string }) => {
       if(type === 'like') {
         dispatch(notificationSliceActions.addNotification({ 
@@ -81,11 +92,13 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     socket.on("sendDeleteTaskNotification", handleDeleteTaskNotification);
     socket.on("sendEditTaskNotification", handleEditTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
+    socket.on("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
 
     return () => {
       socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
       socket.off("sendEditTaskNotification", handleEditTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
+      socket.off("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
     };
   }, [dispatch, userInfo?.fullName]);
   

@@ -29,8 +29,8 @@ export default function Dashboard({ children }: DashboardProps) {
   }, [])
 
   useEffect(() => {
-    socket.emit("newUser", user.fullName);
-  }, [user.fullName]);
+    socket.emit("newUser", user.userId);
+  }, [user.userId]);
 
   const toggleDrawer = () => {
     setOpen(!open);

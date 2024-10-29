@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
 import { memo, useEffect, useState } from "react";
+import { socket } from "@/socket-client";
+import { notificationSliceActions } from "@/store/notification-slice";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -54,6 +56,19 @@ const CustomTaskSettingPopover = ({
 
       toast.success('Task duplicated!');
       
+      socket.emit("duplicateTask", id);
+
+      await axiosPrivate.post('/api/notification', JSON.stringify({
+        type: 'duplicateTask',
+        message: `Task with ID ${id} has been duplicated.`,
+        taskId: id, 
+        visibility: 'public'
+      }), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
     } catch (error) {
       console.log(error);
     }

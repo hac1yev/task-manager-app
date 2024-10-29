@@ -8,6 +8,7 @@ import { taskSliceActions, useTypedTaskSelector } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
 import { socket } from "@/socket-client";
+import toast from "react-hot-toast";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -70,6 +71,8 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         });
   
         dispatch(taskSliceActions.editTask({ _id: id, ...data }));
+        toast.success('Task updated!');
+
         socket.emit("editTask", id);
 
         await axiosPrivate.post('/api/notification', JSON.stringify({

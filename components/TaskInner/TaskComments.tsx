@@ -36,7 +36,7 @@ const TaskComments = ({ id }: { id: string }) => {
       setUserInfo(userInfo);
     }, []);
     
-    const handleLikeComment = useCallback(async ({ commentId, type, fullName }: { commentId: string | undefined, type: string, fullName: string }) => {
+    const handleLikeComment = useCallback(async ({ commentId, type, fullName, userId }: { commentId: string | undefined, type: string, fullName: string, userId: string }) => {
         try {
             await axiosPrivate.post(`/api/tasks/${id}/comments/${commentId}`, JSON.stringify({ userId: userInfo.userId, type }), {
                 headers: {
@@ -46,9 +46,10 @@ const TaskComments = ({ id }: { id: string }) => {
             
             dispatch(taskDetailSliceActions.likeComment({ commentId, userId: userInfo.userId, type }));
             if(type === 'like' && fullName !== userInfo.fullName) {
-                socket.emit("likeComment", { fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
+                socket.emit("likeComment", { userId, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
 
                 await axiosPrivate.post('/api/notification', {
+                    userId,
                     fullName, 
                     message: `${userInfo.fullName} liked your comment!`,
                     type: 'likeComment',
@@ -72,6 +73,9 @@ const TaskComments = ({ id }: { id: string }) => {
             console.log(error);
         }
     }, [axiosPrivate, dispatch, id]);
+
+    console.log(comments);
+    
 
     return (
         <Box className="comment-section-wrapper">
@@ -102,7 +106,7 @@ const TaskComments = ({ id }: { id: string }) => {
                                     <Typography 
                                         variant='subtitle1' 
                                         sx={{ cursor: 'pointer', color: comment.likes.includes(userInfo.userId) ? 'primary.main' : '#6d6d6b', fontWeight: comment.likes.includes(userInfo.userId) ? 600 : 400 }}
-                                        onClick={() => handleLikeComment(comment.likes.includes(userInfo.userId) ? { commentId: comment._id, type: 'dislike', fullName: comment.fullName } : { commentId: comment._id, type: 'like', fullName: comment.fullName })}
+                                        onClick={() => handleLikeComment(comment.likes.includes(userInfo.userId) ? { commentId: comment._id, type: 'dislike', fullName: comment.fullName, userId: comment.userId } : { commentId: comment._id, type: 'like', fullName: comment.fullName, userId: comment.userId })}
                                     >
                                         {comment.likes.length === 0 ? 'Like' : `${comment.likes.length} Likes`} 
                                     </Typography>

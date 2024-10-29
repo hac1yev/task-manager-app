@@ -6,11 +6,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormEvent, useRef, useState } from "react";
 import TaskComments from "./TaskComments";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
+import { taskDetailSliceActions } from "@/store/taskDetail-slice";
 import { useDispatch } from "react-redux";
 
 const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
-    const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const [commentText,setCommentText] = useState("");
     const commentTextRef = useRef<HTMLInputElement | null>(null);
     const axiosPrivate = useAxiosPrivate();
@@ -24,6 +23,7 @@ const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
 
         try {
             const data = {
+                userId: userInfo.userId,
                 fullName: userInfo.fullName,
                 description: commentText,
                 adding_at: new Date(),
@@ -71,7 +71,6 @@ const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
                         type="submit"              
                         sx={{ mr: '5px', height: "100%", borderRadius: '50%', minWidth: '40px' }}
                     >
-                    
                         <SendIcon sx={{ color: 'primary.main' }} />
                     </Button>
                 </Search>
