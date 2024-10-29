@@ -27,15 +27,11 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
-  const lengthOfNotification = useMemo(() => {
-    return notifications.filter((notification) => notification?.fullName === userInfo?.fullName).length + notifications.filter((notification) => notification?.visibility === 'public').length;
-  }, [notifications,userInfo?.fullName]);
-
   useEffect(() => {
     (async function() {
       try {
         const response = await axiosPrivate.get("/api/notification");
-        dispatch(notificationSliceActions.getAllNotifications(response.data.notifications));        
+        dispatch(notificationSliceActions.getAllNotifications(response.data.notifications));                
       } catch (error) {
         console.log(error);
       }
@@ -43,38 +39,38 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   }, [axiosPrivate, dispatch]);
 
   useEffect(() => {
-    const handleDeleteTaskNotification = (id: string) => {
-      dispatch(notificationSliceActions.addNotification({ 
-          message: `Task with ID ${id} has been deleted.`,
-          type: 'deleteTask',
-          visibility: 'public',
-          isRead: false,
-          createdAt: new Date().toISOString(),
-          taskId: id, 
-      }));
-    };
+    // const handleDeleteTaskNotification = (id: string) => {
+    //   dispatch(notificationSliceActions.addNotification({ 
+    //     message: `Task with ID ${id} has been deleted.`,
+    //     type: 'deleteTask',
+    //     visibility: 'public',
+    //     isReadUsers: [],
+    //     createdAt: new Date().toISOString(),
+    //     taskId: id, 
+    //   }));
+    // };
 
-    const handleEditTaskNotification = (id: string) => {
-      dispatch(notificationSliceActions.addNotification({ 
-          message: `Task with ID ${id} has been updated.`,
-          type: 'editTask',
-          visibility: 'public',
-          isRead: false,
-          createdAt: new Date().toISOString(),
-          taskId: id, 
-      }));
-    };
+    // const handleEditTaskNotification = (id: string) => {
+    //   dispatch(notificationSliceActions.addNotification({ 
+    //     message: `Task with ID ${id} has been updated.`,
+    //     type: 'editTask',
+    //     visibility: 'public',
+    //     isReadUsers: [],
+    //     createdAt: new Date().toISOString(),
+    //     taskId: id, 
+    //   }));
+    // };
     
-    const handleDuplicateTaskNotification = (id: string) => {
-      dispatch(notificationSliceActions.addNotification({ 
-        message: `Task with ID ${id} has been duplicated.`,
-        type: 'duplicateTask',
-        visibility: 'public',
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        taskId: id, 
-      }));
-    };
+    // const handleDuplicateTaskNotification = (id: string) => {
+    //   dispatch(notificationSliceActions.addNotification({ 
+    //     message: `Task with ID ${id} has been duplicated.`,
+    //     type: 'duplicateTask',
+    //     visibility: 'public',
+    //     isReadUsers: [],
+    //     createdAt: new Date().toISOString(),
+    //     taskId: id, 
+    //   }));
+    // };
 
     const handleUserLikeNotification = ({ userId,fullName,type,message }: { userId: string, fullName: string, type: string, message: string }) => {
       if(type === 'like') {
@@ -84,22 +80,22 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
           message,
           type: 'likeComment',
           visibility: 'private',
-          isRead: false,
+          isReadUsers: [],
           createdAt: new Date().toISOString(),
         }));
       }
     };
 
-    socket.on("sendDeleteTaskNotification", handleDeleteTaskNotification);
-    socket.on("sendEditTaskNotification", handleEditTaskNotification);
+    // socket.on("sendDeleteTaskNotification", handleDeleteTaskNotification);
+    // socket.on("sendEditTaskNotification", handleEditTaskNotification);
+    // socket.on("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
-    socket.on("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
 
     return () => {
-      socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
-      socket.off("sendEditTaskNotification", handleEditTaskNotification);
+      // socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
+      // socket.off("sendEditTaskNotification", handleEditTaskNotification);
+      // socket.off("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
-      socket.off("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
     };
   }, [dispatch, userInfo?.fullName]);
   
@@ -201,7 +197,6 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
         </Typography>
         <Stack direction="row" spacing={matches ? 2 : 1}>
           <NotificationPopover 
-            lengthOfNotification={lengthOfNotification}
             notifications={notifications}
             userInfo={userInfo}
           />

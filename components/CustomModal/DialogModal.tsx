@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import { memo, useCallback } from 'react';
 import { socket } from '@/socket-client';
+import { notificationSliceActions } from '@/store/notification-slice';
 
 const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const axiosPrivate = useAxiosPrivate();
@@ -27,7 +28,7 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
             dispatch(taskSliceActions.deleteTask(id));
             socket.emit("deleteTask", id);
 
-            await axiosPrivate.post('/api/notification', JSON.stringify({
+            const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 type: 'deleteTask',
                 message: `Task with ID ${id} has been deleted.`,
                 taskId: id, 
@@ -37,6 +38,9 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
                     'Content-Type': 'application/json'
                 }
             });
+
+            delete notificationResponse.data.notification.__v;
+            dispatch(notificationSliceActions.addNotification({...notificationResponse.data.notification}));
         } catch (error) {
             console.log(error);
         }

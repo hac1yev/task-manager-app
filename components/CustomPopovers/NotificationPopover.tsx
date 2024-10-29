@@ -6,8 +6,13 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { memo, useMemo, useState } from "react";
 import Image from "next/image";
 import moment from "moment";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { notificationSliceActions } from "@/store/notification-slice";
 
-const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: NotificationPopoverType) => {
+const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType) => {
+    const axiosPrivate = useAxiosPrivate();
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const handleNotificationPopoverOpen = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -16,29 +21,47 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
     
-    
     let publicNotifications = useMemo(() => {
         return notifications.filter((notification) => notification.visibility === 'public');
     }, [notifications]);
 
     let privateNotifications = useMemo(() => {
         return notifications.filter((notifications) => notifications.userId === userInfo?.userId);
-    }, [notifications, userInfo?.userId]);
-    
-    console.log(notifications);
-    
+    }, [notifications, userInfo?.userId]);    
 
-    let allPossibleNotifications = useMemo(() => {
+    let possibleNotifications = useMemo(() => {
         return publicNotifications.concat(privateNotifications);
-    }, [privateNotifications,publicNotifications]);        
+    }, [privateNotifications,publicNotifications]);  
+    
+    let allUnreadNotifications = possibleNotifications.filter((notification) => {
+        if( userInfo?.userId) { 
+            if(!notification.isReadUsers?.includes(userInfo?.userId)) return notification;
+        }
+    });
+    
+    const markAllRead = async () => {
+        let notificationsIds = allUnreadNotifications.map((notification) => notification._id);
+        
+        try {
+            await axiosPrivate.put("/api/notification", JSON.stringify({ ids: notificationsIds, userId: userInfo?.userId }), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            dispatch(notificationSliceActions.readAllNotification(userInfo?.userId));  
+        } catch (error) {
+            console.log(error);
+        }
+    };        
 
     return (
         <>
             <IconButton onClick={handleNotificationPopoverOpen}>
-                {lengthOfNotification > 0 && <Badge badgeContent={lengthOfNotification} color="error">
+                {allUnreadNotifications.length > 0 && <Badge badgeContent={allUnreadNotifications.length} color="error">
                 <NotificationsNoneIcon />
                 </Badge>}
-                {lengthOfNotification === 0 && <NotificationsNoneIcon />}
+                {allUnreadNotifications.length === 0 && <NotificationsNoneIcon />}
             </IconButton>
             <Popover
                 id={id}
@@ -54,7 +77,7 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
                     horizontal: 'center',
                 }}
             >
-                {notifications.length === 0 ? (
+                {allUnreadNotifications.length === 0 ? (
                     <Box 
                         className="flex-column-center" 
                         sx={{ 
@@ -85,6 +108,7 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
                         >
                             You have no notifications right now. Come back later.
                         </Typography>
+                        <Button variant="contained" color="primary" sx={{ color: '#fff', mt: 2, textTransform: 'capitalize' }} onClick={handleNotificationPopoverClose}>Close</Button>
                     </Box>
                 ) : (
                     <List 
@@ -98,7 +122,7 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
                             py: 2 
                         }}
                     >
-                        {allPossibleNotifications.map((notification) => (
+                        {allUnreadNotifications.map((notification) => (
                             <ListItemButton sx={{ px: 1 }} key={notification._id}>
                                 <ListItemAvatar>
                                     <Avatar sx={{ bgcolor: 'primary.main' }}>
@@ -126,9 +150,9 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
                         ))}
                     </List>
                 )}
-                {allPossibleNotifications.length > 0 && <Box className="flex-between" sx={{ width: '100%', px: 4, py: 1, borderTopLeftRadius: '30px', borderTopRightRadius: '30px', bgcolor: '#f9f9f9' }}>
+                {allUnreadNotifications.length > 0 && <Box className="flex-between" sx={{ width: '100%', px: 4, py: 1, borderTopLeftRadius: '30px', borderTopRightRadius: '30px', bgcolor: '#f9f9f9' }}>
                     <Button sx={{ textTransform: 'capitalize' }} onClick={handleNotificationPopoverClose}>Cancel</Button>
-                    <Button sx={{ textTransform: 'capitalize' }}>Mark All Read</Button>
+                    <Button sx={{ textTransform: 'capitalize' }} onClick={markAllRead}>Mark All Read</Button>
                 </Box>}
             </Popover>
         </>

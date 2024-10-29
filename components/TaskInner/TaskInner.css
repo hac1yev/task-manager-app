@@ -82,6 +82,10 @@
     top: 10px;
 }
 
+.comment-content {
+    width: calc(90% - 50px);
+}
+
 .comment-content > h6 {
     width: 93%;
 }

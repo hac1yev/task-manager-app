@@ -9,6 +9,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
 import { socket } from "@/socket-client";
 import toast from "react-hot-toast";
+import { notificationSliceActions } from "@/store/notification-slice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -75,7 +76,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
 
         socket.emit("editTask", id);
 
-        await axiosPrivate.post('/api/notification', JSON.stringify({
+        const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
           type: 'editTask',
           message: `Task with ID ${id} has been updated.`,
           taskId: id, 
@@ -85,7 +86,9 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
             'Content-Type': 'application/json'
           }
         });
-  
+
+        delete notificationResponse.data.notification.__v;
+        dispatch(notificationSliceActions.addNotification({...notificationResponse.data.notification}));
         setOpen(false);
       } catch (error) {
         console.log(error);

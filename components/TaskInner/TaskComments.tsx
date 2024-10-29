@@ -95,7 +95,7 @@ const TaskComments = ({ id }: { id: string }) => {
                                     className='comment-header-text' 
                                     sx={{ mb: 0 }} 
                                 />
-                                <Typography variant='subtitle1'>
+                                <Typography variant='subtitle1' sx={{ fontWeight: 500 }}>
                                     {comment.description}
                                 </Typography>
 

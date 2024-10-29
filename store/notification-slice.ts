@@ -20,8 +20,17 @@ export const notificationSlice = createSlice({
             state.notifications = [
                 ...state.notifications,
                 action.payload
-            ]
+            ];
         },
+        readAllNotification(state,action) {
+            state.notifications = state.notifications.map((notification) => {
+                if(!notification.isReadUsers?.includes(action.payload)) {
+                    notification.isReadUsers?.push(action.payload);
+                }
+
+                return notification;
+            });
+        }
     }
 });
 
