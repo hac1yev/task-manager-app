@@ -73,10 +73,7 @@ const TaskComments = ({ id }: { id: string }) => {
             console.log(error);
         }
     }, [axiosPrivate, dispatch, id]);
-
-    console.log(comments);
     
-
     return (
         <Box className="comment-section-wrapper">
             <List sx={{ p: 2 }}>
