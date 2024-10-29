@@ -76,9 +76,10 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       }));
     };
 
-    const handleUserLikeNotification = ({ fullName,type,message }: { fullName: string, type: string, message: string }) => {
+    const handleUserLikeNotification = ({ userId,fullName,type,message }: { userId: string, fullName: string, type: string, message: string }) => {
       if(type === 'like') {
-        dispatch(notificationSliceActions.addNotification({ 
+        dispatch(notificationSliceActions.addNotification({
+          userId, 
           fullName,
           message,
           type: 'likeComment',

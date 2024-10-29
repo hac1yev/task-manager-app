@@ -2,6 +2,9 @@ import { model, models, Schema } from "mongoose";
 import { User } from "./User";
 
 const NotificationSchema = new Schema({
+    userId: {
+        type: String,
+    },
     fullName: {
         type: String,
     },

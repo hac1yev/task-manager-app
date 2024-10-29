@@ -22,9 +22,12 @@ const NotificationPopover = ({ lengthOfNotification,notifications,userInfo }: No
     }, [notifications]);
 
     let privateNotifications = useMemo(() => {
-        return notifications.filter((notifications) => notifications.fullName === userInfo?.fullName);
-    }, [notifications, userInfo?.fullName]);
+        return notifications.filter((notifications) => notifications.userId === userInfo?.userId);
+    }, [notifications, userInfo?.userId]);
     
+    console.log(notifications);
+    
+
     let allPossibleNotifications = useMemo(() => {
         return publicNotifications.concat(privateNotifications);
     }, [privateNotifications,publicNotifications]);        
