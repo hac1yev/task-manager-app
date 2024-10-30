@@ -122,7 +122,11 @@ const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType
                             py: 2 
                         }}
                     >
-                        {allUnreadNotifications.map((notification) => (
+                        {allUnreadNotifications.toSorted((a,b) => {
+                            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                            return dateB - dateA;
+                        }).map((notification) => (
                             <ListItemButton sx={{ px: 1 }} key={notification._id}>
                                 <ListItemAvatar>
                                     <Avatar sx={{ bgcolor: 'primary.main' }}>

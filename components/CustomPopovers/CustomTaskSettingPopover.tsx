@@ -56,8 +56,7 @@ const CustomTaskSettingPopover = ({
 
       toast.success('Task duplicated!');
       
-      socket.emit("duplicateTask", id);
-
+      
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
         type: 'duplicateTask',
         message: `Task with ID ${id} has been duplicated.`,
@@ -68,9 +67,12 @@ const CustomTaskSettingPopover = ({
           'Content-Type': 'application/json'
         }
       });
+      
+      const notification = notificationResponse.data.notification;
+      delete notification.__v;
+      
+      socket.emit("duplicateTask", notification);
 
-      delete notificationResponse.data.notification.__v;
-      dispatch(notificationSliceActions.addNotification({...notificationResponse.data.notification}));
     } catch (error) {
       console.log(error);
     }

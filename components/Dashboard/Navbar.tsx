@@ -39,38 +39,9 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   }, [axiosPrivate, dispatch]);
 
   useEffect(() => {
-    // const handleDeleteTaskNotification = (id: string) => {
-    //   dispatch(notificationSliceActions.addNotification({ 
-    //     message: `Task with ID ${id} has been deleted.`,
-    //     type: 'deleteTask',
-    //     visibility: 'public',
-    //     isReadUsers: [],
-    //     createdAt: new Date().toISOString(),
-    //     taskId: id, 
-    //   }));
-    // };
-
-    // const handleEditTaskNotification = (id: string) => {
-    //   dispatch(notificationSliceActions.addNotification({ 
-    //     message: `Task with ID ${id} has been updated.`,
-    //     type: 'editTask',
-    //     visibility: 'public',
-    //     isReadUsers: [],
-    //     createdAt: new Date().toISOString(),
-    //     taskId: id, 
-    //   }));
-    // };
-    
-    // const handleDuplicateTaskNotification = (id: string) => {
-    //   dispatch(notificationSliceActions.addNotification({ 
-    //     message: `Task with ID ${id} has been duplicated.`,
-    //     type: 'duplicateTask',
-    //     visibility: 'public',
-    //     isReadUsers: [],
-    //     createdAt: new Date().toISOString(),
-    //     taskId: id, 
-    //   }));
-    // };
+    const handleTaskNotification = (notification: Partial<NotificationType>) => {            
+      dispatch(notificationSliceActions.addNotification({ ...notification }));
+    };
 
     const handleUserLikeNotification = ({ userId,fullName,type,message }: { userId: string, fullName: string, type: string, message: string }) => {
       if(type === 'like') {
@@ -86,18 +57,18 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       }
     };
 
-    // socket.on("sendDeleteTaskNotification", handleDeleteTaskNotification);
-    // socket.on("sendEditTaskNotification", handleEditTaskNotification);
-    // socket.on("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
+    socket.on("sendDeleteTaskNotification", handleTaskNotification);
+    socket.on("sendEditTaskNotification", handleTaskNotification);
+    socket.on("sendDuplicateTaskNotification", handleTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
 
     return () => {
-      // socket.off("sendDeleteTaskNotification", handleDeleteTaskNotification);
-      // socket.off("sendEditTaskNotification", handleEditTaskNotification);
-      // socket.off("sendDuplicateTaskNotification", handleDuplicateTaskNotification);
+      socket.off("sendDeleteTaskNotification", handleTaskNotification);
+      socket.off("sendEditTaskNotification", handleTaskNotification);
+      socket.off("sendDuplicateTaskNotification", handleTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
     };
-  }, [dispatch, userInfo?.fullName]);
+  }, [dispatch]);
   
   useEffect(() => {
     if (typeof window !== "undefined") {

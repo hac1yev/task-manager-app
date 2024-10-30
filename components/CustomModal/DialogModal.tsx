@@ -26,8 +26,7 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
         try {
             await axiosPrivate.post(`/api/trash/${id}`);
             dispatch(taskSliceActions.deleteTask(id));
-            socket.emit("deleteTask", id);
-
+            
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 type: 'deleteTask',
                 message: `Task with ID ${id} has been deleted.`,
@@ -38,9 +37,12 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
                     'Content-Type': 'application/json'
                 }
             });
+            
+            const notification = notificationResponse.data.notification;
+            delete notification.__v;
+            
+            socket.emit("deleteTask", notification);
 
-            delete notificationResponse.data.notification.__v;
-            dispatch(notificationSliceActions.addNotification({...notificationResponse.data.notification}));
         } catch (error) {
             console.log(error);
         }
