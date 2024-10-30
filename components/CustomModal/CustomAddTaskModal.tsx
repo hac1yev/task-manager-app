@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
+import { socket } from "@/socket-client";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -72,6 +73,22 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
           ...recievingData,
         }));
   
+        const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+          userId: data.users && [...data.users],
+          type: 'assignTask',
+          message: data.users?.length && (data.users?.length > 1 ? `New task has been assigned to you and ${data.users?.length - 1} others.` : `New task has been assigned to you.`),
+          visibility: 'private'
+        }), {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const notification = notificationResponse.data.notification;
+        delete notification.__v;
+        
+        socket.emit("assignTask", { notification, usersIds: data.users });
+
         setOpen(false);
         setTaskValues({ title: "", users: [], stage: "", created_at: new Date().toISOString().slice(0,10), priority_level: "" });
       } catch (error) {

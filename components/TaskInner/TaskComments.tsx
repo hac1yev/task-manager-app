@@ -49,12 +49,11 @@ const TaskComments = ({ id }: { id: string }) => {
                 socket.emit("likeComment", { userId, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
 
                 await axiosPrivate.post('/api/notification', {
-                    userId,
+                    userId: [userId],
                     fullName, 
                     message: `${userInfo.fullName} liked your comment!`,
                     type: 'likeComment',
                     visibility: 'private',
-                    isRead: false,
                     createdAt: new Date().toISOString(),
                 }); 
             }           

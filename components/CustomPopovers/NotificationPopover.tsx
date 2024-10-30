@@ -26,7 +26,9 @@ const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType
     }, [notifications]);
 
     let privateNotifications = useMemo(() => {
-        return notifications.filter((notifications) => notifications.userId === userInfo?.userId);
+        return notifications.filter((notifications) => {
+            if(userInfo?.userId) return notifications.userId?.includes(userInfo?.userId);
+        });
     }, [notifications, userInfo?.userId]);    
 
     let possibleNotifications = useMemo(() => {

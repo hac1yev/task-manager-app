@@ -61,12 +61,15 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     socket.on("sendEditTaskNotification", handleTaskNotification);
     socket.on("sendDuplicateTaskNotification", handleTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
+    socket.on("sendUserAssignNotification", handleTaskNotification);
 
     return () => {
       socket.off("sendDeleteTaskNotification", handleTaskNotification);
       socket.off("sendEditTaskNotification", handleTaskNotification);
       socket.off("sendDuplicateTaskNotification", handleTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
+      socket.off("sendUserAssignNotification", handleTaskNotification);
+
     };
   }, [dispatch]);
   

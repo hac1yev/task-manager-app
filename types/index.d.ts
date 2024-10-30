@@ -136,7 +136,7 @@ declare type UserInfo = {
 
 declare type NotificationType = {
     _id: string;
-    userId: string;
+    userId: string[];
     taskId: string;
     commentId: string;
     isReadUsers: string[];

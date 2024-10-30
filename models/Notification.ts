@@ -2,15 +2,18 @@ import { model, models, Schema } from "mongoose";
 import { User } from "./User";
 
 const NotificationSchema = new Schema({
-    userId: {
-        type: String,
-    },
+    userId: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: User,
+        }
+    ],
     fullName: {
         type: String,
     },
     type: { 
         type: String, 
-        enum: ['deleteTask', 'editTask', 'duplicateTask', 'likeComment', 'replyComment'], 
+        enum: ['deleteTask', 'editTask', 'duplicateTask', 'likeComment', 'assignTask', 'replyComment'], 
         required: true 
     },
     message: { 

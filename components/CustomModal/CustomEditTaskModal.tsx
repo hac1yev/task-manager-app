@@ -74,7 +74,6 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         dispatch(taskSliceActions.editTask({ _id: id, ...data }));
         toast.success('Task updated!');
 
-        
         const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
           type: 'editTask',
           message: `Task with ID ${id} has been updated.`,
