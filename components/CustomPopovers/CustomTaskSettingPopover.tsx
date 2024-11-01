@@ -12,7 +12,6 @@ import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
 import { memo, useEffect, useState } from "react";
 import { socket } from "@/socket-client";
-import { notificationSliceActions } from "@/store/notification-slice";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -55,7 +54,6 @@ const CustomTaskSettingPopover = ({
       }));
 
       toast.success('Task duplicated!');
-      
       
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
         type: 'duplicateTask',
