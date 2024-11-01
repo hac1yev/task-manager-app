@@ -41,6 +41,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
   useEffect(() => {
     const handleTaskNotification = (notification: Partial<NotificationType>) => {            
       dispatch(notificationSliceActions.addNotification({ ...notification }));
+      console.log(notification);
     };
 
     const handleUserLikeNotification = ({ userId,fullName,type,message }: { userId: string, fullName: string, type: string, message: string }) => {
@@ -62,6 +63,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     socket.on("sendDuplicateTaskNotification", handleTaskNotification);
     socket.on("sendUserLikeNotification", handleUserLikeNotification);
     socket.on("sendUserAssignNotification", handleTaskNotification);
+    socket.on("sendUserAddCommentNotification", handleTaskNotification);
 
     return () => {
       socket.off("sendDeleteTaskNotification", handleTaskNotification);
@@ -69,7 +71,7 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
       socket.off("sendDuplicateTaskNotification", handleTaskNotification);
       socket.off("sendUserLikeNotification", handleUserLikeNotification);
       socket.off("sendUserAssignNotification", handleTaskNotification);
-
+      socket.off("sendUserAddCommentNotification", handleTaskNotification);
     };
   }, [dispatch]);
   

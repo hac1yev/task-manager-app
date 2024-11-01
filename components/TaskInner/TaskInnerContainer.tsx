@@ -16,11 +16,11 @@ import TaskTimeline from "./TaskTimeline";
 const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
-    const [userNames, setUserNames] = useState<{ fullName: string; title: string }[]>([]);
+    const [userNames, setUserNames] = useState<{ id: string; fullName: string; title: string }[]>([]);
     const [isLoading,setIsLoading] = useState(true);
     const [value, setValue] = useState(0);
     const axiosPrivate = useAxiosPrivate();        
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();    
 
     const handleChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -45,6 +45,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
         if(taskData) {
             const { users } = taskData;
             const userNames: {
+                id: string;
                 fullName: string;
                 title: string;
             }[] = [];            
@@ -54,6 +55,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                 
                 if(findedUser) {
                     userNames.push({
+                        id: user,
                         fullName: findedUser?.fullName,
                         title: findedUser.title,
                     });
@@ -91,7 +93,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
             {taskData._id === taskId && (
                 <>
                     <CustomTabPanel value={value} index={0}>
-                        <TaskDetail userNames={userNames} taskId={taskId} />
+                        <TaskDetail taskId={taskId} userNames={userNames} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                         <TaskTimeline taskId={taskId} />

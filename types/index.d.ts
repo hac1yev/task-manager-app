@@ -121,7 +121,7 @@ declare type ParamsType = {
 };
 
 declare type TaskDetailType = {
-    userNames: { fullName: string; title: string }[];
+    userNames: { id: string; fullName: string; title: string }[];
     taskId: string;
 }; 
 

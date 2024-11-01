@@ -8,8 +8,9 @@ import TaskComments from "./TaskComments";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { taskDetailSliceActions } from "@/store/taskDetail-slice";
 import { useDispatch } from "react-redux";
+import { socket } from "@/socket-client";
 
-const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
+const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
     const commentTextRef = useRef<HTMLInputElement | null>(null);
     const axiosPrivate = useAxiosPrivate();
@@ -36,6 +37,25 @@ const TaskInnerRightbar = ({ taskId }: { taskId: string }) => {
             });
             
             dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
+
+            const userIds = userNames.map((user) => user.id);
+
+            const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+                userId: [...userIds],
+                type: 'addComment',
+                message: `New comment on task (ID: ${taskId}), which you’re also responsible for.`,
+                visibility: 'private'
+            }), {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+            });
+              
+            const notification = notificationResponse.data.notification;
+            delete notification.__v;
+                    
+            socket.emit("addComment", { notification, userIds });
+
             setCommentText("");
 
         } catch (error) {

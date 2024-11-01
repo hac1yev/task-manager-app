@@ -13,7 +13,7 @@ const NotificationSchema = new Schema({
     },
     type: { 
         type: String, 
-        enum: ['deleteTask', 'editTask', 'duplicateTask', 'likeComment', 'assignTask', 'replyComment'], 
+        enum: ['deleteTask', 'editTask', 'duplicateTask', 'likeComment', 'assignTask', 'addComment', 'replyComment'], 
         required: true 
     },
     message: { 
