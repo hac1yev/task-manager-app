@@ -76,7 +76,9 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
         const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
           userId: data.users && [...data.users],
           type: 'assignTask',
-          message: data.users?.length && (data.users?.length > 1 ? `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you and ${data.users?.length - 1} others.</div>` : `New task has been assigned to you.`),
+          message: data.users?.length && (data.users?.length > 1 
+            ? `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you and ${data.users?.length - 1} others.</div>` 
+            : `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you.</div>`),
           visibility: 'private'
         }), {
           headers: {
