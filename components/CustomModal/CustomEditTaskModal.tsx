@@ -76,7 +76,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
 
         const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
           type: 'editTask',
-          message: `Task with ID ${id} has been updated.`,
+          message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been updated.</div>`,
           taskId: id, 
           visibility: 'public'
         }), {

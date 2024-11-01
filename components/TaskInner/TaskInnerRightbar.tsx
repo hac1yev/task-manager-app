@@ -36,26 +36,25 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                 }
             });
             
-            dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
-
             const userIds = userNames.map((user) => user.id);
-
+            
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 userId: [...userIds],
                 type: 'addComment',
-                message: `New comment on task (ID: ${taskId}), which you’re also responsible for.`,
+                message: `<div>New comment on your task <a style="color: #1851df" href="/tasks/${taskId}">(ID: ${taskId})</a>.</div>`,
                 visibility: 'private'
             }), {
                 headers: {
-                  'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
-              
+            
             const notification = notificationResponse.data.notification;
             delete notification.__v;
-                    
+            
             socket.emit("addComment", { notification, userIds });
-
+            
+            dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
             setCommentText("");
 
         } catch (error) {

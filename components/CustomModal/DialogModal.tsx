@@ -29,7 +29,7 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
             
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 type: 'deleteTask',
-                message: `Task with ID ${id} has been deleted.`,
+                message: `<div>Task with ID ${id} has been deleted.</div>`,
                 taskId: id, 
                 visibility: 'public'
             }), {

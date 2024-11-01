@@ -141,16 +141,11 @@ const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType
                                         <Typography variant="subtitle1">{moment(notification.createdAt).fromNow()}</Typography>
                                     </Box>
                                 } secondary={
-                                    <Typography 
-                                        sx={{ 
-                                            fontSize: '15px',
-                                            fontWeight: '400',
-                                            lineHeight: '18px',
-                                            color: '#1D1D1B' 
-                                        }}
+                                    <div 
+                                        dangerouslySetInnerHTML={{ __html: notification.message || "" }}
                                     >
-                                        {notification.message}
-                                    </Typography>
+                                        
+                                    </div>
                                 } />
                             </ListItemButton>
                         ))}

@@ -59,7 +59,7 @@ const CustomTaskSettingPopover = ({
       
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
         type: 'duplicateTask',
-        message: `Task with ID ${id} has been duplicated.`,
+        message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been duplicated.</div>`,
         taskId: id, 
         visibility: 'public'
       }), {
