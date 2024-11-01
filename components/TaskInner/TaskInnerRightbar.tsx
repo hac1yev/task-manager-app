@@ -6,13 +6,14 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormEvent, useRef, useState } from "react";
 import TaskComments from "./TaskComments";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { taskDetailSliceActions } from "@/store/taskDetail-slice";
+import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 import { useDispatch } from "react-redux";
 import { socket } from "@/socket-client";
 
 const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
     const commentTextRef = useRef<HTMLInputElement | null>(null);
+    const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     const userInfo: Partial<UserInfo> = typeof window !== "undefined" && localStorage.getItem("userInfo") 
@@ -64,7 +65,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
 
     return (
         <Box>
-            <Typography variant="h6">COMMENTS: 45</Typography>
+            <Typography variant="h6">COMMENTS: {taskData.comments.length}</Typography>
             <Box className="comment-box" sx={{ my: 2 }}>
                 <Search 
                     onSubmit={handleAddComment}
@@ -94,7 +95,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                     </Button>
                 </Search>
             </Box> 
-            <TaskComments id={taskId} />
+            <TaskComments id={taskId} taskData={taskData} />
         </Box>   
     );
 };

@@ -10,8 +10,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket-client';
 
-const TaskComments = ({ id }: { id: string }) => {
-    const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
+const TaskComments = ({ id, taskData }: { id: string, taskData: Partial<TaskSliceType> }) => {
     const [userInfo,setUserInfo] = useState<UserInfo>({
         userId: "",
         email: "",
@@ -166,7 +165,7 @@ const TaskComments = ({ id }: { id: string }) => {
                         </Paper>
                     </ListItem>
                 ))}
-                {comments.length === 0 && (
+                {comments?.length === 0 && (
                     <Typography align='center' variant='h6'>There is no comment!</Typography>
                 )}
             </List>
