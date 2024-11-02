@@ -13,6 +13,7 @@ import { socket } from "@/socket-client";
 const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const [isLoading,setIsLoading] = useState(false);
     const [deformedCommentText,setDeformedCommentText] = useState("");
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const axiosPrivate = useAxiosPrivate();
@@ -23,7 +24,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
 
     const handleAddComment = async (e: FormEvent) => {
         e.preventDefault();
-
+        setIsLoading(true);
         try {
             let myStr;
             if(deformedCommentText.includes('@') && commentText.includes(deformedCommentText.split("*").join(" "))) {
@@ -54,7 +55,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                 }
             });
             
-            const userIds = userNames.map((user) => user.id);
+            const userIds = userNames.map((user) => user.id).filter((id) => id !== userInfo.userId);
             
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 userId: [...userIds],
@@ -74,6 +75,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
             
             dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
             setCommentText("");
+            setIsLoading(false);
 
         } catch (error) {
             console.log(error);
@@ -102,6 +104,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                         onChange={(e) => setCommentText(e.target.value)}
                         value={commentText}
                         inputProps={{ ref: inputRef }}
+                        disabled={isLoading}
                     />
                     <Button
                         type="submit"              
