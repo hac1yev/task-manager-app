@@ -125,7 +125,6 @@ const UserProfileModal = ({
               placeholder="Email"
               autoComplete="email"
               value={editedUser?.email}
-              autoFocus
               required
               fullWidth
               disabled
@@ -141,7 +140,6 @@ const UserProfileModal = ({
               placeholder="role"
               autoComplete="role"
               value={editedUser?.role}
-              autoFocus
               required
               fullWidth
               variant="outlined"

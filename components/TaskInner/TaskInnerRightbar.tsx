@@ -12,7 +12,8 @@ import { socket } from "@/socket-client";
 
 const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
-    const commentTextRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const [deformedCommentText,setDeformedCommentText] = useState("");
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
@@ -24,10 +25,26 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
         e.preventDefault();
 
         try {
+            let myStr;
+            if(deformedCommentText.includes('@') && commentText.includes(deformedCommentText.split("*").join(" "))) {
+                const arr = deformedCommentText.split(" ");
+                const newArr = arr.map((str) => {
+                    if(str.includes('@')) {
+                        const newString = str.split("*").join(" ");
+                        return `<span style="color: blue">${newString}</span>`
+                    }
+                    return str;
+                });
+                
+                myStr = commentText.replace(deformedCommentText.split("*").join(" "), newArr.join(" "));                          
+            }else{
+                myStr = commentText;
+            }
+
             const data = {
                 userId: userInfo.userId,
                 fullName: userInfo.fullName,
-                description: commentText,
+                description: `<div>${myStr}</div>`,
                 adding_at: new Date(),
             };            
 
@@ -61,7 +78,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
         } catch (error) {
             console.log(error);
         }
-    };
+    };    
 
     return (
         <Box>
@@ -82,10 +99,9 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                         placeholder="Comment yaz..."
                         sx={{ width: "100%" }}
                         className="text-comment-input"
-                        inputProps={{ "aria-label": "search" }}
                         onChange={(e) => setCommentText(e.target.value)}
                         value={commentText}
-                        ref={commentTextRef}
+                        inputProps={{ ref: inputRef }}
                     />
                     <Button
                         type="submit"              
@@ -95,7 +111,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                     </Button>
                 </Search>
             </Box> 
-            <TaskComments id={taskId} taskData={taskData} />
+            <TaskComments id={taskId} taskData={taskData} inputRef={inputRef} setCommentText={setCommentText} setDeformedCommentText={setDeformedCommentText} />
         </Box>   
     );
 };

@@ -3,14 +3,14 @@
 import { ListItem,ListItemAvatar,ListItemText,Avatar, List, Box, Typography, IconButton, Paper, Popover, ListItemIcon, ListItemButton } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useCallback, useEffect, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from '@/store/taskDetail-slice';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket-client';
 
-const TaskComments = ({ id, taskData }: { id: string, taskData: Partial<TaskSliceType> }) => {
+const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, inputRef }: { id: string, taskData: Partial<TaskSliceType>, setCommentText: (value: string) => void, setDeformedCommentText: (value: string) => void, inputRef: MutableRefObject<HTMLInputElement | null> }) => {
     const [userInfo,setUserInfo] = useState<UserInfo>({
         userId: "",
         email: "",
@@ -71,6 +71,20 @@ const TaskComments = ({ id, taskData }: { id: string, taskData: Partial<TaskSlic
             console.log(error);
         }
     }, [axiosPrivate, dispatch, id]);
+
+    const handleReply = useCallback((fullName: string) => {
+        if(inputRef.current) {
+            inputRef.current.focus();
+            window.scrollTo(0,0);
+        }
+        setCommentText(`@${fullName}`);        
+        if(fullName.includes(" ")){
+            const newStr = fullName.split(" ").join("*");
+            setDeformedCommentText(`@${newStr}`);
+        }else{
+            setDeformedCommentText(`@${fullName}`);
+        }
+    }, [setCommentText,setDeformedCommentText,inputRef]);
     
     return (
         <Box className="comment-section-wrapper">
@@ -94,7 +108,7 @@ const TaskComments = ({ id, taskData }: { id: string, taskData: Partial<TaskSlic
                                     sx={{ mb: 0 }} 
                                 />
                                 <Typography variant='subtitle1' sx={{ fontWeight: 500 }}>
-                                    {comment.description}
+                                    <div dangerouslySetInnerHTML={{ __html: comment.description }}></div>
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mt: '8px' }}>
@@ -108,6 +122,7 @@ const TaskComments = ({ id, taskData }: { id: string, taskData: Partial<TaskSlic
                                     <Typography 
                                         variant='subtitle1' 
                                         sx={{ cursor: 'pointer' }}
+                                        onClick={() => handleReply(comment.fullName)}
                                     >
                                         Reply
                                     </Typography>
