@@ -8,11 +8,11 @@ import LoginForm from './LoginForm';
 
 export default function LoginWrapper() {
   return (
-    <Grid container className="flex-center" sx={{ height: '100vh' ,width: '100%', background: '#F5F4F7' }}>
-        <Grid size={{ sm: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <Grid container className="flex-center" sx={{ height: '100vh', width: '100%', background: '#F5F4F7' }}>
+        <Grid size={{ md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <LoginContent />
         </Grid>
-        <Grid size={{ sm: 6 }}>
+        <Grid size={{ md: 6 }}>
             <LoginForm />
         </Grid>
     </Grid>

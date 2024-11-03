@@ -86,11 +86,11 @@ const LoginForm = () => {
   };
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ borderRadius: '15px', pt: 5, pb: 6 }}>
       <Typography
         component="h1"
         variant="h4"
-        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)", color: 'primary.main', fontWeight: 400 }}
       >
         Sign in
       </Typography>
@@ -147,8 +147,9 @@ const LoginForm = () => {
           variant="contained"
           onClick={validateInputs}
           disabled={isProcessing}
+          sx={{ textTransform: 'capitalize' }}  
         >
-          {isProcessing ? 'Processing...' : 'Submit'}
+          {isProcessing ? 'Processing...' : 'Sign In'}
         </Button>
       </Box>
     </Card>
