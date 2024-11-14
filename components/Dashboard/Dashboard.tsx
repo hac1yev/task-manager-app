@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Toolbar, Typography, Divider, IconButton, Box, CssBaseline } from "@mui/material"; 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
@@ -52,12 +52,6 @@ export default function Dashboard({ children }: DashboardProps) {
     });
   }, []);
 
-  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    
-  }, []);
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
@@ -66,7 +60,6 @@ export default function Dashboard({ children }: DashboardProps) {
           <Navbar
             open={open}
             toggleDrawer={toggleDrawer}
-            handleSubmit={(e) => handleSubmit}
           />
           <Drawer variant="permanent" open={open}>
             <Toolbar

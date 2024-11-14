@@ -15,17 +15,20 @@ import toast from "react-hot-toast";
 import { socket } from "@/socket-client";
 import { notificationSliceActions, useTypedNotificationSelector } from "@/store/notification-slice";
 import NotificationPopover from "../CustomPopovers/NotificationPopover";
+import { useRouter } from "next/navigation";
 
-const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDrawer: () => void, handleSubmit: (e: FormEvent) => void }) => {
+const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => void }) => {
   const matches = useMediaQuery("(min-width:769px)");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [searchValue,setSearchValue] = useState("");
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
   const [openProfileModal,setOpenProfileModal] = useState("");
   const [openChangePasswordModal,setOpenChangePasswordModal] = useState("");
   const notifications = useTypedNotificationSelector(state => state.notificationReducer.notifications);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
+  const navigation = useRouter();
 
   useEffect(() => {
     (async function() {
@@ -119,6 +122,14 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
     [axiosPrivate, dispatch, editedUser]
   );
 
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(searchValue === "") return;
+
+    navigation.push(`/search?q=${searchValue}`);
+  }, [navigation,searchValue]);
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -167,6 +178,8 @@ const Navbar = ({ open, toggleDrawer, handleSubmit }: { open: boolean, toggleDra
               name="searchText"
               placeholder="Task axtar…"
               sx={{ width: "100%" }}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               inputProps={{ "aria-label": "search" }}
             />
           </Search>

@@ -9,17 +9,21 @@ import { useTypedTaskSelector } from "@/store/task-slice";
 import { useTypedSelector } from "@/store/team-slice";
 import { memo, useCallback, useMemo, useState } from "react";
 import TaskList from "./TaskList";
+import { usePathname } from "next/navigation";
 
 const Tasks = () => {
     const allUsers = useTypedSelector(state => state.teamReducer.users);
     const tasks = useTypedTaskSelector(state => state.taskReducer.tasks);
+    const searchedTasks = useTypedTaskSelector(state => state.taskReducer.searchedTasks);
     const isLoading = useTypedTaskSelector(state => state.taskReducer.isLoading);
     const [hideTasks,setHideTasks] = useState({
         todo: 'TODO', inProgress: 'IN PROGRESS', completed: 'COMPLETED'
     }); 
+    const pathname = usePathname();
 
     const modifiedTasks = useMemo(() => {
-        return tasks.map((task) => {
+        let taskList = pathname === '/search' ? searchedTasks : tasks;
+        return taskList.map((task) => {
             const { users } = task;
             const userNames: {
                 fullName: string;
@@ -43,7 +47,7 @@ const Tasks = () => {
                 users: userNames
             }
         });
-    }, [allUsers,tasks]);
+    }, [allUsers,tasks,pathname,searchedTasks]);
         
     const todoTasks = useMemo(() => {
         return modifiedTasks.filter(task => {

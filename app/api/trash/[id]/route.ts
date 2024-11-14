@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is not valid!' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden!' }, { status: 403 });
     }
 
     await connectToDB();
@@ -37,7 +37,7 @@ export async function PUT(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is not valid!' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden!' }, { status: 403 });
     }
 
     await connectToDB();

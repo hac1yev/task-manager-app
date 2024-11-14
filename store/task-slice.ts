@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 interface TaskState {
     tasks: Partial<TaskSliceType>[];
+    searchedTasks: Partial<TaskSliceType>[];
     isLoading: boolean;
 };
 
 const initialTaskState: TaskState = {
     tasks: [],
+    searchedTasks: [],
     isLoading: true
 };
 
@@ -20,6 +22,9 @@ export const taskSlice = createSlice({
         },
         getAllTasks(state, action) {
             state.tasks = action.payload;
+        },
+        getAllSearchedTasks(state,action){
+            state.searchedTasks = action.payload;
         },
         addTask(state, action) {
             state.tasks = [

@@ -1,25 +1,27 @@
 "use client";
 
 import { useEffect } from 'react';
-import TasksApiCall from '../HOC/TasksApiCall';
-import Tasks from '../Tasks/Tasks';
 import { useDispatch } from 'react-redux';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { taskSliceActions } from '@/store/task-slice';
+import Tasks from '../Tasks/Tasks';
+import { Box } from '@mui/material';
+import SearchHeader from './SearchHeader';
+import TeamApiCall from '../HOC/TeamApiCall';
 
-const HOCTasksComponent = TasksApiCall(Tasks);
+const HOCAddTaskComponent = TeamApiCall(SearchHeader);
 
-const SearchWrapper = ({ searchParams }: { searchParams: { q: string; page: number } }) => {
+const SearchWrapper = ({ searchParams }: { searchParams: { q: string } }) => {
     const axiosPrivate = useAxiosPrivate();    
-    const { q,page } = searchParams;
-    const dispatch = useDispatch();
-
+    const { q } = searchParams;
+    const dispatch = useDispatch();    
+    
     useEffect(() => {
       const fetchData = async () => {
         dispatch(taskSliceActions.setIsLoading(true));
         try {
-          const response = await axiosPrivate.get(`/api/search?q=${q}&page=${page}`);          
-          dispatch(taskSliceActions.getAllTasks(response.data.tasks));        
+          const response = await axiosPrivate.get(`/api/search?q=${q}`);                    
+          dispatch(taskSliceActions.getAllSearchedTasks(response.data.tasks));        
         } catch (error) {
           console.error(error);
         }
@@ -27,10 +29,13 @@ const SearchWrapper = ({ searchParams }: { searchParams: { q: string; page: numb
       };
 
       fetchData();
-    }, [axiosPrivate, dispatch, q, page]);    
+    }, [axiosPrivate, dispatch, q]);    
 
     return (
-        <HOCTasksComponent />
+      <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
+        <HOCAddTaskComponent q={q} />
+        <Tasks />
+      </Box>
     );
 };
 
