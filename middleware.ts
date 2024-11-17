@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest } from 'next/server'
 import { verifyRefreshToken } from './lib/verifyToken';
 
 const authPages = ['/login','/forget-password'];
@@ -10,6 +10,10 @@ export async function middleware(request: NextRequest) {
     const { url,nextUrl,cookies } = request;
     const refreshToken = cookies.get("refreshToken")?.value || "";
     
+    if(nextUrl.pathname === '/settings') {
+        return NextResponse.redirect(new URL("/settings/account", url));
+    }
+
     const notAuthPage = ['/', '/team', '/in-progress', '/completed', '/to-do', '/search'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
@@ -33,5 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/team', '/tasks/:path*', '/in-progress', '/completed', '/to-do', '/search'],
+  matcher: ['/', '/login', '/team', '/tasks/:path*', '/in-progress', '/completed', '/to-do', '/search','/settings'],
 };

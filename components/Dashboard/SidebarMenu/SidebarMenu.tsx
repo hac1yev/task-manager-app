@@ -151,14 +151,16 @@ const SidebarMenu = () => {
           width: "100%",
         }}
       >
-        <ListItem disablePadding className="sidebar-list-item">
-          <ListItemButton>
-            <ListItemIcon sx={{ minWidth: "40px" }}>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
-        </ListItem>
+        <Link href="/settings/account">
+          <ListItem disablePadding className="sidebar-list-item">
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: "40px" }}>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItemButton>
+          </ListItem>
+        </Link>
       </List>
     </>
   );

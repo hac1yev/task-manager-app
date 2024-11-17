@@ -1,0 +1,31 @@
+.tabs-ul > div > div {
+    height: 100%;
+    overflow: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    display: flex;   
+    gap: 30px;
+}
+
+.tabs-ul .active-tab {
+    border-bottom: 3px solid blue;
+    color: blue;
+}
+
+.tabs-ul > div > div a {
+    text-transform: capitalize;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.tabs-ul > div > div::-webkit-scrollbar {
+    display: none;
+}
+
+.tabs-ul div > span {
+    display: none!important;
+}
