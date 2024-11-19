@@ -5,7 +5,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { MutableRefObject, useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
-import { taskDetailSliceActions, useTypedTaskDetailSelector } from '@/store/taskDetail-slice';
+import { taskDetailSliceActions } from '@/store/taskDetail-slice';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket-client';
@@ -17,7 +17,8 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
         fullName: "",
         role: "",
         title: "",
-        accessToken: ""
+        accessToken: "",
+        avatar: "",
     }); 
     const { comments } = taskData;
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -93,7 +94,7 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
                     <ListItem sx={{ p: 0, mb: 2 }} className='comment-list-item' key={comment._id}>
                         <Paper className='comment-paper'>
                             <ListItemAvatar sx={{ minWidth: '50px' }}>
-                                <Avatar alt="User Name" sx={{ bgcolor: 'primary.main' }}>
+                                <Avatar src={comment?.avatar} alt="User Name" sx={{ bgcolor: 'primary.main' }}>
                                     {comment?.fullName?.includes(" ") 
                                         ? comment?.fullName?.split(" ").map((name: string) => name[0].toLocaleUpperCase()) 
                                         : comment?.fullName?.slice(0,2).toLocaleUpperCase()

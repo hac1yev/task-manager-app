@@ -44,6 +44,7 @@ declare type TaskType = {
         fullName: string;
         userId: string;
         description: string;
+        avatar: string;
         adding_at:string;
         likes: string[];
     }[];
@@ -72,6 +73,7 @@ declare type TaskSliceType = {
         _id?: string;
         userId: string;
         fullName: string;
+        avatar: string;
         description: string;
         adding_at:string;
         likes: string[];
@@ -134,8 +136,8 @@ declare type UserInfo = {
     role: string;
     accessToken: string;
     title: string;
-    avatar: string;
-    biography: string;
+    avatar?: string;
+    biography?: string;
 };
 
 declare type NotificationType = {

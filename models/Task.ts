@@ -45,6 +45,9 @@ const TaskSchema = new Schema({
             fullName: {
                 type: String,
             },
+            avatar: {
+                type: String,
+            },
             description: {
                 type: String,
             },

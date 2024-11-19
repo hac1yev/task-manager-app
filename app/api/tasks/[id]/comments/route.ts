@@ -4,7 +4,7 @@ import { Task } from "@/models/Task";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-    const { userId,fullName,description,adding_at } = await req.json();
+    const { userId,fullName,description,adding_at,avatar } = await req.json();
     const taskId = req.url.split("/").at(-2);
     const bearer = req.headers.get("Authorization");    
 
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     
     await connectToDB();
 
-    await Task.findByIdAndUpdate({ _id: taskId }, { $push: { comments: { userId, fullName, description, adding_at } } });
+    await Task.findByIdAndUpdate({ _id: taskId }, { $push: { comments: { userId, fullName, avatar, description, adding_at } } });
 
     const task = await Task.findById({ _id: taskId });
 

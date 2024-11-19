@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, Divider, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import './SettingsAccount.css';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 
 const SettingsAccountWrapper = () => {
@@ -35,7 +35,7 @@ const SettingsAccountWrapper = () => {
         })()
     }, [axiosPrivate, userInfo.userId]);
 
-    const handleOpenEdit = () => {
+    const handleOpenEdit = useCallback(() => {
         const editInput = document.querySelector("#edit_input") as HTMLInputElement;
         editInput.click();
         
@@ -58,13 +58,13 @@ const SettingsAccountWrapper = () => {
                 reader.readAsDataURL(file);
             } 
         });
-    };
+    }, []);
 
     const handleOpenDelete = () => {
-
+        
     };
 
-    const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
         
         try {
@@ -79,7 +79,7 @@ const SettingsAccountWrapper = () => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, [axiosPrivate,fileName,settingsAccountData,userInfo.userId]);
 
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>

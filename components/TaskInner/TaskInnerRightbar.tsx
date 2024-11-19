@@ -47,6 +47,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                 fullName: userInfo.fullName,
                 description: `<div>${myStr}</div>`,
                 adding_at: new Date(),
+                avatar: userInfo.avatar
             };            
 
             const response = await axiosPrivate.post(`/api/tasks/${taskId}/comments`, JSON.stringify(data), {
