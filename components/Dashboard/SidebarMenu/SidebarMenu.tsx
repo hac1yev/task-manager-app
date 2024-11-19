@@ -106,7 +106,7 @@ const SidebarMenu = () => {
               </ListItemButton>
             </ListItem>
           </Link>
-          {role === 'Admin' && (
+          {role === 'admin' && (
             <>
               <Link href="/team">
                 <ListItem
@@ -149,6 +149,7 @@ const SidebarMenu = () => {
           position: "absolute",
           bottom: "5px",
           width: "100%",
+          bgcolor: '#fff'
         }}
       >
         <Link href="/settings/account">

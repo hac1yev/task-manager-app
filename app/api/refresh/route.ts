@@ -34,7 +34,9 @@ export async function GET(req: Request) {
             _id: user._id,
             title: user.title,
             fullName: user.fullName,
-            email: isValidRefreshToken.email 
+            email: isValidRefreshToken.email,
+            avatar: user.avatar,
+            biography: user.biography
         }); 
     }
 

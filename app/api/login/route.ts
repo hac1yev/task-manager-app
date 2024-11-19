@@ -50,6 +50,8 @@ export async function POST(req: NextRequest) {
         email,
         message: "Login successfully!", 
         accessToken, 
+        avatar: user.avatar,
+        biography: user.biography
     }, { status: 200 });
 
     response.cookies.set({

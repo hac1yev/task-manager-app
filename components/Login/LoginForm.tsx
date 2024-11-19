@@ -37,13 +37,17 @@ const LoginForm = () => {
           email: string;
           fullName: string;
           title: string;
+          avatar: string;
+          biography: string;
         } = {
           accessToken: response.data.accessToken,
           fullName: response.data.fullName,
           email: response.data.email,
           userId: response.data._id,
           role: response.data.role,
-          title: response.data.title
+          title: response.data.title,
+          avatar: response.data.avatar,
+          biography: response.data.biography,
         };
 
         localStorage.setItem("userInfo", JSON.stringify(user_data));

@@ -18,6 +18,8 @@ declare type UserType = {
     role: string; 
     title: string; 
     status: string; 
+    biography?: string;
+    avatar?: string;
 };
 
 declare type TaskType = {
@@ -132,6 +134,8 @@ declare type UserInfo = {
     role: string;
     accessToken: string;
     title: string;
+    avatar: string;
+    biography: string;
 };
 
 declare type NotificationType = {

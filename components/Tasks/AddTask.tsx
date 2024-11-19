@@ -21,7 +21,7 @@ const AddTask = () => {
   return (
     <Box className="flex-between" sx={{ mb: 3 }}>
       <Typography variant="h4">Tasks</Typography>
-      {(role === 'Admin' || role === 'Editor') && <>
+      {(role === 'admin' || role === 'editor') && <>
         <Button variant="contained" onClick={handleModalOpen}>
           + Add Task
         </Button>

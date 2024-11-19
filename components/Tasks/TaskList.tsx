@@ -151,7 +151,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
             </Box>
           </Box>
         ))}
-        {(role === 'Admin' || role === 'Editor') && (
+        {(role === 'admin' || role === 'editor') && (
           <>
             <Button variant="text" sx={{ color: "#6f6f6f" }} onClick={handleModalOpen}>
               <AddOutlinedIcon sx={{ fontSize: "20px" }} />

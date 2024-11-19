@@ -1,6 +1,9 @@
 import { model, models, Schema } from "mongoose";
 
 const UserSchema = new Schema({
+    avatar: {
+        type: String
+    },
     fullName: {
         type: String,
         required: true
@@ -26,6 +29,9 @@ const UserSchema = new Schema({
     title: {
         type: String,
         required: true,
+    },
+    biography: {
+        type: String,
     },
     created_at: {
         type: Date,

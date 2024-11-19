@@ -190,7 +190,7 @@ const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => voi
             userInfo={userInfo}
           />
           <Box component={"button"} id={"avatar-settings"} sx={{ border: 'none', bgcolor: 'transparent', cursor: 'pointer' }} onClick={handleOpenAvatar}>
-            <Avatar alt="Remy Sharp" sx={{ bgcolor: 'primary.main' }}>
+            <Avatar src={userInfo?.avatar} alt="Remy Sharp" sx={{ bgcolor: 'primary.main' }}>
                 {userInfo?.fullName?.includes(" ") 
                     ? userInfo?.fullName?.split(" ").map((name) => name[0].toLocaleUpperCase()) 
                     : userInfo?.fullName?.slice(0,2).toLocaleUpperCase()

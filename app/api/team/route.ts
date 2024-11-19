@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     const bearer = req.headers.get("Authorization");
-    const { fullName,email,password,role,title,status } = await req.json();
+    const { fullName,email,password,role,title,status,biography,avatar } = await req.json();
 
     const accessToken = bearer?.split(" ")[1] || "";
 
@@ -18,9 +18,9 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    await connectToDB();
+   await connectToDB();
 
-    const user = new User({ fullName, email, password: hashedPassword, role, status, title });
+    const user = new User({ fullName, email, password: hashedPassword, role, status, title, biography, avatar });
 
     await user.save();
     
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
 
     const users = await User.find();    
 
-    const filtererUser = JSON.parse(JSON.stringify(users)).filter((user: Partial<UserType>) => user.role !== 'Admin');
+    const filtererUser = JSON.parse(JSON.stringify(users)).filter((user: Partial<UserType>) => user.role !== 'admin');
     
     return NextResponse.json({ message: 'Success', users: filtererUser }, { status: 200 });
 };

@@ -220,8 +220,8 @@ const TeamUserItem = ({ users, user, color }: { users: UserType[], user: UserTyp
                     }}
                     placeholder="Role"
                   >
-                    <MenuItem value={"User"}>User</MenuItem>
-                    <MenuItem value={"Editor"}>Editor</MenuItem>
+                    <MenuItem value={"user"}>user</MenuItem>
+                    <MenuItem value={"editor"}>editor</MenuItem>
                   </Select>
                 </FormControl>
                 <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>

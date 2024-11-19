@@ -19,15 +19,19 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
 
     const formData = new FormData(e.currentTarget);
 
+    const newRole = formData.get("role") as string;
+
     const data = {
       fullName: formData.get("fullName"),
       title: formData.get("title"),
       email: formData.get("email"),
       password: `${formData.get("role")}1234`,
-      role: formData.get("role"),
+      role: newRole.toLocaleLowerCase(),
       status: "Active",
+      biography: "",
+      avatar: "",
       created_at: new Date().toISOString(),
-    };
+    };    
 
     try {
       const response = await axiosPrivate.post(
@@ -132,8 +136,8 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
               onChange={(e) => setRole(e.target.value)}
               placeholder="Role"
             >
-              <MenuItem value={"User"}>User</MenuItem>
-              <MenuItem value={"Editor"}>Editor</MenuItem>
+              <MenuItem value={"user"}>user</MenuItem>
+              <MenuItem value={"editor"}>editor</MenuItem>
             </Select>
           </FormControl>
           <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>

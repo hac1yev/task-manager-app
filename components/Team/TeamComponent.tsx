@@ -25,7 +25,7 @@ const TeamComponent = () => {
     });
     return colorMap;
   }, [users]);
-
+  
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
       <AddUser />

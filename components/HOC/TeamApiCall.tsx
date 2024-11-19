@@ -12,12 +12,14 @@ const TeamApiCall = <P extends object>(WrappedComponent: ComponentType<P>) => {
 
     useEffect(() => {
       const fetchData = async () => {
+        dispatch(teamSliceAction.setIsLoading(true));
         try {
           const response = await axiosPrivate.get("/api/team");
           dispatch(teamSliceAction.getAllUsers(response.data.users));
         } catch (error) {
           console.error(error);
         }
+        dispatch(teamSliceAction.setIsLoading(false));
       };
 
       fetchData();

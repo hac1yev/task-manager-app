@@ -17,7 +17,11 @@ export async function middleware(request: NextRequest) {
     const notAuthPage = ['/', '/team', '/in-progress', '/completed', '/to-do', '/search'];
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
 
-    if(notAuthPage.includes(nextUrl.pathname) || nextUrl.pathname.startsWith('/tasks')) {        
+    if(
+        notAuthPage.includes(nextUrl.pathname) || 
+        nextUrl.pathname.startsWith('/tasks') || 
+        nextUrl.pathname.startsWith('/settings')
+    ) {        
         if(isValidRefreshToken) {
             return NextResponse.next();
         }else{
@@ -37,5 +41,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/team', '/tasks/:path*', '/in-progress', '/completed', '/to-do', '/search','/settings'],
+  matcher: ['/', '/login', '/team', '/tasks/:path*', '/in-progress', '/completed', '/to-do', '/search','/settings/:path*'],
 };
