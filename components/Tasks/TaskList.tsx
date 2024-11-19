@@ -24,7 +24,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
     tag: ""
   });
   const colors = useMemo(() => {
-    return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
+    return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);

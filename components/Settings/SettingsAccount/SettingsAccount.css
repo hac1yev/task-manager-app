@@ -12,3 +12,29 @@
 .account-input-group > div {
     width: 50%;
 }
+
+.css-1jk99ih-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled {
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.5);
+}
+
+.account-input input[disabled] {
+    cursor: not-allowed;
+}
+
+@media screen and (max-width: 1000px) {
+    .account-input-group {
+        width: 100%;
+    }
+} 
+
+@media screen and (max-width: 600px) {
+    .account-input-group {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .account-input-group > div {
+        width: 100%;
+    }
+}

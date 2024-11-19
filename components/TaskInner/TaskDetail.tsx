@@ -11,7 +11,7 @@ import { useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 
 const TaskDetail = ({ userNames, taskId }: TaskDetailType) => {
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
-    const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4'];
+    const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
     
     return (
         <Box sx={{ p: 1 }}>

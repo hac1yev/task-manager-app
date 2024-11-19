@@ -17,7 +17,7 @@ const TeamComponent = () => {
   const isLoading = useTypedSelector((state) => state.teamReducer.isLoading);
 
   const userColors = useMemo(() => {
-    const colors = ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
+    const colors = ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
     const colorMap = new Map();
     users.forEach((user, index) => {
       const color = colors[index % colors.length];

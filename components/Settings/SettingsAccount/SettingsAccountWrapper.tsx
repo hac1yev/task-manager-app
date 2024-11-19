@@ -1,9 +1,11 @@
 "use client";
 
-import { Avatar, Box, Button, Divider, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Divider, LinearProgress, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import './SettingsAccount.css';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
+import { useDispatch } from 'react-redux';
+import { userInfoSliceActions } from '@/store/userInfo-slice';
 
 const SettingsAccountWrapper = () => {
     const [settingsAccountData,setSettingsAccountData] = useState<Partial<UserType>>({
@@ -16,22 +18,24 @@ const SettingsAccountWrapper = () => {
         biography: "",
         avatar: "",
     });
-    const [fileName,setFileName] = useState("");
+    const [isLoading,setIsLoading] = useState(true);
     const axiosPrivate = useAxiosPrivate();
     const userInfo = typeof window !== "undefined" && localStorage.getItem("userInfo") 
       ? JSON.parse(localStorage.getItem("userInfo") || "{}") 
       : "";   
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         (async function() {
+            setIsLoading(true);
             try {
                 const response = await axiosPrivate.get(`/api/team/${userInfo?.userId}`);
-                setSettingsAccountData(response.data.user);
-                console.log(response.data.user);
-                
+                setSettingsAccountData(response.data.user);  
             } catch (error) {
                 console.log(error);
             }
+            setIsLoading(false);
         })()
     }, [axiosPrivate, userInfo.userId]);
 
@@ -44,7 +48,6 @@ const SettingsAccountWrapper = () => {
             const file = target.files?.[0]; 
             if (file) {
                 const reader = new FileReader();
-                setFileName(file.name.split(".")[0]);
 
                 reader.onload = () => {
                     setSettingsAccountData((prev) => {
@@ -66,20 +69,47 @@ const SettingsAccountWrapper = () => {
 
     const handleSubmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
-        
+
+        setIsLoading(true);
         try {
-            await axiosPrivate.post(`/api/team/${userInfo.userId}`, JSON.stringify({
+            const response = await axiosPrivate.post(`/api/team/${userInfo.userId}`, JSON.stringify({
                 ...settingsAccountData,
-                fileName
             }), {
                 headers: {
                   'Content-Type': 'application/json'
                 }
-            });
+            });            
+
+            localStorage.setItem("userInfo", JSON.stringify({
+                ...userInfo,
+                ...response.data.newUserInfo
+            }));
+
+            dispatch(userInfoSliceActions.editUserInfo(response.data.newUserInfo));
+            
         } catch (error) {
             console.log(error);
         }
-    }, [axiosPrivate,fileName,settingsAccountData,userInfo.userId]);
+        setIsLoading(false);
+    }, [axiosPrivate,settingsAccountData,userInfo,dispatch]);
+
+    if(!settingsAccountData.fullName && isLoading) {
+        return (
+            <Box sx={{ width: '100%', bgcolor: '#fff', p: 4 }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
+
+    if(!settingsAccountData.fullName && !isLoading) {
+        return (
+            <Typography className="flex-center" variant='h6' sx={{ mt: 1 }}>
+                There is no task!
+            </Typography>
+        )
+    }
+
+    console.log(settingsAccountData.fullName);
 
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
@@ -118,20 +148,22 @@ const SettingsAccountWrapper = () => {
                             src={settingsAccountData.avatar}
                             alt="profile_picture"
                         >
-                            {!settingsAccountData.avatar ? "IH" : ""}
+                            {!settingsAccountData.avatar ? settingsAccountData.fullName?.split(" ").map(u => u[0].toLocaleUpperCase()).join("") : ""}
                         </Avatar>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <input type="file" id='edit_input' accept='image/png, image/jpeg, image/jpg' hidden />
                             <Button 
-                                sx={{ bgcolor: '#20283C', color: '#fff', borderRadius: '20px' }}
+                                sx={{ bgcolor: '#20283C', borderRadius: '20px' }}
                                 onClick={handleOpenEdit}
+                                variant='contained'
                             >
                                 Edit
                             </Button>
                             <input type="file" id='delete_input' accept='image/png, image/jpeg, image/jpg' hidden />
                             <Button 
-                                sx={{ bgcolor: '#F3415F', color: '#fff', borderRadius: '20px', px: 2 }}
+                                sx={{ bgcolor: '#F3415F', borderRadius: '20px', px: 2 }}
                                 onClick={handleOpenDelete}
+                                variant='contained'
                             >
                                 Delete
                             </Button>
@@ -211,7 +243,21 @@ const SettingsAccountWrapper = () => {
                         ))}
                     </Select>
                 </Box>
-                <Button type="submit">Send</Button>
+                <Box className="flex-end" sx={{ pt: 3 }}>
+                    <Button 
+                        type="submit"
+                        disabled={isLoading}
+                        variant='contained'
+                        sx={{  
+                            color: '#fff', 
+                            textTransform: 'capitalize', 
+                            fontSize: '16px', 
+                            px: 4 
+                        }} 
+                    >
+                        Save
+                    </Button>
+                </Box>
             </Box>
         </Box>
     );

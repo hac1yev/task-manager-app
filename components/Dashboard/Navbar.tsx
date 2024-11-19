@@ -16,10 +16,11 @@ import { socket } from "@/socket-client";
 import { notificationSliceActions, useTypedNotificationSelector } from "@/store/notification-slice";
 import NotificationPopover from "../CustomPopovers/NotificationPopover";
 import { useRouter } from "next/navigation";
+import { userInfoSliceActions, useTypedUserInfoSelector } from "@/store/userInfo-slice";
 
 const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => void }) => {
   const matches = useMediaQuery("(min-width:769px)");
-  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>(null);
+  const userInfo = useTypedUserInfoSelector(state => state.userInfoReducer.userInfo); 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [searchValue,setSearchValue] = useState("");
   const [editedUser, setEditedUser] = useState<Partial<UserType>>({});
@@ -44,7 +45,6 @@ const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => voi
   useEffect(() => {
     const handleTaskNotification = (notification: Partial<NotificationType>) => {            
       dispatch(notificationSliceActions.addNotification({ ...notification }));
-      console.log(notification);
     };
 
     const handleUserLikeNotification = ({ userId,fullName,type,message }: { userId: string, fullName: string, type: string, message: string }) => {
@@ -81,9 +81,9 @@ const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => voi
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUserInfo = localStorage.getItem("userInfo");
-      setUserInfo(storedUserInfo ? JSON.parse(storedUserInfo) : null);
+      if(storedUserInfo) dispatch(userInfoSliceActions.getUserInfo(JSON.parse(storedUserInfo)));
     }
-  }, []);
+  }, [dispatch]);
 
   const handleOpenAvatar = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

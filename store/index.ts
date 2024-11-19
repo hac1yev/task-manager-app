@@ -6,6 +6,7 @@ import { taskSlice } from "./task-slice";
 import { trashSlice } from "./trash-slice";
 import { taskDetailSlice } from "./taskDetail-slice";
 import { notificationSlice } from "./notification-slice";
+import { userInfoSlice } from "./userInfo-slice";
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         taskReducer: taskSlice.reducer,
         trashReducer: trashSlice.reducer,
         taskDetailReducer: taskDetailSlice.reducer,
-        notificationReducer: notificationSlice.reducer
+        notificationReducer: notificationSlice.reducer,
+        userInfoReducer: userInfoSlice.reducer
     },
 });

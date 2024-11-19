@@ -23,7 +23,7 @@ const MenuProps = {
 const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const users = useTypedSelector((state) => state.teamReducer.users);
     const colors = useMemo(() => {
-      return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4"];
+      return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
     }, []);
   
     const usersNames = users.map((user: Partial<UserType>) => {
