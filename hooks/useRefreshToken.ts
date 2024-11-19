@@ -23,7 +23,8 @@ const useRefreshToken = () => {
                 email: response.data.email,
                 userId: response.data._id,
                 role: response.data.role,
-                biography: response.data.biography
+                avatar: response.data.avatar,
+                biography: response.data.biography,
             };
       
             localStorage.setItem("userInfo", JSON.stringify(user_data));
