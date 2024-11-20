@@ -59,7 +59,7 @@ const theme = createTheme({
       },
     },
     h5: {
-        fontSize: '22px',
+        fontSize: '24px',
         fontWeight: '600',
         lineHeight: '28px',
         color: '#2D2D2B',

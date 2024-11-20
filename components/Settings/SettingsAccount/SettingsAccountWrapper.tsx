@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { userInfoSliceActions } from '@/store/userInfo-slice';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const SettingsAccountWrapper = () => {
     const [settingsAccountData,setSettingsAccountData] = useState<Partial<UserType>>({
@@ -66,7 +67,6 @@ const SettingsAccountWrapper = () => {
     }, []);
 
     const handleOpenDelete = useCallback(async () => {
-        const editInput = document.querySelector("#edit_input") as HTMLInputElement;
         try {
             await axiosPrivate.put(`/api/team/${userInfo.userId}`, {
                 headers: {
@@ -138,6 +138,30 @@ const SettingsAccountWrapper = () => {
         }
     }, [axiosPrivate,router]);
 
+    const handleSignOut = useCallback(async () => {
+        try {
+          await axios.post("/api/logout");
+          if(typeof window !== 'undefined') {
+            localStorage.removeItem("userInfo");
+            window.location.reload();
+          }
+        } catch (error) {
+          console.log(error);
+        }
+    }, []);
+
+    const handleDeleteAccount = useCallback(async (id: string) => {
+        try {
+            await axiosPrivate.delete(`/api/account/${id}`);
+            if(typeof window !== 'undefined') {
+                localStorage.removeItem("userInfo");
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },[axiosPrivate]);
+    
     if(!settingsAccountData.fullName && isLoading) {
         return (
             <Box sx={{ width: '100%', bgcolor: '#fff', p: 4 }}>
@@ -285,7 +309,7 @@ const SettingsAccountWrapper = () => {
                         ))}
                     </Select>
                 </Box>
-                <Box className="flex-end" sx={{ pt: 3 }}>
+                <Box className="flex-end" sx={{ width: '70%', pt: 3 }}>
                     <Button 
                         type="submit"
                         disabled={isLoading}
@@ -349,6 +373,23 @@ const SettingsAccountWrapper = () => {
                     <Button type="submit" size="large" variant="contained" sx={{ textTransform: 'capitalize' }}>
                         Confirm
                     </Button>
+                </Box>
+            </Box>
+            <Divider sx={{ my: 4, borderBottomWidth: 'medium', borderColor: 'rgba(0,0,0,0.3)' }} />
+            <Box>
+                <Typography variant="h5" align='left'>Danger Zone</Typography>
+                <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 1 }}>Sign out or delete your account</Typography>
+            </Box>
+            <Divider sx={{ my: 3 }} />
+            <Box>
+                <Box className="account-danger-zone">
+                    <Typography variant="h6" align='left'>Sign out from your account</Typography>
+                    <Button variant="contained" color="error" sx={{ px: 4, textTransform: 'capitalize' }} onClick={handleSignOut}>Sign Out</Button>
+                </Box>
+                <Divider sx={{ my: 3 }} />
+                <Box className="account-danger-zone">
+                    <Typography variant="h6" align='left'>Delete your account</Typography>
+                    <Button variant="contained" color="error" sx={{ px: 4, textTransform: 'capitalize' }} onClick={handleDeleteAccount.bind(null, userInfo?.userId)}>Delete Account</Button>
                 </Box>
             </Box>
         </Box>

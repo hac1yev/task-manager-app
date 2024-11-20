@@ -38,7 +38,7 @@ const ProfilePopover = ({
     }
   }, [setOpenProfileModal]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await axios.post("/api/logout");
       if(typeof window !== 'undefined') {
@@ -48,11 +48,11 @@ const ProfilePopover = ({
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
-  const handleOpenConfirmPassword = () => {
+  const handleOpenConfirmPassword = useCallback(() => {
     setOpenChangePasswordModal("open-change-password");
-  };
+  }, [setOpenChangePasswordModal]);
 
   return (
     <Popover
