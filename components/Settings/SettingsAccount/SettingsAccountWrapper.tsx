@@ -1,11 +1,13 @@
 "use client";
 
-import { Avatar, Box, Button, Divider, LinearProgress, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Divider, FormControl, FormLabel, LinearProgress, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import './SettingsAccount.css';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
 import { userInfoSliceActions } from '@/store/userInfo-slice';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const SettingsAccountWrapper = () => {
     const [settingsAccountData,setSettingsAccountData] = useState<Partial<UserType>>({
@@ -23,7 +25,7 @@ const SettingsAccountWrapper = () => {
     const userInfo = typeof window !== "undefined" && localStorage.getItem("userInfo") 
       ? JSON.parse(localStorage.getItem("userInfo") || "{}") 
       : "";   
-
+    const router = useRouter();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -63,9 +65,31 @@ const SettingsAccountWrapper = () => {
         });
     }, []);
 
-    const handleOpenDelete = () => {
-        
-    };
+    const handleOpenDelete = useCallback(async () => {
+        const editInput = document.querySelector("#edit_input") as HTMLInputElement;
+        try {
+            await axiosPrivate.put(`/api/team/${userInfo.userId}`, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+            });  
+            dispatch(userInfoSliceActions.deleteAvatar());
+            setSettingsAccountData((prev) => {
+                return {
+                    ...prev, 
+                    avatar: ""
+                }
+            })
+            localStorage.setItem("userInfo", JSON.stringify({
+                ...userInfo,
+                avatar: ""
+            }));
+
+            toast.success("Profile image deleted successfully.")
+        } catch (error) {
+            console.log(error);
+        }
+    }, [axiosPrivate,dispatch,userInfo]);
 
     const handleSubmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
@@ -86,12 +110,33 @@ const SettingsAccountWrapper = () => {
             }));
 
             dispatch(userInfoSliceActions.editUserInfo(response.data.newUserInfo));
-            
+            toast.success("Profile updated successfully.")
         } catch (error) {
             console.log(error);
         }
         setIsLoading(false);
     }, [axiosPrivate,settingsAccountData,userInfo,dispatch]);
+
+    const handleConfirm = useCallback(async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+    
+        try {
+          await axiosPrivate.post("/api/change-password", JSON.stringify({
+            newPassword: formData.get("newPassword"),
+            confirmPassword: formData.get("confirmPassword"),
+          }), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+          });
+        
+          toast.success('Password changed successfully!');
+          router.push("/");
+        } catch (error) {
+          console.log(error);
+        }
+    }, [axiosPrivate,router]);
 
     if(!settingsAccountData.fullName && isLoading) {
         return (
@@ -108,8 +153,6 @@ const SettingsAccountWrapper = () => {
             </Typography>
         )
     }
-
-    console.log(settingsAccountData.fullName);
 
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
@@ -159,7 +202,6 @@ const SettingsAccountWrapper = () => {
                             >
                                 Edit
                             </Button>
-                            <input type="file" id='delete_input' accept='image/png, image/jpeg, image/jpg' hidden />
                             <Button 
                                 sx={{ bgcolor: '#F3415F', borderRadius: '20px', px: 2 }}
                                 onClick={handleOpenDelete}
@@ -256,6 +298,56 @@ const SettingsAccountWrapper = () => {
                         }} 
                     >
                         Save
+                    </Button>
+                </Box>
+            </Box>
+            <Divider sx={{ my: 4, borderBottomWidth: 'medium', borderColor: 'rgba(0,0,0,0.3)' }} />
+            <Box>
+                <Typography variant="h5" align='left'>Change Password</Typography>
+            </Box>
+            <Box
+                component="form"
+                onSubmit={handleConfirm}
+                noValidate
+                className='settings-change-password-form'
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    mt: 4,
+                }}
+                >
+                <FormControl>
+                    <FormLabel sx={{ mb: 0.5 }} htmlFor="newPassword">New Password</FormLabel>
+                    <TextField
+                        id="newPassword"
+                        type="password"
+                        name="newPassword"
+                        placeholder="New Password"
+                        autoComplete="newPassword"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{ ariaLabel: "newPassword" }}
+                    />
+                </FormControl>
+                <FormControl>
+                    <FormLabel sx={{ mb: 0.5 }} htmlFor="confirmPassword">Confirm Password</FormLabel>
+                    <TextField
+                        id="confirmPassword"
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        autoComplete="confirmPassword"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{ ariaLabel: "confirmPassword" }}
+                    />
+                </FormControl>
+                <Box className="flex-end" sx={{ gap: 1, mt: 1 }}>
+                    <Button type="submit" size="large" variant="contained" sx={{ textTransform: 'capitalize' }}>
+                        Confirm
                     </Button>
                 </Box>
             </Box>

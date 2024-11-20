@@ -90,3 +90,23 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ message: 'Success', user });
 };
+
+export async function PUT(req: Request) {
+    const bearer = req.headers.get("Authorization");
+    const url = req.url;
+
+    const accessToken = bearer?.split(" ")[1] || "";    
+    const id = url.split("/").at(-1);
+        
+    const isAccessTokenValid = await verifyAccessToken(accessToken);
+
+    if(!isAccessTokenValid) {
+        return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
+    }
+
+    await connectToDB();
+
+    await User.updateOne({ _id: id }, { avatar: "" });
+
+    return NextResponse.json({ message: 'Successfully deleted!' });
+}

@@ -21,8 +21,16 @@
     cursor: not-allowed;
 }
 
+.settings-change-password-form {
+    width: 70%;
+}
+
 @media screen and (max-width: 1000px) {
     .account-input-group {
+        width: 100%;
+    }
+
+    .settings-change-password-form {
         width: 100%;
     }
 } 

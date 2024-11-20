@@ -21,6 +21,12 @@ export const userInfoSlice = createSlice({
                 ...state.userInfo,
                 ...action.payload
             }
+        },
+        deleteAvatar(state) {
+            state.userInfo = {
+                ...state.userInfo,
+                avatar: ""
+            }   
         }
     }
 });

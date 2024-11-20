@@ -16,6 +16,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'Forbidden!' }, { status: 403 });
     }
     
+    if(newPassword === "" || confirmPassword === "") {
+        return NextResponse.json({ message: 'Please fill the inputs!' }, { status: 400 });
+    }
+
     if(newPassword !== confirmPassword) {
         return NextResponse.json({ message: 'Passwords are not equal!' }, { status: 400 });
     }
