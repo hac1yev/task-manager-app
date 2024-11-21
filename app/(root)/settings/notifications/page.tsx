@@ -1,7 +1,10 @@
+import SettingsNotificationWrapper from "@/components/Settings/SettingsNotification/SettingsNotificationWrapper";
 
 const SettingsNotifications = () => {
     return (
-        <div>SettingsNotifications</div>
+        <>
+            <SettingsNotificationWrapper />
+        </>
     );
 };
 

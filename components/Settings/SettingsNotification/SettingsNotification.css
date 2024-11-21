@@ -1,0 +1,9 @@
+.setting-notifications-wrapper > div {
+    width: 60%;
+}
+
+@media screen and (max-width: 1000px) {
+    .setting-notifications-wrapper > div {
+        width: 100%;
+    }
+}

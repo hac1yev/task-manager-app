@@ -9,6 +9,8 @@ import { userInfoSliceActions } from '@/store/userInfo-slice';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const SettingsAccountWrapper = () => {
     const [settingsAccountData,setSettingsAccountData] = useState<Partial<UserType>>({
@@ -181,8 +183,10 @@ const SettingsAccountWrapper = () => {
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
             <Box>
-                <Typography variant="h5" align='left'>Your Profile</Typography>
-                <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 1 }}>Please update your profile settings here</Typography>
+                <Typography variant="h5" align='left' sx={{ mt: 1 }}>Your Profile</Typography>
+                <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 2 }}>
+                    In this section you can update your profile settings
+                </Typography>
             </Box>
             <Divider sx={{ my: 3 }} />
             <Box component={"form"} onSubmit={handleSubmit}>
@@ -381,16 +385,15 @@ const SettingsAccountWrapper = () => {
                 <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 1 }}>Sign out or delete your account</Typography>
             </Box>
             <Divider sx={{ my: 3 }} />
-            <Box>
-                <Box className="account-danger-zone">
-                    <Typography variant="h6" align='left'>Sign out from your account</Typography>
-                    <Button variant="contained" color="error" sx={{ px: 4, textTransform: 'capitalize' }} onClick={handleSignOut}>Sign Out</Button>
-                </Box>
-                <Divider sx={{ my: 3 }} />
-                <Box className="account-danger-zone">
-                    <Typography variant="h6" align='left'>Delete your account</Typography>
-                    <Button variant="contained" color="error" sx={{ px: 4, textTransform: 'capitalize' }} onClick={handleDeleteAccount.bind(null, userInfo?.userId)}>Delete Account</Button>
-                </Box>
+            <Box className="flex-column-start" sx={{ gap: 1, mb: 2 }}>
+                <Button variant="contained" color="error" sx={{ px: 2, textTransform: 'capitalize' }} onClick={handleSignOut}>
+                    <LogoutIcon />
+                    Sign Out From Your Account
+                </Button>
+                <Button variant="contained" color="error" sx={{ px: 2, textTransform: 'capitalize',  }} onClick={handleDeleteAccount.bind(null, userInfo?.userId)}>
+                    <DeleteIcon />
+                    Delete your Account
+                </Button>
             </Box>
         </Box>
     );
