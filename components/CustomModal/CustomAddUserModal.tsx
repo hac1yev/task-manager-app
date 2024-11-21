@@ -1,9 +1,9 @@
 "use client";
 
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { teamSliceAction } from "@/store/team-slice";
+import { teamSliceAction, useTypedSelector } from "@/store/team-slice";
 import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 import { socket } from "@/socket-client";
@@ -12,6 +12,14 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
   const [role, setRole] = useState("");
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
+  const user = useMemo(() => {
+    if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+      return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+    }else{
+      return "";
+    }
+  }, []);
+  const users = useTypedSelector(state => state.teamReducer.users);  
 
   const handleClose = () => setOpen(false);
 
@@ -50,9 +58,12 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
 
       dispatch(teamSliceAction.addUser(recievingData));
 
+      const allUserIDS = users.map((user) => user._id).filter((item) => item !== user.userId);
+
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+        userId: [...allUserIDS],
         type: 'addUser',
-        message: `New user added to the team!`,
+        message: `<div>New user, ${data.fullName}, has been added to the team!</div>`,
         visibility: 'public'
       }), {
         headers: {
@@ -63,7 +74,7 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
       const notification = notificationResponse.data.notification;
       delete notification.__v;
             
-      socket.emit("addUser", notification);
+      socket.emit("addUser", { notification, userIds: [...allUserIDS] });
 
       setOpen(false);
     } catch (error) {
