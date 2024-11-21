@@ -6,6 +6,7 @@ import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField
 import { memo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
+import { socket } from "@/socket-client";
 
 const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
   const [role, setRole] = useState("");
@@ -48,6 +49,22 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
       delete recievingData.__v;
 
       dispatch(teamSliceAction.addUser(recievingData));
+
+      const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+        type: 'addUser',
+        message: `New user added to the team!`,
+        visibility: 'public'
+      }), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const notification = notificationResponse.data.notification;
+      delete notification.__v;
+            
+      socket.emit("addUser", notification);
+
       setOpen(false);
     } catch (error) {
       console.log(error);
