@@ -10,8 +10,9 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { socket } from "@/socket-client";
+import { useTypedSelector } from "@/store/team-slice";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -22,6 +23,18 @@ const CustomTaskSettingPopover = ({
 ) => {
 
   const [role,setRole] = useState("");
+  const users = useTypedSelector(state => state.teamReducer.users);
+  const user = useMemo(() => {
+    if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+      return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+    }else{
+      return "";
+    }
+  }, []);
+
+  const allUserIDS = useMemo(() => {
+    return users.map((user) => user._id).filter((item) => item !== user.userId);
+  }, [user.userId, users]);
 
   useEffect(() => {
     const role = typeof window !== "undefined" && localStorage.getItem("userInfo") 
@@ -56,10 +69,11 @@ const CustomTaskSettingPopover = ({
       toast.success('Task duplicated!');
       
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+        userId: allUserIDS,
         type: 'duplicateTask',
         message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been duplicated.</div>`,
         taskId: id, 
-        visibility: 'public'
+        visibility: 'private'
       }), {
         headers: {
           'Content-Type': 'application/json'
@@ -69,7 +83,7 @@ const CustomTaskSettingPopover = ({
       const notification = notificationResponse.data.notification;
       delete notification.__v;
       
-      socket.emit("duplicateTask", notification);
+      socket.emit("duplicateTask", { notification, userIds: allUserIDS });
 
     } catch (error) {
       console.log(error);

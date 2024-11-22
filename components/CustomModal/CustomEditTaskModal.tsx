@@ -80,10 +80,11 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         toast.success('Task updated!');
 
         const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+          userId: data.users && [...data.users],
           type: 'editTask',
           message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been updated.</div>`,
           taskId: id, 
-          visibility: 'public'
+          visibility: 'private'
         }), {
           headers: {
             'Content-Type': 'application/json'
@@ -93,7 +94,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         const notification = notificationResponse.data.notification;
         delete notification.__v;
         
-        socket.emit("editTask", notification);
+        socket.emit("editTask", { notification, userIds: data.users });
 
         setOpen(false);
       } catch (error) {
