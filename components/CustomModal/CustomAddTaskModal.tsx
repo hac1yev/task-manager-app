@@ -22,9 +22,15 @@ const MenuProps = {
 
 const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const users = useTypedSelector((state) => state.teamReducer.users);
-    const colors = useMemo(() => {
-      return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
-    }, []);
+    const userColors = useMemo(() => {
+      const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
+      const colorMap = new Map();
+      users.forEach((user, index) => {
+        const color = colors[index % colors.length];
+        colorMap.set(user._id, color);
+      });
+      return colorMap;
+    }, [users]);
   
     const usersNames = users.map((user: Partial<UserType>) => {
       return {
@@ -180,7 +186,7 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
               <MenuItem disabled value="">
                 <em>Select User</em>
               </MenuItem>
-              {usersNames.map((user, index) => (
+              {usersNames.map((user) => (
                 <MenuItem
                   key={user.id}
                   value={user.id}
@@ -191,7 +197,7 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
                       width: "35px",
                       height: "35px",
                       fontSize: "15px",
-                      bgcolor: colors[index % usersNames.length],
+                      bgcolor: userColors.get(user.id),
                     }}
                   >
                     {user.name.trim().includes(" ")

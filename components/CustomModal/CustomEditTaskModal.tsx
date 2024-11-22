@@ -9,7 +9,6 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
 import { socket } from "@/socket-client";
 import toast from "react-hot-toast";
-import { notificationSliceActions } from "@/store/notification-slice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,9 +26,15 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
     const tasks = useTypedTaskSelector((state) => state.taskReducer.tasks);
     const findedTask = tasks.find((task) => task._id === id);
 
-    const colors = useMemo(() => {
-      return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
-    }, []);
+    const userColors = useMemo(() => {
+      const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
+      const colorMap = new Map();
+      users.forEach((user, index) => {
+        const color = colors[index % colors.length];
+        colorMap.set(user._id, color);
+      });
+      return colorMap;
+    }, [users]);
       
     const usersNames = users.map((user: Partial<UserType>) => {
         return {
@@ -178,7 +183,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
               <MenuItem disabled value="">
                 <em>Select User</em>
               </MenuItem>
-              {usersNames.map((user, index) => (
+              {usersNames.map((user) => (
                 <MenuItem
                   key={user.id}
                   value={user.id}
@@ -189,7 +194,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
                       width: "35px",
                       height: "35px",
                       fontSize: "15px",
-                      bgcolor: colors[index % usersNames.length],
+                      bgcolor: userColors.get(user.id),
                     }}
                   >
                     {user.name.trim().includes(" ")
