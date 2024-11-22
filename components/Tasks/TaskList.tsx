@@ -11,6 +11,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import TaskHeader from "./TaskHeader";
+import { socket } from "@/socket-client";
 
 const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comments }: Partial<TaskType>) => {
   const axiosPrivate = useAxiosPrivate();
@@ -26,6 +27,18 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
   const colors = useMemo(() => {
     return ["#D18805", "#1A65E9", "#0B8A49", "#D83121", "#6D36D4", "#F72D93"];
   }, []);
+
+  const user = useMemo(() => {
+      if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+        return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+      }else{
+        return "";
+      }
+  }, []);
+
+  const allUserIDS = useMemo(() => {
+      if(users) return users.map((user) => user._id).filter((item) => item !== user.userId);
+  }, [user.userId, users]);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -64,11 +77,28 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
         }
       });
       dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));
+
+      const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+        userId: allUserIDS,
+        type: 'addSubtask',
+        message: `<div>Sub-task added to the task with ID ${_id}.</div>`,
+        taskId: _id, 
+        visibility: 'private'
+      }), {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      });
+      
+      const notification = notificationResponse.data.notification;
+      delete notification.__v;
+      
+      socket.emit("addSubtask", { notification, userIds: allUserIDS });
     } catch (error) {
       console.log(error);
     }
     setModalOpen(false);
-  }, [_id,axiosPrivate,dispatch,subtaskValues]);  
+  }, [_id,axiosPrivate,dispatch,subtaskValues,allUserIDS]);  
 
   return (
     <Item sx={{ mb: 2 }}>

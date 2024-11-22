@@ -29,6 +29,7 @@ declare type TaskType = {
         fullName: string;
         title: string;
         email: string;
+        _id: string
     }[];
     stage: string;
     priority_level: string;

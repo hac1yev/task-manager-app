@@ -29,6 +29,7 @@ const Tasks = () => {
                 fullName: string;
                 title: string;
                 email: string;
+                _id: string;
             }[] = [];            
     
             users?.forEach((user) => {
@@ -37,7 +38,8 @@ const Tasks = () => {
                     userNames.push({
                         fullName: findedUser?.fullName,
                         title: findedUser.title,
-                        email: findedUser.email
+                        email: findedUser.email,
+                        _id: findedUser._id,
                     });
                 }
             });

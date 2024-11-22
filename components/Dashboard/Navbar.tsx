@@ -68,6 +68,7 @@ const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => voi
     socket.on("sendUserAssignNotification", handleTaskNotification);
     socket.on("sendUserAddCommentNotification", handleTaskNotification);
     socket.on("sendAddUserNotification", handleTaskNotification);
+    socket.on("sendAddSubTaskNotification", handleTaskNotification);
 
     return () => {
       socket.off("sendDeleteTaskNotification", handleTaskNotification);
@@ -77,6 +78,7 @@ const Navbar = ({ open, toggleDrawer }: { open: boolean, toggleDrawer: () => voi
       socket.off("sendUserAssignNotification", handleTaskNotification);
       socket.off("sendUserAddCommentNotification", handleTaskNotification);
       socket.off("sendAddUserNotification", handleTaskNotification);
+      socket.off("sendAddSubTaskNotification", handleTaskNotification);
     };
   }, [dispatch]);
   
