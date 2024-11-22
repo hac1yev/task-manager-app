@@ -96,7 +96,7 @@ const TaskInnerContainer = ({ taskId }: { taskId: string }) => {
                         <TaskDetail taskId={taskId} userNames={userNames} />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <TaskTimeline taskId={taskId} />
+                        <TaskTimeline taskId={taskId} userNames={userNames} />
                     </CustomTabPanel>
                 </>
             )}

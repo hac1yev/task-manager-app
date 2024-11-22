@@ -6,7 +6,11 @@ import TimelineComponent from "./TimelineComponent";
 import AddTimeline from "./AddTimeline";
 import { useEffect, useState } from "react";
 
-const TaskTimeline = ({ taskId }: { taskId: string }) => {
+const TaskTimeline = ({ taskId, userNames }: { taskId: string, userNames: {
+    id: string;
+    fullName: string;
+    title: string;
+}[] }) => {
     const [role,setRole] = useState("");
 
     useEffect(() => {
@@ -25,7 +29,7 @@ const TaskTimeline = ({ taskId }: { taskId: string }) => {
                 </Grid>
                 {(role === 'admin' || role === 'editor') && (
                     <Grid size={{ xs: 12, sm: 12, md: 12, lg: 6 }}>
-                        <AddTimeline taskId={taskId} />
+                        <AddTimeline taskId={taskId} users={userNames} />
                     </Grid>
                 )}
             </Grid>

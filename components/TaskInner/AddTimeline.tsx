@@ -11,8 +11,13 @@ import { useDispatch } from "react-redux";
 import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import uniqid from "uniqid";
+import { socket } from "@/socket-client";
 
-const AddTimeline = ({ taskId }: { taskId: string }) => {
+const AddTimeline = ({ taskId, users }: { taskId: string, users: {
+  id: string;
+  fullName: string;
+  title: string;
+}[] }) => {
   const [activityData, setActivityData] = useState<
     Partial<{
       _id: string;
@@ -24,6 +29,18 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
   const dispatch = useDispatch();
   const [description, setDescription] = useState("");
 
+  const user = useMemo(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("userInfo")) {
+      return JSON.parse(localStorage.getItem("userInfo") || "{}");
+    } else {
+      return "";
+    }
+  }, []);
+
+  const allUserIDS = useMemo(() => {
+    return users.map((user) => user.id).filter((item) => item !== user.userId);
+  }, [user.userId, users]);
+  
   const activityNames = useMemo(() => {
     return [
       { name: "Started" },
@@ -35,48 +52,75 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
     ];
   }, []);
 
-  const handleChange = useCallback((name: string, event: React.ChangeEvent<HTMLInputElement>) => {
-    if(activityData.name !== name) {
+  const handleChange = useCallback(
+    (name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+      if (activityData.name !== name) {
         setActivityData({
-            _id: uniqid(),
-            name,
-            created_at: new Date().toISOString(),
+          _id: uniqid(),
+          name,
+          created_at: new Date().toISOString(),
         });
-    }else{
+      } else {
         setActivityData({});
-    }
-  }, [activityData.name]);
+      }
+    },
+    [activityData.name]
+  );
 
-  const handleSubmit = useCallback(async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
 
-    if (activityData.name) {
-        
+      if (activityData.name) {
         await axiosPrivate.post(
-            `/api/tasks/${taskId}/activity`,
-            JSON.stringify({
-                name:  activityData.name,
-                created_at: activityData.created_at && new Date(activityData.created_at),
-                description,
-            }),
-        {
+          `/api/tasks/${taskId}/activity`,
+          JSON.stringify({
+            name: activityData.name,
+            created_at:
+              activityData.created_at && new Date(activityData.created_at),
+            description,
+          }),
+          {
             headers: {
-            "Content-Type": "application/json",
+              "Content-Type": "application/json",
             },
-        }
+          }
         );
 
-      dispatch(
-        taskDetailSliceActions.addActivities({
-          ...activityData,
-          description,
-        })
-      );
-      setDescription("");
-    } else {
-      console.log("Please select an activity.");
-    }
-  }, [activityData, axiosPrivate, description, dispatch, taskId]);
+        dispatch(
+          taskDetailSliceActions.addActivities({
+            ...activityData,
+            description,
+          })
+        );
+
+        const notificationResponse = await axiosPrivate.post(
+          "/api/notification",
+          JSON.stringify({
+            userId: allUserIDS,
+            type: "addTimeline",
+            message: `<div>Timeline added to the task with <a style="color: #1851df" href="/tasks/${taskId}">ID ${taskId}</a>.</div>`,
+            taskId: taskId,
+            visibility: "private",
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const notification = notificationResponse.data.notification;
+        delete notification.__v;
+
+        socket.emit("addTimeline", { notification, userIds: allUserIDS });
+        setDescription("");
+      } else {
+        console.log("Please select an activity.");
+      }
+    },
+    [activityData, axiosPrivate, description, dispatch, taskId, allUserIDS]
+  );
 
   return (
     <Box className="flex-column">
@@ -86,7 +130,12 @@ const AddTimeline = ({ taskId }: { taskId: string }) => {
           {activityNames.map((data) => (
             <Grid size={4} key={data.name}>
               <FormControlLabel
-                control={<Checkbox checked={activityData?.name === data.name} onChange={handleChange.bind(null, data.name)} />}
+                control={
+                  <Checkbox
+                    checked={activityData?.name === data.name}
+                    onChange={handleChange.bind(null, data.name)}
+                  />
+                }
                 label={data.name}
               />
             </Grid>

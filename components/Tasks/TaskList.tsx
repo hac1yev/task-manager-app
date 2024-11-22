@@ -76,15 +76,12 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
           'Content-Type': 'application/json'
         }
       });
-      dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));
-
-      console.log(allUserIDS);
-      
+      dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));      
 
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
         userId: allUserIDS,
         type: 'addSubtask',
-        message: `<div>Sub-task added to the task with ID ${_id}.</div>`,
+        message: `<div>Sub-task added to the task with <a style="color: #1851df" href="/tasks/${_id}">ID ${_id}</a>.</div>`,
         taskId: _id, 
         visibility: 'private'
       }), {
