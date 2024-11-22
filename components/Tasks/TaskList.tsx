@@ -78,6 +78,9 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       });
       dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));
 
+      console.log(allUserIDS);
+      
+
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
         userId: allUserIDS,
         type: 'addSubtask',
