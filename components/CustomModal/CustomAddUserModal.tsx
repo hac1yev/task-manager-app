@@ -21,6 +21,10 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
   }, []);
   const users = useTypedSelector(state => state.teamReducer.users);  
 
+  const allUserIDS = useMemo(() => {
+    return users.map((user) => user._id).filter((item) => item !== user.userId);
+  }, [user.userId, users]);
+
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,13 +62,11 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
 
       dispatch(teamSliceAction.addUser(recievingData));
 
-      const allUserIDS = users.map((user) => user._id).filter((item) => item !== user.userId);
-
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-        userId: [...allUserIDS],
+        userId: allUserIDS,
         type: 'addUser',
-        message: `<div>New user, ${data.fullName}, has been added to the team!</div>`,
-        visibility: 'public'
+        message: `<div>New user, "${data.fullName}", has been added to the team!</div>`,
+        visibility: 'private'
       }), {
         headers: {
           'Content-Type': 'application/json'
@@ -74,7 +76,7 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
       const notification = notificationResponse.data.notification;
       delete notification.__v;
             
-      socket.emit("addUser", { notification, userIds: [...allUserIDS] });
+      socket.emit("addUser", { notification, userIds: allUserIDS });
 
       setOpen(false);
     } catch (error) {
