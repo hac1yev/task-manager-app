@@ -43,5 +43,5 @@ export async function GET(req: Request) {
         }); 
     }
 
-    return NextResponse.json({ message: 'Refresh token is not valid!', data: isValidRefreshToken }, { status: 200 });
+    return NextResponse.json({ message: 'Refresh token is not valid!', data: cookie }, { status: 401 });
 };
