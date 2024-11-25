@@ -11,8 +11,6 @@ export async function GET(req: Request) {
 
     const isValidRefreshToken = await verifyRefreshToken(refreshToken);
     
-    // return NextResponse.json({ data: isValidRefreshToken });
-
     if(isValidRefreshToken) {   
         const jwtSecretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);    
             
@@ -39,9 +37,8 @@ export async function GET(req: Request) {
             email: isValidRefreshToken.email,
             avatar: user.avatar,
             biography: user.biography,
-            data: isValidRefreshToken
         }); 
     }
 
-    return NextResponse.json({ message: 'Refresh token is not valid!', data: cookie }, { status: 401 });
+    return NextResponse.json({ message: 'Refresh token is not valid!' }, { status: 401 });
 };
