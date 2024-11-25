@@ -2,6 +2,10 @@
     width: 60%;
 }
 
+.notification-list {
+    align-items: center!important;
+}
+
 @media screen and (max-width: 1000px) {
     .setting-notifications-wrapper > div {
         width: 100%;
