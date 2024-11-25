@@ -9,9 +9,6 @@ const useRefreshToken = () => {
                 withCredentials: true
             });
 
-            console.log(response);
-            
-
             const user_data: Partial<UserInfo> = {
                 accessToken: response.data.newAccessToken,
                 fullName: response.data.fullName,
