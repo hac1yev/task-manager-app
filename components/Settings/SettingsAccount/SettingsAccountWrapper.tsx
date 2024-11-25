@@ -154,7 +154,7 @@ const SettingsAccountWrapper = () => {
 
     const handleDeleteAccount = useCallback(async (id: string) => {
         try {
-            await axiosPrivate.delete(`/api/account/${id}`);
+            await axiosPrivate.delete(`/api/settings/account/${id}`);
             if(typeof window !== 'undefined') {
                 localStorage.removeItem("userInfo");
                 window.location.reload();

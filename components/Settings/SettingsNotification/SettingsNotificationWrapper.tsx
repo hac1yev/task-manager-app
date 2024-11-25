@@ -3,7 +3,8 @@
 import { Box, Button, Divider, Switch, Typography } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import './SettingsNotification.css';
-import { useState } from 'react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
+import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -17,12 +18,36 @@ const SettingsNotificationWrapper = () => {
         addTimeline: true,
         addUser: true
     });
+    let notificationRef = useRef(notificationSettings);
+    const axiosPrivate = useAxiosPrivate();
+
+    const user = useMemo(() => {
+        if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+          return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+        }else{
+          return "";
+        }
+    }, []);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNotificationSettings({
           ...notificationSettings,
           [event.target.name]: event.target.checked,
         });
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        
+        try {
+            await axiosPrivate.post('/api/settings/notification', JSON.stringify({ notificationSettings, userId: user?.userId }), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -34,7 +59,7 @@ const SettingsNotificationWrapper = () => {
                 </Typography>
             </Box>
             <Divider sx={{ mt: 3, mb: 2 }} />
-            <Box className="setting-notifications-wrapper" component={"form"} sx={{ mb: 2 }}>
+            <Box className="setting-notifications-wrapper" component={"form"} sx={{ mb: 2 }} onSubmit={handleSubmit}>
                 <Box className="flex-between notification-list">
                     <Typography variant="h6">Enable Assign Tasks Notifications</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
@@ -130,6 +155,7 @@ const SettingsNotificationWrapper = () => {
                     <Button 
                         type="submit"
                         variant='contained'
+                        disabled={JSON.stringify(notificationRef.current) === JSON.stringify(notificationSettings)}
                         sx={{  
                             color: '#fff', 
                             textTransform: 'capitalize', 
