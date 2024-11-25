@@ -1,6 +1,7 @@
 import { connectToDB } from "@/lib/connectToDB";
 import { hashPassword } from "@/lib/hashPassword";
 import { verifyAccessToken } from "@/lib/verifyToken";
+import { Settings } from "@/models/Settings";
 import { User } from "@/models/User";
 import { NextResponse } from "next/server";
 
@@ -21,8 +22,10 @@ export async function POST(req: Request) {
    await connectToDB();
 
     const user = new User({ fullName, email, password: hashedPassword, role, status, title, biography, avatar });
-
     await user.save();
+
+    const newSettings = new Settings({ userId: user._id });
+    await newSettings.save();
     
     return NextResponse.json({ message: 'Added!', addedUser: user });
 };

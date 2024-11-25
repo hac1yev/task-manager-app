@@ -3,8 +3,9 @@
 import { Box, Button, Divider, Switch, Typography } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import './SettingsNotification.css';
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
+import toast from 'react-hot-toast';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -20,6 +21,7 @@ const SettingsNotificationWrapper = () => {
     });
     let notificationRef = useRef(notificationSettings);
     const axiosPrivate = useAxiosPrivate();
+    const [isLoading,setIsLoading] = useState(false);
 
     const user = useMemo(() => {
         if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
@@ -29,26 +31,41 @@ const SettingsNotificationWrapper = () => {
         }
     }, []);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        (async function() {
+            try {
+                const response = await axiosPrivate.get(`/api/settings/notification/${user.userId}`);
+                setNotificationSettings(response.data.settings.notification);
+                notificationRef.current = response.data.settings.notification;
+            } catch (error) {
+                console.log(error);
+            }
+        })()
+    }, [axiosPrivate, user.userId]);
+
+    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setNotificationSettings({
           ...notificationSettings,
           [event.target.name]: event.target.checked,
         });
-    };
+    }, [notificationSettings]);
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        
+    const handleSubmit = useCallback(async (e: FormEvent) => {
+        e.preventDefault();                
+        setIsLoading(true);
         try {
             await axiosPrivate.post('/api/settings/notification', JSON.stringify({ notificationSettings, userId: user?.userId }), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
+            notificationRef.current = notificationSettings;
+            toast.success('Changes Saved!');
         } catch (error) {
             console.log(error);
         }
-    };
+        setIsLoading(false);
+    }, [axiosPrivate,notificationSettings,user.userId]);
 
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
@@ -155,7 +172,7 @@ const SettingsNotificationWrapper = () => {
                     <Button 
                         type="submit"
                         variant='contained'
-                        disabled={JSON.stringify(notificationRef.current) === JSON.stringify(notificationSettings)}
+                        disabled={(JSON.stringify(notificationRef.current) === JSON.stringify(notificationSettings)) || isLoading}
                         sx={{  
                             color: '#fff', 
                             textTransform: 'capitalize', 
@@ -164,7 +181,7 @@ const SettingsNotificationWrapper = () => {
                             mt: 1
                         }} 
                     >
-                        Save
+                        {isLoading ? 'Loading...' : 'Save'}
                     </Button>
                 </Box>
             </Box>

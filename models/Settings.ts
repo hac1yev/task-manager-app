@@ -1,10 +1,12 @@
 import { model, models, Schema } from "mongoose";
+import { User } from "./User";
 
 const SettingsSchema = new Schema({
     userId: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: User,
         unique: true,
+        required: true
     },
     notification: {
         type: Object,
@@ -20,4 +22,4 @@ const SettingsSchema = new Schema({
     }
 });
 
-export const Settings = models.Notification || model("Notification", SettingsSchema); 
+export const Settings = models.Settings || model("Settings", SettingsSchema); 

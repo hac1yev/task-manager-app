@@ -6,10 +6,8 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     const { notificationSettings,userId } = await req.json();
     const bearer = req.headers.get("Authorization");
-    const url = req.url;
 
     const accessToken = bearer?.split(" ")[1] || "";    
-    const id = url.split("/").at(-1);
         
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
@@ -19,8 +17,7 @@ export async function POST(req: Request) {
 
     await connectToDB();
 
-    const newSettingsNotification = new Settings({ userId, notification: notificationSettings });
-    await newSettingsNotification.save();
+    await Settings.findOneAndUpdate({ userId }, { notification: notificationSettings });
 
     return NextResponse.json({ message: 'Success' });
 };
