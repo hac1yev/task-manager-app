@@ -13,7 +13,7 @@ export async function DELETE(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
     await connectToDB();
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }    
 
     const base64Data = avatar.replace(/^data:image\/\w+;base64,/, '');
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
     await connectToDB();
@@ -101,7 +101,7 @@ export async function PUT(req: Request) {
     const isAccessTokenValid = await verifyAccessToken(accessToken);
 
     if(!isAccessTokenValid) {
-        return NextResponse.json({ message: 'Access token is expired' }, { status: 403 });
+        return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
     await connectToDB();
