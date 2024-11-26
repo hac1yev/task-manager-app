@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import uniqid from "uniqid";
 import { socket } from "@/socket-client";
+import { useTypedSettingSelector } from "@/store/settings-slice";
 
 const AddTimeline = ({ taskId, users }: { taskId: string, users: {
   id: string;
@@ -28,7 +29,7 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
   const [description, setDescription] = useState("");
-  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+  const settingsData = useTypedSettingSelector(state => state.settingReducer.taskDetailPageSettings);
 
   const user = useMemo(() => {
     if (typeof window !== "undefined" && localStorage.getItem("userInfo")) {
@@ -52,17 +53,6 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
       { name: "Assigned" },
     ];
   }, []);
-
-  useEffect(() => {
-    (async function() {
-      try {
-        const response = await axiosPrivate.get("/api/settings");
-        setSettingsData(response.data.settings);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [axiosPrivate]);
 
   const handleChange = useCallback(
     (name: string, event: React.ChangeEvent<HTMLInputElement>) => {

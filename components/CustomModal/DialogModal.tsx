@@ -10,15 +10,16 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { socket } from '@/socket-client';
 import { useTypedSelector } from '@/store/team-slice';
+import { useTypedSettingSelector } from '@/store/settings-slice';
 
 const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     const users = useTypedSelector(state => state.teamReducer.users);
-    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+    const settingsData = useTypedSettingSelector(state => state.settingReducer.taskPageSettings);
 
     const user = useMemo(() => {
         if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
@@ -35,17 +36,6 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const handleClose = useCallback(() => {
         setOpenDialog(false);
     }, [setOpenDialog]);
-
-    useEffect(() => {
-        (async function() {
-          try {
-            const response = await axiosPrivate.get("/api/settings");            
-            setSettingsData(response.data.settings);
-          } catch (error) {
-            console.log(error);
-          }
-        })();
-    }, [axiosPrivate]);
 
     const handleDelete = useCallback(async () => {
         try {

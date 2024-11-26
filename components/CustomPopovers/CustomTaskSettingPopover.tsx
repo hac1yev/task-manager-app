@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { socket } from "@/socket-client";
 import { useTypedSelector } from "@/store/team-slice";
+import { useTypedSettingSelector } from "@/store/settings-slice";
 
 const CustomTaskSettingPopover = ({ 
   anchorEl, handlePopoverClose, handleDialogOpen, id, open, setOpenModal
@@ -24,7 +25,7 @@ const CustomTaskSettingPopover = ({
 
   const [role,setRole] = useState("");
   const users = useTypedSelector(state => state.teamReducer.users);
-  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+  const settingsData = useTypedSettingSelector(state => state.settingReducer.taskPageSettings);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
 
@@ -47,17 +48,6 @@ const CustomTaskSettingPopover = ({
     
     setRole(role);
   }, []);
-
-  useEffect(() => {
-    (async function() {
-      try {
-        const response = await axiosPrivate.get("/api/settings");
-        setSettingsData(response.data.settings);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [axiosPrivate]);
 
   const handleOpenEditTaskModal = useCallback(() => {
     setOpenModal(true);

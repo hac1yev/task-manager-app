@@ -2,12 +2,13 @@
 
 import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, TextField, Typography, SelectChangeEvent } from "@mui/material";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useTypedSelector } from "@/store/team-slice";
 import { socket } from "@/socket-client";
+import { useTypedSettingSelector } from "@/store/settings-slice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -22,7 +23,7 @@ const MenuProps = {
 
 const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const users = useTypedSelector((state) => state.teamReducer.users);
-    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+    const settingsData = useTypedSettingSelector(state => state.settingReducer.taskPageSettings);
     const userColors = useMemo(() => {
       const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
       const colorMap = new Map();
@@ -33,15 +34,17 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
       return colorMap;
     }, [users]);
   
-    const usersNames = users.map((user: Partial<UserType>) => {
-      return {
-        id: user._id,
-        name: user.fullName
-      }
-    }) as {
-      id: string;
-      name: string;
-    }[] || [];
+    const usersNames = useMemo(() => {
+      return users.map((user: Partial<UserType>) => {
+        return {
+          id: user._id,
+          name: user.fullName
+        }
+      }) as {
+        id: string;
+        name: string;
+      }[] || [];
+    }, [users]);
   
     const [taskValues,setTaskValues] = useState<Partial<TaskSliceType>>({
       title: "",
@@ -53,20 +56,9 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
   
-    const handleModalClose = () => setOpen(false);
-
-    useEffect(() => {
-      (async function() {
-        try {
-          const response = await axiosPrivate.get("/api/settings");
-          setSettingsData(response.data.settings);
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-    }, [axiosPrivate]);
+    const handleModalClose = useCallback(() => setOpen(false), [setOpen]);
   
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
       const data = {
@@ -128,16 +120,16 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
       } catch (error) {
         console.log(error);
       }
-    };
+    }, [axiosPrivate,dispatch,setOpen,settingsData,taskValues.created_at,taskValues.priority_level,taskValues.stage,taskValues.title,taskValues.users]);
   
-    const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const handleChange = useCallback((event: SelectChangeEvent<string[]>) => {
       const { target: { value } } = event;
       
       setTaskValues((prev) => ({
         ...prev,
         users: typeof value === 'string' ? value.split(',') : value
       }));
-    };  
+    }, []);
 
   return (
     <Modal

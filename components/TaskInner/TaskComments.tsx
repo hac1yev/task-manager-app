@@ -9,6 +9,7 @@ import { taskDetailSliceActions } from '@/store/taskDetail-slice';
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket-client';
+import { useTypedSettingSelector } from '@/store/settings-slice';
 
 const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, inputRef }: { id: string, taskData: Partial<TaskSliceType>, setCommentText: (value: string) => void, setDeformedCommentText: (value: string) => void, inputRef: MutableRefObject<HTMLInputElement | null> }) => {
     const [userInfo,setUserInfo] = useState<UserInfo>({
@@ -22,7 +23,7 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
     }); 
     const { comments } = taskData;
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+    const settingsData = useTypedSettingSelector(state => state.settingReducer.taskDetailPageSettings);
     const [selectedPopover, setSelectedPopover] = useState("");
     const axiosPrivate = useAxiosPrivate();
     const open = Boolean(anchorEl);
@@ -36,17 +37,6 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
       
       setUserInfo(userInfo);
     }, []);
-
-    useEffect(() => {
-        (async function() {
-          try {
-            const response = await axiosPrivate.get("/api/settings");
-            setSettingsData(response.data.settings);
-          } catch (error) {
-            console.log(error);
-          }
-        })();
-    }, [axiosPrivate]);
     
     const handleLikeComment = useCallback(async ({ commentId, type, fullName, userId }: { commentId: string | undefined, type: string, fullName: string, userId: string }) => {
         try {

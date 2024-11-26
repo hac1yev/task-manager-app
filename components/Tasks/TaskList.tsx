@@ -12,12 +12,14 @@ import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import TaskHeader from "./TaskHeader";
 import { socket } from "@/socket-client";
+import { useTypedSettingSelector } from "@/store/settings-slice";
 
 const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comments }: Partial<TaskType>) => {
   const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [userId,setUserId] = useState("");
-  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+  const settingsData = useTypedSettingSelector(state => state.settingReducer.taskPageSettings); 
+  const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const [role,setRole] = useState(""); 
   const [subtaskValues,setSubtaskValues] = useState<SubTaskType>({
@@ -41,7 +43,6 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       if(users) return users.map((user) => user._id).filter((item) => item !== user.userId);
   }, [user.userId, users]);
 
-  const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = useCallback(() => setModalOpen(true), []);
   const handleModalClose = useCallback(() => setModalOpen(false), []);
@@ -67,17 +68,6 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
     
     setRole(role);
   }, []);
-
-  useEffect(() => {
-    (async function() {
-      try {
-        const response = await axiosPrivate.get("/api/settings");
-        setSettingsData(response.data.settings);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [axiosPrivate]);
 
   const handleAddSubtask = useCallback(async (e: FormEvent) => {
     e.preventDefault();
