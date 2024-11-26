@@ -72,10 +72,7 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
           console.log(error);
         }
       })();
-    }, [axiosPrivate, user.userId]);
-
-    console.log(notificationSettings);
-    
+    }, [axiosPrivate, user.userId]);    
   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -103,6 +100,8 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
         }));
   
         if(notificationSettings && notificationSettings.assignTask) {
+          console.log("NOTIFICATION SETTINGS: ", notificationSettings.assignTask);
+          
           const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
             userId: data.users && [...data.users],
             type: 'assignTask',
