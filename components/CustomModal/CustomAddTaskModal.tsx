@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, TextField, Typography, SelectChangeEvent } from "@mui/material";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -22,6 +22,7 @@ const MenuProps = {
 
 const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const users = useTypedSelector((state) => state.teamReducer.users);
+    const [notificationSettings,setNotificationSettings] = useState<NotificationSettingsType>();
     const userColors = useMemo(() => {
       const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
       const colorMap = new Map();
@@ -32,6 +33,14 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
       return colorMap;
     }, [users]);
   
+    const user = useMemo(() => {
+      if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
+        return JSON.parse(localStorage.getItem("userInfo") || "{}") 
+      }else{
+        return "";
+      }
+    }, []);
+
     const usersNames = users.map((user: Partial<UserType>) => {
       return {
         id: user._id,
@@ -53,6 +62,20 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
     const dispatch = useDispatch();
   
     const handleModalClose = () => setOpen(false);
+
+    useEffect(() => {
+      (async function() {
+        try {
+          const response = await axiosPrivate.get(`/api/settings/notification/${user.userId}`);
+          setNotificationSettings(response.data.settings.notification);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }, [axiosPrivate, user.userId]);
+
+    console.log(notificationSettings);
+    
   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -79,23 +102,25 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
           ...recievingData,
         }));
   
-        const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-          userId: data.users && [...data.users],
-          type: 'assignTask',
-          message: data.users?.length && (data.users?.length > 1 
-            ? `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you and ${data.users?.length - 1} others.</div>` 
-            : `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you.</div>`),
-          visibility: 'private'
-        }), {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        const notification = notificationResponse.data.notification;
-        delete notification.__v;
-              
-        socket.emit("assignTask", { notification, userIds: data.users });
+        if(notificationSettings && notificationSettings.assignTask) {
+          const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
+            userId: data.users && [...data.users],
+            type: 'assignTask',
+            message: data.users?.length && (data.users?.length > 1 
+              ? `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you and ${data.users?.length - 1} others.</div>` 
+              : `<div>New task with <a style="color: #1851df" href="/tasks/${response.data.addedTask._id}">ID ${response.data.addedTask._id}</a> has been assigned to you.</div>`),
+            visibility: 'private'
+          }), {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const notification = notificationResponse.data.notification;
+          delete notification.__v;
+                
+          socket.emit("assignTask", { notification, userIds: data.users });
+        }
 
         setOpen(false);
         setTaskValues({ title: "", users: [], stage: "", created_at: new Date().toISOString().slice(0,10), priority_level: "" });

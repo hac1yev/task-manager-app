@@ -159,15 +159,17 @@ declare type NotificationPopoverType = {
     userInfo: Partial<UserInfo> | null;
 }; 
 
+declare type NotificationSettingsType = {
+    assignTask: boolean,
+    addComment: boolean,
+    subTask: boolean,
+    likeComment: boolean,
+    modifyTask: boolean,
+    addTimeline: boolean,
+    addUser: boolean
+};
+
 declare type SettingsType = {
-    userid: string;
-    notifications: {
-        assignTask: boolean;
-        addComment: boolean;
-        subTask: boolean;
-        likeComment: boolean;
-        modifyTask: boolean;
-        addTimeline: boolean;
-        addUser: boolean
-    }
+    userId: string;
+    notifications: NotificationType;
 };

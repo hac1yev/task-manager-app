@@ -40,7 +40,7 @@ const SettingsNotificationWrapper = () => {
             } catch (error) {
                 console.log(error);
             }
-        })()
+        })();
     }, [axiosPrivate, user.userId]);
 
     const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
