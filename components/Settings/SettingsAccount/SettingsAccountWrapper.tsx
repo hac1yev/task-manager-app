@@ -313,7 +313,7 @@ const SettingsAccountWrapper = () => {
                         ))}
                     </Select>
                 </Box>
-                <Box className="flex-end" sx={{ width: '70%', pt: 3 }}>
+                <Box className="flex-end account-save-button" sx={{ pt: 3 }}>
                     <Button 
                         type="submit"
                         disabled={isLoading}

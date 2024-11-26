@@ -5,6 +5,10 @@
     justify-content: space-between;
 }
 
+.account-save-button {
+    width: 70%;
+}
+
 .account-danger-zone {
     width: 100%;
     display: flex;
@@ -33,7 +37,8 @@
 }
 
 @media screen and (max-width: 1000px) {
-    .account-input-group {
+    .account-input-group,
+    .account-save-button {
         width: 100%;
     }
 
