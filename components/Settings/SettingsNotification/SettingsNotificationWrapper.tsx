@@ -89,7 +89,7 @@ const SettingsNotificationWrapper = () => {
             <Divider sx={{ mt: 3, mb: 2 }} />
             <Box className="setting-notifications-wrapper" component={"form"} sx={{ mb: 2 }} onSubmit={handleSubmit}>
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Assign Tasks Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.assignTask ? 'Disable Assign Tasks Notifications' : 'Enable Assign Tasks Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -102,7 +102,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Add Comments Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.addComment ? 'Disable Add Comments Notifications' : 'Enable Add Comments Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -115,7 +115,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Sub-Tasks Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.subTask ? 'Disable Sub-Tasks Notifications' : 'Enable Sub-Tasks Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -128,7 +128,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Like Comments Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.likeComment ? 'Disable Like Comments Notifications' : 'Enable Like Comments Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -141,7 +141,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Modified Tasks Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.modifyTask ? 'Disable Modified Tasks Notifications' : 'Enable Modified Tasks Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -154,7 +154,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable Task Activities Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.addTimeline ? 'Disable Task Activities Notifications' : 'Enable Task Activities Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 
@@ -167,7 +167,7 @@ const SettingsNotificationWrapper = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box className="flex-between notification-list">
-                    <Typography variant="h6">Enable New User Notifications</Typography>
+                    <Typography variant="h6">{notificationSettings.addUser ? 'Disable New User Notifications' : 'Enable New User Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
                         <HelpIcon sx={{ color: '#494949' }} />
                         <Switch 

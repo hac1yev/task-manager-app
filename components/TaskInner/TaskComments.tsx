@@ -22,6 +22,7 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
     }); 
     const { comments } = taskData;
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
     const [selectedPopover, setSelectedPopover] = useState("");
     const axiosPrivate = useAxiosPrivate();
     const open = Boolean(anchorEl);
@@ -35,6 +36,17 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
       
       setUserInfo(userInfo);
     }, []);
+
+    useEffect(() => {
+        (async function() {
+          try {
+            const response = await axiosPrivate.get("/api/settings");
+            setSettingsData(response.data.settings);
+          } catch (error) {
+            console.log(error);
+          }
+        })();
+    }, [axiosPrivate]);
     
     const handleLikeComment = useCallback(async ({ commentId, type, fullName, userId }: { commentId: string | undefined, type: string, fullName: string, userId: string }) => {
         try {
@@ -46,21 +58,37 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
             
             dispatch(taskDetailSliceActions.likeComment({ commentId, userId: userInfo.userId, type }));
             if(type === 'like' && fullName !== userInfo.fullName) {
-                socket.emit("likeComment", { userId, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
+                const possibleSendingUsers = settingsData.filter((item) => {
+                    if(item && (userId === item.userId)) {
+                      return item;
+                    }
+                });
+                  
+                const resultUser = possibleSendingUsers.filter((setting) => {
+                    if(setting?.notification?.likeComment) {
+                      return setting;
+                    }
+                }).map((item) => {
+                    if(item) return item.userId;
+                });                                
 
-                await axiosPrivate.post('/api/notification', {
-                    userId: [userId],
-                    fullName, 
-                    message: `${userInfo.fullName} liked your comment!`,
-                    type: 'likeComment',
-                    visibility: 'private',
-                    createdAt: new Date().toISOString(),
-                }); 
+                if(resultUser.length > 0) {
+                    socket.emit("likeComment", { resultUser, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
+
+                    await axiosPrivate.post('/api/notification', {
+                        userId: [...resultUser],
+                        fullName, 
+                        message: `${userInfo.fullName} liked your comment!`,
+                        type: 'likeComment',
+                        visibility: 'private',
+                        createdAt: new Date().toISOString(),
+                    }); 
+                }
             }           
         } catch (error) {
             console.log(error);
         }
-    }, [userInfo.userId, id, axiosPrivate, dispatch, userInfo.fullName]);  
+    }, [userInfo.userId, id, axiosPrivate, dispatch, userInfo.fullName,settingsData]);  
     
     const handleDeleteComment = useCallback(async (commentId: string | undefined) => {
         try {

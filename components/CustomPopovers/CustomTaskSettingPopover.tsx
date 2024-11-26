@@ -10,7 +10,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
 import toast from 'react-hot-toast';
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { socket } from "@/socket-client";
 import { useTypedSelector } from "@/store/team-slice";
 
@@ -24,6 +24,10 @@ const CustomTaskSettingPopover = ({
 
   const [role,setRole] = useState("");
   const users = useTypedSelector(state => state.teamReducer.users);
+  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useDispatch();
+
   const user = useMemo(() => {
     if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
       return JSON.parse(localStorage.getItem("userInfo") || "{}") 
@@ -44,14 +48,22 @@ const CustomTaskSettingPopover = ({
     setRole(role);
   }, []);
 
-  const axiosPrivate = useAxiosPrivate();
-  const dispatch = useDispatch();
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await axiosPrivate.get("/api/settings");
+        setSettingsData(response.data.settings);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [axiosPrivate]);
 
-  const handleOpenEditTaskModal = () => {
+  const handleOpenEditTaskModal = useCallback(() => {
     setOpenModal(true);
-  };
+  },[setOpenModal]);
 
-  const handleDuplicate = async () => {
+  const handleDuplicate = useCallback(async () => {
     try {
       const response = await axiosPrivate.post("/api/duplicate", JSON.stringify(id), {
         headers: {
@@ -68,8 +80,22 @@ const CustomTaskSettingPopover = ({
 
       toast.success('Task duplicated!');
       
+      const possibleSendingUsers = settingsData.filter((item) => {
+        if(item && allUserIDS?.includes(item.userId)) {
+          return item;
+        }
+      });
+      
+      const resultUsers = possibleSendingUsers.filter((setting) => {
+        if(setting?.notification?.modifyTask) {
+          return setting;
+        }
+      }).map((item) => {
+        if(item) return item.userId;
+      });        
+
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-        userId: allUserIDS,
+        userId: resultUsers,
         type: 'duplicateTask',
         message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been duplicated.</div>`,
         taskId: id, 
@@ -83,12 +109,12 @@ const CustomTaskSettingPopover = ({
       const notification = notificationResponse.data.notification;
       delete notification.__v;
       
-      socket.emit("duplicateTask", { notification, userIds: allUserIDS });
+      socket.emit("duplicateTask", { notification, userIds: resultUsers });
 
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [allUserIDS,axiosPrivate,dispatch,id,settingsData]);
 
   return (
     <Popover

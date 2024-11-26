@@ -144,7 +144,6 @@ const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType
                                     <div 
                                         dangerouslySetInnerHTML={{ __html: notification.message || "" }}
                                     >
-                                        
                                     </div>
                                 } />
                             </ListItemButton>

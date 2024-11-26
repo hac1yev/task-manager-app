@@ -3,7 +3,7 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { teamSliceAction, useTypedSelector } from "@/store/team-slice";
 import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
 import { socket } from "@/socket-client";
@@ -11,6 +11,7 @@ import { socket } from "@/socket-client";
 const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
   const [role, setRole] = useState("");
   const axiosPrivate = useAxiosPrivate();
+  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
   const dispatch = useDispatch();
   const user = useMemo(() => {
     if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
@@ -27,7 +28,18 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
 
   const handleClose = () => setOpen(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await axiosPrivate.get("/api/settings");
+        setSettingsData(response.data.settings);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [axiosPrivate]);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -62,10 +74,24 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
 
       dispatch(teamSliceAction.addUser(recievingData));
 
+      const possibleSendingUsers = settingsData.filter((item) => {
+        if(item && allUserIDS?.includes(item.userId)) {
+          return item;
+        }
+      });
+      
+      const resultUsers = possibleSendingUsers.filter((setting) => {
+        if(setting?.notification?.addUser) {
+          return setting;
+        }
+      }).map((item) => {
+        if(item) return item.userId;
+      });  
+
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-        userId: allUserIDS,
+        userId: resultUsers,
         type: 'addUser',
-        message: `<div>New user, "${data.fullName}", has been added to the team!</div>`,
+        message: `<div>New user, <span style="color: #1851df;">"${data.fullName}"</span>, has been added to the team!</div>`,
         visibility: 'private'
       }), {
         headers: {
@@ -76,13 +102,13 @@ const CustomAddUserModal = ({ setOpen, open }: CustomModalType) => {
       const notification = notificationResponse.data.notification;
       delete notification.__v;
             
-      socket.emit("addUser", { notification, userIds: allUserIDS });
+      socket.emit("addUser", { notification, userIds: resultUsers });
 
       setOpen(false);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [allUserIDS, axiosPrivate, dispatch, setOpen, settingsData]);
 
   return (
     <Modal

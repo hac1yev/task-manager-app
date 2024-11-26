@@ -121,7 +121,7 @@ const CustomAddTaskModal = ({ setOpen,open }: CustomModalType) => {
         const notification = notificationResponse.data.notification;
         delete notification.__v;
               
-        socket.emit("assignTask", { notification, userIds: data.users });
+        socket.emit("assignTask", { notification, userIds: resultUsers });
 
         setOpen(false);
         setTaskValues({ title: "", users: [], stage: "", created_at: new Date().toISOString().slice(0,10), priority_level: "" });

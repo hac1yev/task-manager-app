@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, FormControl, FormLabel, MenuItem, Modal, OutlinedInput, Select, TextField, Typography, SelectChangeEvent } from "@mui/material";
 import { addUserStyle } from "../MaterialSnippets/MaterialSnippets";
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { taskSliceActions, useTypedTaskSelector } from "@/store/task-slice";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -25,6 +25,7 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
     const users = useTypedSelector((state) => state.teamReducer.users);
     const tasks = useTypedTaskSelector((state) => state.taskReducer.tasks);
     const findedTask = tasks.find((task) => task._id === id);
+    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
 
     const userColors = useMemo(() => {
       const colors = ['#D18805', '#1A65E9', '#0B8A49', '#D83121', '#6D36D4', "#F72D93"];
@@ -36,15 +37,17 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
       return colorMap;
     }, [users]);
       
-    const usersNames = users.map((user: Partial<UserType>) => {
-        return {
-            id: user._id,
-            name: user.fullName
-        }
-    }) as {
-        id: string;
-      name: string;
-    }[] || [];
+    const usersNames = useMemo(() => {
+      return users.map((user: Partial<UserType>) => {
+          return {
+              id: user._id,
+              name: user.fullName
+          }
+      }) as {
+          id: string;
+        name: string;
+      }[] || [];
+    }, [users]);
     
     const [taskValues,setTaskValues] = useState<Partial<TaskSliceType>>({
         title: findedTask?.title,
@@ -56,9 +59,20 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     
-    const handleModalClose = () => setOpen(false);
+    const handleModalClose = useCallback(() => setOpen(false), [setOpen]);
   
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+      (async function() {
+        try {
+          const response = await axiosPrivate.get("/api/settings");
+          setSettingsData(response.data.settings);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }, [axiosPrivate]);
+
+    const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
       const data = {
@@ -79,8 +93,22 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         dispatch(taskSliceActions.editTask({ _id: id, ...data }));
         toast.success('Task updated!');
 
+        const possibleSendingUsers = settingsData.filter((item) => {
+          if(item && data.users?.includes(item.userId)) {
+            return item;
+          }
+        });
+        
+        const resultUsers = possibleSendingUsers.filter((setting) => {
+          if(setting?.notification?.modifyTask) {
+            return setting;
+          }
+        }).map((item) => {
+          if(item) return item.userId;
+        });  
+
         const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-          userId: data.users && [...data.users],
+          userId: resultUsers,
           type: 'editTask',
           message: `<div>Task with <a style="color: #1851df" href="/tasks/${id}">ID ${id}</a> has been updated.</div>`,
           taskId: id, 
@@ -94,22 +122,22 @@ const CustomEditTaskModal = ({ setOpen,open,id }: CustomModalType) => {
         const notification = notificationResponse.data.notification;
         delete notification.__v;
         
-        socket.emit("editTask", { notification, userIds: data.users });
+        socket.emit("editTask", { notification, userIds: resultUsers });
 
         setOpen(false);
       } catch (error) {
         console.log(error);
       }
-    };
+    }, [axiosPrivate,dispatch,taskValues,id,settingsData,setOpen]);
   
-    const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const handleChange = useCallback((event: SelectChangeEvent<string[]>) => {
       const { target: { value } } = event;
       
       setTaskValues((prev) => ({
         ...prev,
         users: typeof value === 'string' ? value.split(',') : value
       }));
-    };  
+    }, []);
 
   return (
     <Modal

@@ -17,6 +17,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
   const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [userId,setUserId] = useState("");
+  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
   const dispatch = useDispatch();
   const [role,setRole] = useState(""); 
   const [subtaskValues,setSubtaskValues] = useState<SubTaskType>({
@@ -67,6 +68,17 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
     setRole(role);
   }, []);
 
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await axiosPrivate.get("/api/settings");
+        setSettingsData(response.data.settings);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [axiosPrivate]);
+
   const handleAddSubtask = useCallback(async (e: FormEvent) => {
     e.preventDefault();
 
@@ -76,10 +88,24 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
           'Content-Type': 'application/json'
         }
       });
-      dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));      
+      dispatch(taskSliceActions.addSubtaskToTask({ _id, subtask: { ...subtaskValues }}));
+
+      const possibleSendingUsers = settingsData.filter((item) => {
+        if(item && allUserIDS?.includes(item.userId)) {
+          return item;
+        }
+      });
+      
+      const resultUsers = possibleSendingUsers.filter((setting) => {
+        if(setting?.notification?.subTask) {
+          return setting;
+        }
+      }).map((item) => {
+        if(item) return item.userId;
+      });  
 
       const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-        userId: allUserIDS,
+        userId: resultUsers,
         type: 'addSubtask',
         message: `<div>Sub-task added to the task with <a style="color: #1851df" href="/tasks/${_id}">ID ${_id}</a>.</div>`,
         taskId: _id, 
@@ -93,12 +119,12 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       const notification = notificationResponse.data.notification;
       delete notification.__v;
       
-      socket.emit("addSubtask", { notification, userIds: allUserIDS });
+      socket.emit("addSubtask", { notification, userIds: resultUsers });
     } catch (error) {
       console.log(error);
     }
     setModalOpen(false);
-  }, [_id,axiosPrivate,dispatch,subtaskValues,allUserIDS]);  
+  }, [_id,axiosPrivate,dispatch,subtaskValues,allUserIDS,settingsData]);  
 
   return (
     <Item sx={{ mb: 2 }}>

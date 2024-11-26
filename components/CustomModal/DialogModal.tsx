@@ -10,7 +10,7 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { taskSliceActions } from "@/store/task-slice";
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { socket } from '@/socket-client';
 import { useTypedSelector } from '@/store/team-slice';
 
@@ -18,6 +18,7 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     const users = useTypedSelector(state => state.teamReducer.users);
+    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
 
     const user = useMemo(() => {
         if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
@@ -35,13 +36,38 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
         setOpenDialog(false);
     }, [setOpenDialog]);
 
+    useEffect(() => {
+        (async function() {
+          try {
+            const response = await axiosPrivate.get("/api/settings");            
+            setSettingsData(response.data.settings);
+          } catch (error) {
+            console.log(error);
+          }
+        })();
+    }, [axiosPrivate]);
+
     const handleDelete = useCallback(async () => {
         try {
             await axiosPrivate.post(`/api/trash/${id}`);
             dispatch(taskSliceActions.deleteTask(id));
             
+            const possibleSendingUsers = settingsData.filter((item) => {
+                if(item && allUserIDS?.includes(item.userId)) {
+                  return item;
+                }
+            });
+              
+            const resultUsers = possibleSendingUsers.filter((setting) => {
+                if(setting?.notification?.modifyTask) {
+                  return setting;
+                }
+            }).map((item) => {
+                if(item) return item.userId;
+            });  
+
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-                userId: allUserIDS,
+                userId: resultUsers,
                 type: 'deleteTask',
                 message: `<div>Task with ID ${id} has been deleted.</div>`,
                 taskId: id, 
@@ -55,13 +81,13 @@ const DialogModal = ({ setOpenDialog,openDialog,id }: DialogModalType) => {
             const notification = notificationResponse.data.notification;
             delete notification.__v;
             
-            socket.emit("deleteTask", { notification, userIds: allUserIDS });
+            socket.emit("deleteTask", { notification, userIds: resultUsers });
 
         } catch (error) {
             console.log(error);
         }
         setOpenDialog(false);
-    }, [axiosPrivate,dispatch,id,setOpenDialog,allUserIDS]);
+    }, [axiosPrivate,dispatch,id,setOpenDialog,allUserIDS,settingsData]);
 
     return (
         <Dialog

@@ -3,7 +3,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Search, StyledInputBase } from "../MaterialSnippets/MaterialSnippets";
 import SendIcon from '@mui/icons-material/Send';
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import TaskComments from "./TaskComments";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
@@ -13,6 +13,7 @@ import { socket } from "@/socket-client";
 const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
     const [isLoading,setIsLoading] = useState(false);
     const [deformedCommentText,setDeformedCommentText] = useState("");
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
@@ -22,7 +23,18 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
         ? JSON.parse(localStorage.getItem("userInfo") || "{}") 
         : "";            
 
-    const handleAddComment = async (e: FormEvent) => {
+    useEffect(() => {
+        (async function() {
+            try {
+            const response = await axiosPrivate.get("/api/settings");
+            setSettingsData(response.data.settings);
+            } catch (error) {
+            console.log(error);
+            }
+        })();
+    }, [axiosPrivate]);    
+
+    const handleAddComment = useCallback(async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
@@ -57,9 +69,23 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
             });
             
             const userIds = userNames.map((user) => user.id).filter((id) => id !== userInfo.userId);
+
+            const possibleSendingUsers = settingsData.filter((item) => {
+                if(item && userIds.includes(item.userId)) {
+                    return item;
+                }
+            });
+            
+            const resultUsers = possibleSendingUsers.filter((setting) => {
+                if(setting?.notification?.addComment) {
+                    return setting;
+                }
+            }).map((item) => {
+                if(item) return item.userId;
+            });              
             
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
-                userId: [...userIds],
+                userId: [...resultUsers],
                 type: 'addComment',
                 message: `<div>New comment on your task <a style="color: #1851df" href="/tasks/${taskId}">(ID: ${taskId})</a>.</div>`,
                 visibility: 'private'
@@ -72,7 +98,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
             const notification = notificationResponse.data.notification;
             delete notification.__v;
             
-            socket.emit("addComment", { notification, userIds });
+            socket.emit("addComment", { notification, resultUsers });
             
             dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
             setCommentText("");
@@ -81,7 +107,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
         } catch (error) {
             console.log(error);
         }
-    };    
+    }, [axiosPrivate,commentText,deformedCommentText,dispatch,settingsData,taskId,userInfo.avatar,userInfo.fullName,userInfo.userId,userNames]);
 
     return (
         <Box>

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { taskDetailSliceActions } from "@/store/taskDetail-slice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -28,6 +28,7 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
   const [description, setDescription] = useState("");
+  const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
 
   const user = useMemo(() => {
     if (typeof window !== "undefined" && localStorage.getItem("userInfo")) {
@@ -51,6 +52,17 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
       { name: "Assigned" },
     ];
   }, []);
+
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await axiosPrivate.get("/api/settings");
+        setSettingsData(response.data.settings);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [axiosPrivate]);
 
   const handleChange = useCallback(
     (name: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,10 +106,24 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
           })
         );
 
+        const possibleSendingUsers = settingsData.filter((item) => {
+          if(item && allUserIDS?.includes(item.userId)) {
+            return item;
+          }
+        });
+        
+        const resultUsers = possibleSendingUsers.filter((setting) => {
+          if(setting?.notification?.addTimeline) {
+            return setting;
+          }
+        }).map((item) => {
+          if(item) return item.userId;
+        });  
+
         const notificationResponse = await axiosPrivate.post(
           "/api/notification",
           JSON.stringify({
-            userId: allUserIDS,
+            userId: resultUsers,
             type: "addTimeline",
             message: `<div>Timeline added to the task with <a style="color: #1851df" href="/tasks/${taskId}">ID ${taskId}</a>.</div>`,
             taskId: taskId,
@@ -113,13 +139,13 @@ const AddTimeline = ({ taskId, users }: { taskId: string, users: {
         const notification = notificationResponse.data.notification;
         delete notification.__v;
 
-        socket.emit("addTimeline", { notification, userIds: allUserIDS });
+        socket.emit("addTimeline", { notification, userIds: resultUsers });
         setDescription("");
       } else {
         console.log("Please select an activity.");
       }
     },
-    [activityData, axiosPrivate, description, dispatch, taskId, allUserIDS]
+    [activityData, axiosPrivate, description, dispatch, taskId, allUserIDS,settingsData]
   );
 
   return (
