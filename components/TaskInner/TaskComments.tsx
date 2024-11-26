@@ -60,10 +60,10 @@ const TaskComments = ({ id, taskData, setCommentText, setDeformedCommentText, in
                     }
                 }).map((item) => {
                     if(item) return item.userId;
-                });                                
-
+                });               
+                                
                 if(resultUser.length > 0) {
-                    socket.emit("likeComment", { resultUser, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
+                    socket.emit("likeComment", { userId, fullName, type, message: `${userInfo.fullName} liked your comment!` }); 
 
                     await axiosPrivate.post('/api/notification', {
                         userId: [...resultUser],

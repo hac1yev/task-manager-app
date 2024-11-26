@@ -9,11 +9,12 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { taskDetailSliceActions, useTypedTaskDetailSelector } from "@/store/taskDetail-slice";
 import { useDispatch } from "react-redux";
 import { socket } from "@/socket-client";
+import { useTypedSettingSelector } from "@/store/settings-slice";
 
 const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const [commentText,setCommentText] = useState("");
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [settingsData,setSettingsData] = useState<Partial<SettingsType>>([]);
+    const settingsData = useTypedSettingSelector(state => state.settingReducer.taskDetailPageSettings);
     const [isLoading,setIsLoading] = useState(false);
     const [deformedCommentText,setDeformedCommentText] = useState("");
     const taskData = useTypedTaskDetailSelector(state => state.taskDetailReducer.taskDetailData);
@@ -21,18 +22,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
     const dispatch = useDispatch();
     const userInfo: Partial<UserInfo> = typeof window !== "undefined" && localStorage.getItem("userInfo") 
         ? JSON.parse(localStorage.getItem("userInfo") || "{}") 
-        : "";            
-
-    useEffect(() => {
-        (async function() {
-            try {
-            const response = await axiosPrivate.get("/api/settings");
-            setSettingsData(response.data.settings);
-            } catch (error) {
-            console.log(error);
-            }
-        })();
-    }, [axiosPrivate]);    
+        : "";              
 
     const handleAddComment = useCallback(async (e: FormEvent) => {
         e.preventDefault();
@@ -82,8 +72,8 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
                 }
             }).map((item) => {
                 if(item) return item.userId;
-            });              
-            
+            });           
+                        
             const notificationResponse = await axiosPrivate.post('/api/notification', JSON.stringify({
                 userId: [...resultUsers],
                 type: 'addComment',
@@ -98,7 +88,7 @@ const TaskInnerRightbar = ({ taskId, userNames }: TaskDetailType) => {
             const notification = notificationResponse.data.notification;
             delete notification.__v;
             
-            socket.emit("addComment", { notification, resultUsers });
+            socket.emit("addComment", { notification, userIds: resultUsers });
             
             dispatch(taskDetailSliceActions.addComment(response.data.addedComment));
             setCommentText("");

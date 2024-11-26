@@ -1,5 +1,6 @@
 import { connectToDB } from "@/lib/connectToDB";
 import { verifyAccessToken } from "@/lib/verifyToken";
+import { Settings } from "@/models/Settings";
 import { User } from "@/models/User";
 import { NextResponse } from "next/server";
 
@@ -19,6 +20,7 @@ export async function DELETE(req: Request) {
     await connectToDB();
 
     await User.deleteOne({ _id: id });
+    await Settings.deleteOne({ userId: id });
 
     return NextResponse.json({ message: 'Success' });
 };
