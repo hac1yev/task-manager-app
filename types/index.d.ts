@@ -170,6 +170,7 @@ declare type NotificationSettingsType = {
 };
 
 declare type SettingsType = {
+    _id?: string;
     userId: string;
-    notifications: NotificationType;
-};
+    notification: NotificationSettingsType;
+}[];
