@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Divider, Switch, Typography } from '@mui/material';
+import { Box, Button, Divider, LinearProgress, Switch, Typography } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import './SettingsNotification.css';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -22,6 +22,7 @@ const SettingsNotificationWrapper = () => {
     let notificationRef = useRef(notificationSettings);
     const axiosPrivate = useAxiosPrivate();
     const [isLoading,setIsLoading] = useState(false);
+    const [isComponentLoading,setIsComponentLoading] = useState(true);
 
     const user = useMemo(() => {
         if(typeof window !== "undefined" && localStorage.getItem("userInfo") ) {
@@ -33,6 +34,7 @@ const SettingsNotificationWrapper = () => {
 
     useEffect(() => {
         (async function() {
+            setIsComponentLoading(true);
             try {
                 const response = await axiosPrivate.get(`/api/settings/notification/${user.userId}`);
                 setNotificationSettings(response.data.settings.notification);
@@ -40,6 +42,7 @@ const SettingsNotificationWrapper = () => {
             } catch (error) {
                 console.log(error);
             }
+            setIsComponentLoading(false);
         })();
     }, [axiosPrivate, user.userId]);
 
@@ -66,6 +69,14 @@ const SettingsNotificationWrapper = () => {
         }
         setIsLoading(false);
     }, [axiosPrivate,notificationSettings,user.userId]);
+
+    if(isComponentLoading) {
+        return (
+            <Box sx={{ width: '100%', bgcolor: '#fff', p: 4 }}>
+                <LinearProgress />
+            </Box>
+        )
+    }
 
     return (
         <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
