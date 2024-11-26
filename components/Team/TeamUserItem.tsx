@@ -66,7 +66,7 @@ const TeamUserItem = ({ users, user, color }: { users: UserType[], user: UserTyp
         className="flex-start"
         sx={{ display: "flex", gap: 1 }}
       >
-        <Avatar sx={{ bgcolor: color }}>
+        <Avatar sx={{ bgcolor: color }} src={user.avatar}>
           {user.fullName.trim().includes(" ")
             ? user.fullName
                 .split(" ")

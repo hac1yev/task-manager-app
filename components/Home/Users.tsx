@@ -62,6 +62,7 @@ function Users() {
                       onMouseLeave={handlePopoverClose} 
                       onMouseEnter={handlePopoverOpen.bind(null, user._id)}
                       aria-haspopup="true"
+                      src={user.avatar}
                     >
                       {user.fullName.split(" ").map(u => u[0].toLocaleUpperCase()).join("")}
                     </Avatar>

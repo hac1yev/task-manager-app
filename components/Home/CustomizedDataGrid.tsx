@@ -36,16 +36,18 @@ function CustomPaginationActionsTable() {
           fullName: string;
           title: string;
           email: string;
+          avatar: string | undefined;
       }[] = [];            
   
       users?.forEach((user) => {
-          const findedUser = allUsers.find((u) => user === u._id);
+          const findedUser = allUsers.find((u) => user === u._id);          
           if(findedUser) {
               userNames.push({
                   _id: findedUser?._id,
                   fullName: findedUser?.fullName,
                   title: findedUser.title,
-                  email: findedUser.email
+                  email: findedUser.email,
+                  avatar: findedUser.avatar
               });
           }
       });
@@ -103,6 +105,7 @@ function CustomPaginationActionsTable() {
                     {row.users?.map((user) => (
                       <Box key={user._id} component="span">
                         <Avatar 
+                          src={user.avatar}
                           sx={{ bgcolor: userColors.get(user._id) }} 
                           className="task-avatar"
                         >

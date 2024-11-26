@@ -17,6 +17,7 @@ const Tasks = ({ stage }: { stage: string }) => {
             fullName: string;
             title: string;
             email: string;
+            avatar: string | undefined;
         }[] = [];            
 
         users?.forEach((user) => {
@@ -25,7 +26,8 @@ const Tasks = ({ stage }: { stage: string }) => {
                 userNames.push({
                     fullName: findedUser?.fullName,
                     title: findedUser.title,
-                    email: findedUser.email
+                    email: findedUser.email,
+                    avatar: findedUser.avatar
                 });
             }
         });

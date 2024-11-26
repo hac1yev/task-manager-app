@@ -43,7 +43,6 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
       if(users) return users.map((user) => user._id).filter((item) => item !== user.userId);
   }, [user.userId, users]);
 
-
   const handleModalOpen = useCallback(() => setModalOpen(true), []);
   const handleModalClose = useCallback(() => setModalOpen(false), []);
 
@@ -164,6 +163,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
                 onMouseLeave={handlePopoverClose} 
                 onMouseEnter={handlePopoverOpen.bind(null, user.fullName)}
                 aria-haspopup="true" 
+                src={user.avatar}
               >
                 {user.fullName.trim().includes(" ")
                   ? user.fullName

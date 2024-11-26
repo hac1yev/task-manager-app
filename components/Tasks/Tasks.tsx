@@ -30,6 +30,7 @@ const Tasks = () => {
                 title: string;
                 email: string;
                 _id: string;
+                avatar: string | undefined;
             }[] = [];            
     
             users?.forEach((user) => {
@@ -40,6 +41,7 @@ const Tasks = () => {
                         title: findedUser.title,
                         email: findedUser.email,
                         _id: findedUser._id,
+                        avatar: findedUser.avatar
                     });
                 }
             });
