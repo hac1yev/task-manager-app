@@ -176,6 +176,7 @@ const TaskList = ({ title, priority_level, users, subtask, created_at, _id, comm
                 fullName={user.fullName}
                 title={user.title}
                 email={user.email}
+                avatar={user.avatar}
                 color={colors[index]}
                 anchorEl={anchorEl}
                 userId={userId}

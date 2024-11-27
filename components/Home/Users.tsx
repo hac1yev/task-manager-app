@@ -76,6 +76,7 @@ function Users() {
                       anchorEl={anchorEl}
                       userId={userId}
                       handlePopoverClose={handlePopoverClose}
+                      avatar={user.avatar}
                     />
                   </Box>
                 </TableCell>

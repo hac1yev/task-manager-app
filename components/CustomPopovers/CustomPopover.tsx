@@ -3,7 +3,7 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Popover, Typography } from "@mui/material";
 import React from "react";
 
-const CustomPopover = ({ fullName, title, email, color, userId, anchorEl, handlePopoverClose, id }: Partial<UserType> & CustomPopoverType) => {
+const CustomPopover = ({ fullName, title, avatar, email, color, userId, anchorEl, handlePopoverClose, id }: Partial<UserType> & CustomPopoverType) => {
 
   return (
     <Popover
@@ -34,6 +34,7 @@ const CustomPopover = ({ fullName, title, email, color, userId, anchorEl, handle
                 mr: 2,
               }}
               alt="Remy Sharp"
+              src={avatar}
             >
               {fullName && fullName
                 .split(" ")
