@@ -18,8 +18,8 @@ export const trashSlice = createSlice({
         },
         addtrash(state, action) {
             state.trashTasks = [
+                action.payload,
                 ...state.trashTasks,
-                action.payload
             ]
         },
         deleteOne(state,action) {

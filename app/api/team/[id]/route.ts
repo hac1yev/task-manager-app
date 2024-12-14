@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     await connectToDB();    
 
     await User.updateOne({ _id: id }, { fullName, email, title, role, biography, avatar: myNewImage });
-
+    
     const newUserInfo = { fullName, email, title, role, biography, avatar: myNewImage }; 
 
     return NextResponse.json({ message: 'Success', newUserInfo });

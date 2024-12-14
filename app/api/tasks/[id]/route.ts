@@ -1,6 +1,7 @@
 import { connectToDB } from "@/lib/connectToDB";
 import { verifyAccessToken } from "@/lib/verifyToken";
 import { Task } from "@/models/Task";
+import { User } from "@/models/User";
 import { NextResponse } from "next/server";
 
 export async function DELETE(req: Request) {
@@ -60,6 +61,28 @@ export async function GET(req: Request) {
     await connectToDB();
 
     const taskDetail = await Task.findOne({ _id: id });
+    const users = await User.find();
+
+    const updatedComments = taskDetail.comments.map((comment: {
+        _id?: string;
+        fullName: string;
+        userId: string;
+        description: string;
+        avatar: string;
+        adding_at:string;
+        likes: string[];
+    }) => {
+        if(!comment?.avatar) {
+            const findedUser = users.find((user) => user._id == comment.userId);            
+            comment.avatar = findedUser?.avatar;
+        }
+
+        return comment;
+    });    
+
+    taskDetail.comments = [
+        ...updatedComments
+    ];
 
     return NextResponse.json({ message: 'Deleted Successfully!', data: taskDetail });
 };
