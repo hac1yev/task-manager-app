@@ -1,4 +1,5 @@
-.setting-notifications-wrapper > div {
+.setting-notifications-wrapper > div,
+.notification-settings-top {
     width: 60%;
 }
 
@@ -7,7 +8,12 @@
 }
 
 @media screen and (max-width: 1000px) {
-    .setting-notifications-wrapper > div {
+    .setting-notifications-wrapper > div,
+    .notification-settings-top {
         width: 100%;
+    }
+
+    .notification-settings-top {
+        gap: 15px;
     }
 }

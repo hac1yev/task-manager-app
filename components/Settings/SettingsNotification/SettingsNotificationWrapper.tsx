@@ -79,15 +79,32 @@ const SettingsNotificationWrapper = () => {
     }
 
     return (
-        <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
-            <Box>
-                <Typography variant="h5" align='left' sx={{ mt: 1 }}>Notification Settings</Typography>
-                <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 2 }}>
-                    In this section you will able to configure the behaviour of notifications
-                </Typography>
+        <Box sx={{ width: "100%", bgcolor: '#fff', maxWidth: { sm: "100%", md: "1700px" }, p: 2 }} component={"form"} onSubmit={handleSubmit}>
+            <Box className="flex-between notification-settings-top">
+                <Box>
+                    <Typography variant="h5" align='left' sx={{ mt: 1 }}>Notification Settings</Typography>
+                    <Typography variant="subtitle1" sx={{ fontSize: '16px', mt: 2 }}>
+                        In this section you will able to configure the behaviour of notifications
+                    </Typography>
+                </Box>
+                <Button 
+                    type="submit"
+                    variant='contained'
+                    disabled={(JSON.stringify(notificationRef.current) === JSON.stringify(notificationSettings)) || isLoading}
+                    sx={{  
+                        color: '#fff', 
+                        textTransform: 'capitalize', 
+                        fontSize: '16px', 
+                        px: 4,
+                        mt: 1,
+                        alignSelf: 'flex-end'
+                    }} 
+                >
+                    {isLoading ? 'Loading...' : 'Save'}
+                </Button>
             </Box>
             <Divider sx={{ mt: 3, mb: 2 }} />
-            <Box className="setting-notifications-wrapper" component={"form"} sx={{ mb: 2 }} onSubmit={handleSubmit}>
+            <Box className="setting-notifications-wrapper" sx={{ mb: 2 }}>
                 <Box className="flex-between notification-list">
                     <Typography variant="h6">{notificationSettings.assignTask ? 'Disable Assign Tasks Notifications' : 'Enable Assign Tasks Notifications'}</Typography>
                     <Box className="flex-center" sx={{ gap: 1 }}>
@@ -179,22 +196,6 @@ const SettingsNotificationWrapper = () => {
                     </Box>
                 </Box>
                 <Divider sx={{ my: 2 }} />
-                <Box className="flex-end">
-                    <Button 
-                        type="submit"
-                        variant='contained'
-                        disabled={(JSON.stringify(notificationRef.current) === JSON.stringify(notificationSettings)) || isLoading}
-                        sx={{  
-                            color: '#fff', 
-                            textTransform: 'capitalize', 
-                            fontSize: '16px', 
-                            px: 4,
-                            mt: 1
-                        }} 
-                    >
-                        {isLoading ? 'Loading...' : 'Save'}
-                    </Button>
-                </Box>
             </Box>
         </Box>
     );
