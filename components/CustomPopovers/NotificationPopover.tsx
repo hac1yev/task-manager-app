@@ -3,7 +3,7 @@
 import { Avatar, Badge, Box, Button, IconButton, List, ListItemAvatar, ListItemButton, ListItemText, Popover, Typography } from "@mui/material";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import moment from "moment";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -15,8 +15,8 @@ const NotificationPopover = ({ notifications,userInfo }: NotificationPopoverType
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const handleNotificationPopoverOpen = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
-    const handleNotificationPopoverClose = () => setAnchorEl(null);
+    const handleNotificationPopoverOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget), []);
+    const handleNotificationPopoverClose = useCallback(() => setAnchorEl(null), []);
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
